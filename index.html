@@ -18,6 +18,48 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;ba
 .record{display:none;text-align:center}.record.show{display:block}.record-ring{height:155px;width:155px;border-radius:50%;margin:18px auto;display:grid;place-items:center;background:radial-gradient(circle at 35% 25%,#fff,#dce9ff);border:1px solid white;box-shadow:0 0 0 9px #ffffff55,0 15px 35px #6887c533}.mic{font-size:36px}.timer{font-size:29px;font-weight:800;color:#5279ed;font-variant-numeric:tabular-nums}.rec-label{font-size:9px;letter-spacing:2px;color:var(--muted)}.speakerbar{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:18px 0}.speaker{padding:11px 19px;border-radius:12px;border:1px solid #fff;background:#ffffff8c;color:#6a7893;font-weight:800;cursor:pointer}.speaker.active{background:#e0e9ff;border-color:#8ba8f7;color:#3f61c3;box-shadow:0 5px 18px #6f91db33}.record-controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:15px}.stop{border:1px solid #fff;border-radius:12px;padding:12px 23px;background:linear-gradient(100deg,#f18d9c,#eaa0bc);color:#fff;font-weight:800;cursor:pointer}.transcript{max-height:250px;overflow:auto;text-align:left;margin:20px 0;padding:15px;border:1px solid #fff;border-radius:16px;background:#ffffff78;font-size:12px;line-height:1.9}.turn{padding:8px 0;border-bottom:1px solid #d8e2f2}.turn:last-child{border:0}.turn b{color:#4e6bc0}.turn.s2 b{color:#a16db8}.empty{color:#8996aa;text-align:center;padding:20px}
 .result{display:none}.result.show{display:block}.scoreline{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}.score{font-size:66px;line-height:1;font-weight:800;letter-spacing:-4px;color:#5077e6}.score small{font-size:14px;color:var(--muted);letter-spacing:0}.rank{font-size:11px;font-weight:800;color:#6b80bd;letter-spacing:2px}.resultgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin:22px 0}.stat{padding:13px 10px;border-radius:15px;border:1px solid #fff;background:#ffffff80;text-align:center}.stat b{font-size:22px;color:#4c6ed0;display:block}.stat span{font-size:9px;color:var(--muted)}.feedback{padding:16px;border:1px solid #fff;border-radius:16px;background:#ffffff80;margin-top:12px}.feedback h3{font-size:12px;color:#5674bd;margin:0 0 9px}.feedback p,.feedback li{font-size:12px;line-height:1.9;color:#4e5c76}.feedback ul{padding-left:18px;margin:0}.config{margin-top:18px;padding:18px;border-radius:17px;background:#ffffff70;border:1px solid #fff}.config summary{font-size:12px;font-weight:800;color:#526eaf;cursor:pointer}.config p{font-size:10px;color:var(--muted);line-height:1.8}.footer{text-align:center;margin:27px 0 0;font-size:9px;letter-spacing:2px;color:#8290aa}
 @media(max-width:720px){.app{padding:17px 13px 35px}.nav{margin-bottom:30px}.grid{grid-template-columns:1fr;gap:10px}.panel{padding:18px}.resultgrid{grid-template-columns:repeat(2,1fr)}.hero h1{letter-spacing:-1px}}
+
+/* Premium Apple-inspired transparent glass refinement */
+:root{--ink:#182033;--muted:#56647a;--blue:#405fca;--cyan:#4b9eae;--glass:rgba(255,255,255,.27);--line:rgba(255,255,255,.62);--shadow:0 24px 70px rgba(35,42,75,.14)}
+body:before{opacity:.12;background-size:22px 22px}
+.app{max-width:1160px;padding-top:30px}
+.nav{margin-bottom:48px}
+.logo{border-radius:14px;background:rgba(255,255,255,.48);border:1px solid rgba(255,255,255,.78);box-shadow:0 8px 24px rgba(49,58,91,.12);color:#354d9d}
+.brand strong{letter-spacing:2.6px;font-weight:700}
+.livepill{color:#246b58;background:rgba(255,255,255,.34);border:1px solid rgba(255,255,255,.65);box-shadow:0 8px 24px rgba(49,58,91,.08);backdrop-filter:blur(18px)}
+.hero{margin-bottom:36px}
+.eyebrow{color:#394c83;letter-spacing:4.5px}
+.hero h1{font-weight:700;letter-spacing:-2.8px;background:linear-gradient(100deg,#273e88,#326e8b 52%,#6852a2);color:transparent;background-clip:text}
+.hero p{color:#39465d}
+.glass{background:rgba(255,255,255,.24);border:1px solid rgba(255,255,255,.66);box-shadow:0 24px 70px rgba(35,42,75,.14),inset 0 1px 0 rgba(255,255,255,.78);border-radius:28px;backdrop-filter:blur(32px) saturate(175%);-webkit-backdrop-filter:blur(32px) saturate(175%)}
+.panel{padding:30px}
+.panel:before{background:rgba(255,255,255,.34);filter:blur(24px)}
+.tab{border:1px solid rgba(255,255,255,.68);background:rgba(255,255,255,.25);color:#48536c;backdrop-filter:blur(16px)}
+.tab.active{color:#263d83;background:rgba(255,255,255,.62);box-shadow:0 8px 24px rgba(49,58,91,.12)}
+.heading{color:#354d91;letter-spacing:2.2px}
+.field label{color:#46536a}
+.field input,.field select{border:1px solid rgba(255,255,255,.8);background:rgba(255,255,255,.42);box-shadow:inset 0 1px 5px rgba(37,48,75,.045);backdrop-filter:blur(14px)}
+.field input:focus,.field select:focus{border-color:rgba(70,100,190,.6);box-shadow:0 0 0 4px rgba(70,100,190,.12)}
+.topic{border:1px solid rgba(255,255,255,.72);background:rgba(255,255,255,.25);box-shadow:inset 0 1px 0 rgba(255,255,255,.75);backdrop-filter:blur(18px)}
+.topic small,.feedback h3{color:#3e5797}
+.topic p,.hint{color:#4d5a70}
+.softbtn,.speaker{border:1px solid rgba(255,255,255,.72);background:rgba(255,255,255,.34);color:#46536e;backdrop-filter:blur(16px)}
+.primary{border:1px solid rgba(255,255,255,.72);border-radius:16px;background:linear-gradient(105deg,rgba(47,69,145,.94),rgba(49,126,143,.94));box-shadow:0 12px 30px rgba(38,57,111,.22);letter-spacing:1.4px}
+.primary:hover{transform:translateY(-2px);box-shadow:0 16px 34px rgba(38,57,111,.27)}
+.record-ring{background:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.8);box-shadow:0 0 0 9px rgba(255,255,255,.2),0 18px 42px rgba(38,57,111,.15);backdrop-filter:blur(22px)}
+.timer,.score{color:#344f9b}
+.speaker.active{background:rgba(255,255,255,.68);border-color:rgba(65,91,170,.55);color:#304b99;box-shadow:0 8px 22px rgba(38,57,111,.12)}
+.stop{border:1px solid rgba(255,255,255,.72);background:rgba(87,65,106,.82);box-shadow:0 8px 20px rgba(54,43,73,.16)}
+.transcript,.stat,.feedback,.config{border:1px solid rgba(255,255,255,.72);background:rgba(255,255,255,.28);backdrop-filter:blur(18px)}
+.turn{border-bottom-color:rgba(255,255,255,.42)}
+.turn b{color:#344f9b}
+.turn.s2 b{color:#78518e}
+.stat b{color:#344f9b}
+.feedback p,.feedback li{color:#3e4b62}
+.rank{color:#43588f}
+.footer{color:#46536d}
+@media(max-width:720px){.app{padding:17px 13px 35px}.panel{padding:20px}.nav{margin-bottom:34px}}
+
 </style></head>
 <body><main class="app">
 <header class="nav"><div class="brand"><div class="logo">TB</div><div><strong>TALK BATTLE</strong><small>CONVERSATION INTELLIGENCE</small></div></div><div class="livepill">● SYSTEM READY</div></header>
