@@ -165,7 +165,7 @@ body:before{opacity:.12;background-size:22px 22px}
 <div class="field"><label>会話テーマ</label><select id="theme"><option>フリートーク</option><option>お互いの趣味を紹介</option><option>休日の計画を立てる</option><option>意見交換・ディスカッション</option><option>初対面の自己紹介</option><option>学校生活について話す</option></select></div>
 <div class="field"><label>会話時間</label><select id="duration"><option value="60">1分</option><option value="180" selected>3分</option><option value="300">5分</option><option value="600">10分</option></select></div></div>
 <div><h2 class="heading">02 / LOCAL EVALUATION</h2><div class="topic"><small>ANALYSIS TARGET</small><h3>会話の特徴を多角的に分析</h3><p>自然さ・発言バランス・質問・返答・反応表現・話題の広がりを、会話ログから分析します。</p><div class="topic-foot"><span style="font-size:10px;color:#6b82b7">LOCAL ANALYSIS ENGINE</span></div></div>
-<p class="hint" style="margin-top:15px"><b>API不要のChatGPT採点に対応。</b> 会話終了後に採点指示をコピーしてChatGPTに貼り付け、結果を戻せます。詳細設定は右上の⚙から。</p></div></div>
+<p class="hint" style="margin-top:15px"><b>API不要のChatGPT採点に対応。</b> 会話終了後に採点指示をコピーしてChatGPTに貼り付け、結果を戻せます。詳細設定は右上の設定から。</p></div></div>
 <button class="primary" id="start">START CONVERSATION</button>
 <p class="hint">録音開始時にマイク利用を要求します。話者1・話者2のボタンを会話に合わせて切り替えてください。音声認識は対応ブラウザが必要です。</p>
 </section>
@@ -183,7 +183,7 @@ body:before{opacity:.12;background-size:22px 22px}
 <div class="release"><time>2026.11.11 · v1.2.0</time><b>Spatial Minimal Glass</b><p>ヘッダーやロゴ、入力欄を整理し、透明感と操作性を調整。</p></div>
 <div class="release"><time>2026.11.06 · v1.1.0</time><b>Conversation Analysis</b><p>2人の会話録音、話者切替、文字起こし、会話レポートに対応。</p></div>
 <div class="release"><time>2026.11.05 · v1.0.0</time><b>First Release</b><p>TALK BATTLEの初期バージョンを公開。</p></div>
-</div><div class="settings-card about-card"><h3>アプリ情報</h3><div class="settings-line"><span>アプリ名</span><b>TALK BATTLE</b></div><div class="settings-line"><span>エディション</span><b>Conversation Intelligence</b></div><div class="settings-line"><span>バージョン</span><b>1.3.0</b></div><div class="settings-line"><span>AI採点方式</span><b>アプリ内ローカル分析</b></div></div></section><footer class="footer">TALK BATTLE · CONVERSATION INTELLIGENCE · LIQUID GLASS UI</footer></main>
+</div><div class="settings-card about-card"><h3>アプリ情報</h3><div class="settings-line"><span>アプリ名</span><b>TALK BATTLE</b></div><div class="settings-line"><span>エディション</span><b>Conversation Intelligence</b></div><div class="settings-line"><span>バージョン</span><b>1.4.0</b></div><div class="settings-line"><span>AI採点方式</span><b>アプリ内ローカル分析</b></div></div></section><footer class="footer">TALK BATTLE · CONVERSATION INTELLIGENCE · LIQUID GLASS UI</footer></main>
 <script>
 const $=id=>document.getElementById(id);let active=1,recognition=null,turns=[],timer=null,startAt=0,seconds=180,elapsed=0,interim='';
 function setSpeaker(n){active=n;$('speaker1').classList.toggle('active',n===1);$('speaker2').classList.toggle('active',n===2);$('activeName').textContent=(n===1?$('name1').value:$('name2').value)+' の発言を記録中'}
