@@ -131,10 +131,32 @@ body:before{opacity:.12;background-size:22px 22px}
 .release b{display:block}
 #manualAI{display:none!important}
 
+
+/* v1.4.0 — No Emoji / Precision Interface */
+.settings-toggle{font-size:0;display:grid;place-items:center}
+.settings-glyph{width:17px;height:17px;display:block;position:relative;border-top:1.5px solid currentColor;border-bottom:1.5px solid currentColor}
+.settings-glyph:before{content:"";position:absolute;left:0;right:0;top:7px;border-top:1.5px solid currentColor}
+.settings-glyph:after{content:"";position:absolute;width:4px;height:4px;border:1.5px solid currentColor;border-radius:50%;background:#d6dff4;left:4px;top:-3px;box-shadow:6px 10px 0 -1px #d6dff4}
+.mic{font-size:13px;font-weight:800;letter-spacing:4px;color:#344f9b}
+.livepill{font-weight:800;letter-spacing:1.5px}
+.hero h1{font-size:clamp(39px,7.2vw,68px);letter-spacing:-3px}
+.hero .eyebrow{font-size:9px;font-weight:800}
+.topic h3{letter-spacing:.2px}
+.feedback h3{font-size:10px;letter-spacing:1.15px;font-weight:800}
+.speaker{min-width:112px;font-size:11px;letter-spacing:1px}
+.tab{font-size:10px;letter-spacing:1.1px}
+.primary{letter-spacing:1.8px;font-weight:800}
+.stop{font-size:11px;letter-spacing:.6px}
+.settings-toggle:hover{background:rgba(255,255,255,.62);transform:translateY(-1px)}
+.settings-toggle{transition:transform .18s ease,background .18s ease}
+.nav-orbit{opacity:.55}
+.orbit-one{width:27px;height:27px;right:174px;top:-2px;border-radius:9px}
+.orbit-two{width:12px;height:12px;right:151px;top:29px;border-radius:4px}
+@media(max-width:720px){.hero h1{letter-spacing:-1.8px}.orbit-one{right:116px}.orbit-two{right:100px}}
 </style></head>
 <body><main class="app">
-<header class="nav"><div class="nav-orbit orbit-one" aria-hidden="true"></div><div class="nav-orbit orbit-two" aria-hidden="true"></div><div class="brand"><div class="logo">TB</div><div><strong>TALK BATTLE</strong><small>CONVERSATION INTELLIGENCE</small></div></div><div class="nav-actions"><button class="settings-toggle" id="openSettings" aria-label="設定を開く">⚙</button><div class="livepill">● SYSTEM READY</div></div></header>
-<section class="hero"><div class="eyebrow">LISTEN · CONNECT · COMMUNICATE</div><h1>Talk, Together.</h1><p>2人の会話を、AIがまるごと分析。</p></section>
+<header class="nav"><div class="nav-orbit orbit-one" aria-hidden="true"></div><div class="nav-orbit orbit-two" aria-hidden="true"></div><div class="brand"><div class="logo">TB</div><div><strong>TALK BATTLE</strong><small>CONVERSATION INTELLIGENCE</small></div></div><div class="nav-actions"><button class="settings-toggle" id="openSettings" aria-label="設定を開く"><span class="settings-glyph" aria-hidden="true"></span></button><div class="livepill">SYSTEM READY</div></div></header>
+<section class="hero"><div class="eyebrow">LISTEN · CONNECT · COMMUNICATE</div><h1>Talk, Together.</h1><p>2人の会話を、5つの視点から分析。</p></section>
 <div class="tabs"><button class="tab active">CONVERSATION ANALYSIS</button></div>
 <section id="setup" class="glass panel"><div class="grid">
 <div><h2 class="heading">01 / CONVERSATION SETUP</h2>
@@ -142,22 +164,22 @@ body:before{opacity:.12;background-size:22px 22px}
 <div class="field"><label>話者2の名前</label><input id="name2" maxlength="18" value="PLAYER 2"></div>
 <div class="field"><label>会話テーマ</label><select id="theme"><option>フリートーク</option><option>お互いの趣味を紹介</option><option>休日の計画を立てる</option><option>意見交換・ディスカッション</option><option>初対面の自己紹介</option><option>学校生活について話す</option></select></div>
 <div class="field"><label>会話時間</label><select id="duration"><option value="60">1分</option><option value="180" selected>3分</option><option value="300">5分</option><option value="600">10分</option></select></div></div>
-<div><h2 class="heading">02 / AI EVALUATION</h2><div class="topic"><small>ANALYSIS TARGET</small><h3>会話の質を総合評価</h3><p>自然さ・発言バランス・質問力・傾聴力・話題の広がり・協力性などを、会話の文字起こしからChatGPTが評価します。</p><div class="topic-foot"><span style="font-size:10px;color:#6b82b7">AI POWERED · GPT</span></div></div>
+<div><h2 class="heading">02 / LOCAL EVALUATION</h2><div class="topic"><small>ANALYSIS TARGET</small><h3>会話の特徴を多角的に分析</h3><p>自然さ・発言バランス・質問・返答・反応表現・話題の広がりを、会話ログから分析します。</p><div class="topic-foot"><span style="font-size:10px;color:#6b82b7">LOCAL ANALYSIS ENGINE</span></div></div>
 <p class="hint" style="margin-top:15px"><b>API不要のChatGPT採点に対応。</b> 会話終了後に採点指示をコピーしてChatGPTに貼り付け、結果を戻せます。詳細設定は右上の⚙から。</p></div></div>
-<button class="primary" id="start">● START CONVERSATION</button>
+<button class="primary" id="start">START CONVERSATION</button>
 <p class="hint">録音開始時にマイク利用を要求します。話者1・話者2のボタンを会話に合わせて切り替えてください。音声認識は対応ブラウザが必要です。</p>
 </section>
-<section id="record" class="glass panel record"><div class="heading">03 / LIVE CONVERSATION</div><div class="record-ring"><div><div class="mic">🎙️</div><div id="timer" class="timer">00:00</div><div class="rec-label">RECORDING</div></div></div>
+<section id="record" class="glass panel record"><div class="heading">03 / LIVE CONVERSATION</div><div class="record-ring"><div><div class="mic">REC</div><div id="timer" class="timer">00:00</div><div class="rec-label">RECORDING</div></div></div>
 <div id="activeName" style="font-weight:800;font-size:13px">話者1の発言を記録中</div>
-<div class="speakerbar"><button id="speaker1" class="speaker active">● 話者1</button><button id="speaker2" class="speaker">● 話者2</button></div>
+<div class="speakerbar"><button id="speaker1" class="speaker active">話者 01</button><button id="speaker2" class="speaker">話者 02</button></div>
 <p class="hint">話す人が変わったら、上のボタンを押して話者を切り替えてね。</p>
 <div id="transcript" class="transcript"><div class="empty">会話がここに文字起こしされます。</div></div>
-<div class="record-controls"><button id="finish" class="stop">■ 会話を終了して採点</button><button id="cancel" class="softbtn">キャンセル</button></div></section>
-<section id="result" class="glass panel result"><div class="heading">04 / AI CONVERSATION REPORT</div><div id="aiStatus" class="rank">LOCAL ANALYZING</div><div class="scoreline"><div class="score" id="total">--<small> / 100</small></div><div style="text-align:right"><div id="grade" class="rank">OVERALL SCORE</div><div id="names" style="font-size:12px;color:var(--muted);margin-top:6px"></div></div></div>
-<div class="resultgrid" id="metrics"></div><div class="feedback"><h3>✦ AI SUMMARY / 総合講評</h3><p id="summary">分析結果を待っています。</p></div><div class="feedback"><h3>✦ GOOD POINTS / 良かったところ</h3><ul id="good"></ul></div><div class="feedback"><h3>↗ NEXT STEP / 改善アドバイス</h3><ul id="advice"></ul></div><div class="feedback"><h3>◉ EACH SPEAKER / 話者別コメント</h3><div id="speakers"></div></div><div class="feedback"><h3>▤ CONVERSATION LOG / 会話ログ</h3><div id="log" style="font-size:11px;line-height:1.9;white-space:pre-wrap;max-height:220px;overflow:auto"></div></div>
-<div class="feedback" id="manualAI" style="display:none"><h3>✦ CHATGPT HANDOFF / API不要の採点</h3><p>①採点指示をコピー → ②ChatGPTを開いて貼り付け → ③返ってきたJSONを下に貼り付けて反映。</p><div class="record-controls"><button class="softbtn" id="copyPrompt">採点指示をコピー</button><button class="softbtn" id="openChatGPT">ChatGPTを開く</button></div><textarea id="aiReply" rows="7" placeholder="ChatGPTの回答（JSON）をここに貼り付け" style="width:100%;margin-top:12px;padding:13px;border:1px solid rgba(255,255,255,.8);border-radius:13px;background:rgba(255,255,255,.48);font:12px monospace;color:var(--ink)"></textarea><button class="primary" id="applyAI" style="margin-top:10px">採点結果を反映</button><textarea id="promptText" aria-label="採点指示" readonly style="position:absolute;left:-9999px;top:-9999px"></textarea></div><button class="primary" id="retry" style="margin-top:18px">↻ NEW CONVERSATION</button></section>
+<div class="record-controls"><button id="finish" class="stop">会話を終了して採点</button><button id="cancel" class="softbtn">キャンセル</button></div></section>
+<section id="result" class="glass panel result"><div class="heading">04 / CONVERSATION REPORT</div><div id="aiStatus" class="rank">LOCAL ANALYZING</div><div class="scoreline"><div class="score" id="total">--<small> / 100</small></div><div style="text-align:right"><div id="grade" class="rank">OVERALL SCORE</div><div id="names" style="font-size:12px;color:var(--muted);margin-top:6px"></div></div></div>
+<div class="resultgrid" id="metrics"></div><div class="feedback"><h3>01 / SUMMARY　総合講評</h3><p id="summary">分析結果を待っています。</p></div><div class="feedback"><h3>02 / STRENGTHS　良かったところ</h3><ul id="good"></ul></div><div class="feedback"><h3>03 / NEXT STEP　改善アドバイス</h3><ul id="advice"></ul></div><div class="feedback"><h3>04 / SPEAKER REVIEW　話者別コメント</h3><div id="speakers"></div></div><div class="feedback"><h3>05 / TRANSCRIPT　会話ログ</h3><div id="log" style="font-size:11px;line-height:1.9;white-space:pre-wrap;max-height:220px;overflow:auto"></div></div>
+<div class="feedback" id="manualAI" style="display:none"><h3>CHATGPT HANDOFF / API不要の採点</h3><p>①採点指示をコピー → ②ChatGPTを開いて貼り付け → ③返ってきたJSONを下に貼り付けて反映。</p><div class="record-controls"><button class="softbtn" id="copyPrompt">採点指示をコピー</button><button class="softbtn" id="openChatGPT">ChatGPTを開く</button></div><textarea id="aiReply" rows="7" placeholder="ChatGPTの回答（JSON）をここに貼り付け" style="width:100%;margin-top:12px;padding:13px;border:1px solid rgba(255,255,255,.8);border-radius:13px;background:rgba(255,255,255,.48);font:12px monospace;color:var(--ink)"></textarea><button class="primary" id="applyAI" style="margin-top:10px">採点結果を反映</button><textarea id="promptText" aria-label="採点指示" readonly style="position:absolute;left:-9999px;top:-9999px"></textarea></div><button class="primary" id="retry" style="margin-top:18px">NEW CONVERSATION</button></section>
 <section id="settings" class="glass panel settings-screen" style="display:none"><div class="settings-head"><div><div class="heading">SYSTEM PREFERENCES</div><h2 style="margin:0 0 5px">設定</h2><p class="hint" style="margin:0">アプリの動作や情報を管理します。</p></div><button class="softbtn" id="closeSettings">← 戻る</button></div><div class="settings-card"><h3>採点方式</h3><p>標準の採点はアプリ内で完結します。会話テキストは採点のために外部サーバーへ送信しません。</p><div class="settings-line"><span>採点エンジン</span><b>ローカル自動分析</b></div><div class="settings-line"><span>APIキー</span><b>不要</b></div><div class="settings-line"><span>通信</span><b>採点時の外部送信なし</b></div></div><div class="settings-card"><h3>更新履歴</h3>
-<div class="release"><time>2026.11.11 · v1.3.0</time><b>Offline Scoring & Settings</b><p>API不要のアプリ内自動採点を追加。設定画面と更新履歴を拡充し、採点結果の説明を明確化。</p></div>
+<div class="release"><time>2026.11.11 · v1.4.0</time><b>Precision Interface</b><p>絵文字を廃止し、タイポグラフィと操作表示を統一。分析方式の説明も整理。</p></div><div class="release"><time>2026.11.11 · v1.3.0</time><b>Offline Scoring & Settings</b><p>API不要のアプリ内自動採点を追加。設定画面と更新履歴を拡充し、採点結果の説明を明確化。</p></div>
 <div class="release"><time>2026.11.11 · v1.2.0</time><b>Spatial Minimal Glass</b><p>ヘッダーやロゴ、入力欄を整理し、透明感と操作性を調整。</p></div>
 <div class="release"><time>2026.11.06 · v1.1.0</time><b>Conversation Analysis</b><p>2人の会話録音、話者切替、文字起こし、会話レポートに対応。</p></div>
 <div class="release"><time>2026.11.05 · v1.0.0</time><b>First Release</b><p>TALK BATTLEの初期バージョンを公開。</p></div>
@@ -174,7 +196,7 @@ try{const test=await navigator.mediaDevices.getUserMedia({audio:true});test.getT
 turns=[];interim='';drawLog();active=1;setSpeaker(1);seconds=Number($('duration').value);elapsed=0;startAt=Date.now();$('setup').style.display='none';$('result').classList.remove('show');$('record').classList.add('show');
 recognition=new SR();recognition.lang='ja-JP';recognition.continuous=true;recognition.interimResults=true;recognition.onresult=e=>{interim='';for(let i=e.resultIndex;i<e.results.length;i++){const text=e.results[i][0].transcript;if(e.results[i].isFinal&&text.trim()){turns.push({speaker:active,name:active===1?$('name1').value:$('name2').value,text:text.trim()})}else interim+=text}drawLog()};recognition.onerror=e=>{if(e.error!=='no-speech')$('aiStatus').textContent='音声認識エラー: '+e.error};recognition.onend=()=>{if($('record').classList.contains('show')){try{recognition&&recognition.start()}catch(e){}}};try{recognition.start()}catch(e){alert('音声認識を開始できませんでした。');}
 timer=setInterval(()=>{elapsed=Math.floor((Date.now()-startAt)/1000);$('timer').textContent=String(Math.floor(elapsed/60)).padStart(2,'0')+':'+String(elapsed%60).padStart(2,'0');if(elapsed>=seconds)finish()},300)}
-function finish(){clearInterval(timer);stopRecognition();$('record').classList.remove('show');$('result').classList.add('show');$('total').innerHTML='…<small> / 100</small>';$('aiStatus').textContent='AI ANALYZING';$('summary').textContent='アプリ内で会話の特徴を分析しています…';$('names').textContent=$('name1').value+' × '+$('name2').value;$('log').textContent=turns.map(t=>t.name+'：'+t.text).join('\n');if(!turns.length){$('aiStatus').textContent='NO TRANSCRIPT';$('summary').textContent='会話を文字起こしできませんでした。ChromeまたはEdgeでマイクを確認して、もう一度試してください。';$('total').innerHTML='--<small> / 100</small>';return}gradeWithAI()}
+function finish(){clearInterval(timer);stopRecognition();$('record').classList.remove('show');$('result').classList.add('show');$('total').innerHTML='…<small> / 100</small>';$('aiStatus').textContent='LOCAL ANALYZING';$('summary').textContent='アプリ内で会話の特徴を分析しています…';$('names').textContent=$('name1').value+' × '+$('name2').value;$('log').textContent=turns.map(t=>t.name+'：'+t.text).join('\n');if(!turns.length){$('aiStatus').textContent='NO TRANSCRIPT';$('summary').textContent='会話を文字起こしできませんでした。ChromeまたはEdgeでマイクを確認して、もう一度試してください。';$('total').innerHTML='--<small> / 100</small>';return}gradeWithAI()}
 function localAnalyze(){
  const clean=turns.map(t=>({...t,text:String(t.text||'').trim()})).filter(t=>t.text);
  const a=clean.filter(t=>t.speaker===1),b=clean.filter(t=>t.speaker===2);
@@ -218,11 +240,11 @@ function gradeWithAI(){
  $('summary').textContent='会話の特徴をアプリ内で分析しています…';
  const result=localAnalyze();
  renderAI(result);
- $('aiStatus').textContent='✓ ON-DEVICE ANALYSIS COMPLETE';
+ $('aiStatus').textContent='ON-DEVICE ANALYSIS COMPLETE';
 }
-function renderAI(r){$('aiStatus').textContent='✦ CHATGPT EVALUATION COMPLETE';$('total').innerHTML=Number(r.total_score)+'<small> / 100</small>';$('grade').textContent=r.grade||'OVERALL SCORE';$('summary').textContent=r.summary||'';const labels=[['自然さ','naturalness'],['発言バランス','balance'],['質問・返答','interaction'],['傾聴・理解','listening'],['話題の広がり','development']];$('metrics').innerHTML=labels.map(([l,k])=>'<div class="stat"><b>'+Number(r.scores?.[k]??0)+'</b><span>'+l+'</span></div>').join('');$('good').innerHTML=(r.good_points||[]).map(x=>'<li>'+escapeHtml(x)+'</li>').join('');$('advice').innerHTML=(r.improvements||[]).map(x=>'<li>'+escapeHtml(x)+'</li>').join('');$('speakers').innerHTML='<p><b>'+$('name1').value+'：</b>'+escapeHtml(r.speaker1_comment||'')+'</p><p><b>'+$('name2').value+'：</b>'+escapeHtml(r.speaker2_comment||'')+'</p>'}
+function renderAI(r){$('aiStatus').textContent='CHATGPT EVALUATION COMPLETE';$('total').innerHTML=Number(r.total_score)+'<small> / 100</small>';$('grade').textContent=r.grade||'OVERALL SCORE';$('summary').textContent=r.summary||'';const labels=[['自然さ','naturalness'],['発言バランス','balance'],['質問・返答','interaction'],['傾聴・理解','listening'],['話題の広がり','development']];$('metrics').innerHTML=labels.map(([l,k])=>'<div class="stat"><b>'+Number(r.scores?.[k]??0)+'</b><span>'+l+'</span></div>').join('');$('good').innerHTML=(r.good_points||[]).map(x=>'<li>'+escapeHtml(x)+'</li>').join('');$('advice').innerHTML=(r.improvements||[]).map(x=>'<li>'+escapeHtml(x)+'</li>').join('');$('speakers').innerHTML='<p><b>'+$('name1').value+'：</b>'+escapeHtml(r.speaker1_comment||'')+'</p><p><b>'+$('name2').value+'：</b>'+escapeHtml(r.speaker2_comment||'')+'</p>'}
 $('openSettings').onclick=()=>{$('setup').style.display='none';$('record').classList.remove('show');$('result').classList.remove('show');$('settings').style.display='block'};$('closeSettings').onclick=()=>{$('settings').style.display='none';$('setup').style.display='block'};
-$('copyPrompt').onclick=async()=>{const p=makePrompt();$('promptText').value=p;try{await navigator.clipboard.writeText(p);$('copyPrompt').textContent='コピーしました ✓'}catch(e){$('promptText').style.position='static';$('promptText').style.left='auto';$('promptText').style.top='auto';$('promptText').style.width='100%';$('promptText').style.height='100px';$('promptText').select();$('copyPrompt').textContent='文章を選択してコピーしてください'}};
+$('copyPrompt').onclick=async()=>{const p=makePrompt();$('promptText').value=p;try{await navigator.clipboard.writeText(p);$('copyPrompt').textContent='コピーしました'}catch(e){$('promptText').style.position='static';$('promptText').style.left='auto';$('promptText').style.top='auto';$('promptText').style.width='100%';$('promptText').style.height='100px';$('promptText').select();$('copyPrompt').textContent='文章を選択してコピーしてください'}};
 $('openChatGPT').onclick=()=>window.open('https://chatgpt.com/','_blank','noopener');
 $('applyAI').onclick=()=>{try{let raw=$('aiReply').value.trim().replace(/^```(?:json)?\\s*/i,'').replace(/\\s*```$/,'');const data=JSON.parse(raw);renderAI(data);$('manualAI').style.display='none'}catch(e){alert('JSONを読み取れませんでした。ChatGPTに「指定したJSON形式だけで返して」と伝えて、回答をもう一度貼り付けてください。')}};
 $('start').onclick=start;$('finish').onclick=finish;$('cancel').onclick=()=>{clearInterval(timer);stopRecognition();$('record').classList.remove('show');$('setup').style.display='block'};$('retry').onclick=()=>{$('result').classList.remove('show');$('setup').style.display='block'};
