@@ -73,6 +73,34 @@ body:before{opacity:.12;background-size:22px 22px}
 @media(max-width:720px){.orbit-one{right:118px;width:35px;height:35px;top:-8px}.orbit-two{right:102px;top:31px;width:17px;height:17px}.nav{margin-bottom:34px}}
 @media(prefers-reduced-motion:reduce){.orbit-one,.orbit-two{animation:none}}
 
+
+/* Spatial Minimal Glass: restrained floating details and cleaner hierarchy */
+.nav{min-height:54px;margin-bottom:44px}
+.logo{width:44px;height:44px;border-radius:14px;transform:none;background:rgba(255,255,255,.56);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 8px 22px rgba(43,54,91,.11)}
+.brand strong{letter-spacing:2px;font-size:15px}
+.orbit-one{width:34px;height:34px;right:174px;top:-7px;border-radius:11px;transform:rotate(12deg);opacity:.72}
+.orbit-two{width:16px;height:16px;right:151px;top:28px;border-radius:6px;transform:rotate(22deg);opacity:.62}
+.livepill{font-size:9px;padding:8px 12px;letter-spacing:.8px}
+.hero h1{letter-spacing:-2.2px;font-weight:700}
+.hero p{font-size:13px;letter-spacing:.15px}
+.panel{border-radius:26px}
+.heading{font-size:10px;letter-spacing:1.8px}
+.field label{font-size:11px;font-weight:600}
+.field input,.field select{border-radius:13px;padding:12px 14px}
+.topic{border-radius:16px;padding:17px}
+.softbtn,.speaker{border-radius:11px;transition:background .18s ease,border-color .18s ease,transform .18s ease}
+.softbtn:hover,.speaker:hover{transform:translateY(-1px);background:rgba(255,255,255,.58)}
+.primary{font-size:11px;letter-spacing:1.2px;padding:15px;border-radius:14px}
+.footer{letter-spacing:1.5px}
+@media(max-width:720px){
+ .nav{margin-bottom:32px}
+ .orbit-one{right:116px;top:-5px;width:27px;height:27px}
+ .orbit-two{right:100px;top:27px;width:13px;height:13px}
+ .brand strong{font-size:13px}
+ .panel{border-radius:22px}
+ .hero h1{letter-spacing:-1.5px}
+}
+
 </style></head>
 <body><main class="app">
 <header class="nav"><div class="nav-orbit orbit-one" aria-hidden="true"></div><div class="nav-orbit orbit-two" aria-hidden="true"></div><div class="brand"><div class="logo">TB</div><div><strong>TALK BATTLE</strong><small>CONVERSATION INTELLIGENCE</small></div></div><div class="livepill">● SYSTEM READY</div></header>
