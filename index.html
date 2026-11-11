@@ -60,9 +60,22 @@ body:before{opacity:.12;background-size:22px 22px}
 .footer{color:#46536d}
 @media(max-width:720px){.app{padding:17px 13px 35px}.panel{padding:20px}.nav{margin-bottom:34px}}
 
+
+/* Floating spatial glass header */
+.nav{position:relative;isolation:isolate;min-height:58px}
+.nav .brand,.nav .livepill{position:relative;z-index:2}
+.nav-orbit{position:absolute;z-index:1;pointer-events:none;border:1px solid rgba(255,255,255,.76);background:linear-gradient(145deg,rgba(255,255,255,.56),rgba(255,255,255,.12));box-shadow:inset 0 1px 1px rgba(255,255,255,.8),0 18px 38px rgba(38,48,84,.13);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%)}
+.orbit-one{width:46px;height:46px;border-radius:15px;right:178px;top:-13px;transform:rotate(18deg);animation:floatGlass 7s ease-in-out infinite}
+.orbit-two{width:22px;height:22px;border-radius:8px;right:145px;top:29px;transform:rotate(35deg);background:linear-gradient(145deg,rgba(255,255,255,.65),rgba(255,255,255,.2));animation:floatGlass 5.5s ease-in-out infinite reverse}
+.logo{width:48px;height:48px;border-radius:17px;transform:rotate(-5deg);background:linear-gradient(145deg,rgba(255,255,255,.76),rgba(255,255,255,.2));box-shadow:inset 0 1px 1px rgba(255,255,255,.95),0 12px 28px rgba(43,54,91,.16);backdrop-filter:blur(20px)}
+.livepill{padding:10px 15px;letter-spacing:1px;background:rgba(255,255,255,.3);box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 10px 28px rgba(43,54,91,.1)}
+@keyframes floatGlass{0%,100%{translate:0 0}50%{translate:0 -9px}}
+@media(max-width:720px){.orbit-one{right:118px;width:35px;height:35px;top:-8px}.orbit-two{right:102px;top:31px;width:17px;height:17px}.nav{margin-bottom:34px}}
+@media(prefers-reduced-motion:reduce){.orbit-one,.orbit-two{animation:none}}
+
 </style></head>
 <body><main class="app">
-<header class="nav"><div class="brand"><div class="logo">TB</div><div><strong>TALK BATTLE</strong><small>CONVERSATION INTELLIGENCE</small></div></div><div class="livepill">● SYSTEM READY</div></header>
+<header class="nav"><div class="nav-orbit orbit-one" aria-hidden="true"></div><div class="nav-orbit orbit-two" aria-hidden="true"></div><div class="brand"><div class="logo">TB</div><div><strong>TALK BATTLE</strong><small>CONVERSATION INTELLIGENCE</small></div></div><div class="livepill">● SYSTEM READY</div></header>
 <section class="hero"><div class="eyebrow">LISTEN · CONNECT · COMMUNICATE</div><h1>Talk, Together.</h1><p>2人の会話を、AIがまるごと分析。</p></section>
 <div class="tabs"><button class="tab active">CONVERSATION ANALYSIS</button></div>
 <section id="setup" class="glass panel"><div class="grid">
