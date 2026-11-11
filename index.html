@@ -233,7 +233,7 @@ function missionCount(){
  if(id==='question')return turns.filter(t=>/[？?]|(なぜ|どうして|どう思う|どんな|いつ|どこ|誰|何が)/.test(t.text)).length;
  if(id==='listen')return turns.filter((t,i)=>i>0&&['そうなんだ','なるほど','たしかに','わかる','それで','でも','だから','いいね','すごい','どういう','私も','僕も','そう思う'].some(w=>t.text.includes(w))).length;
  if(id==='deep')return turns.filter(t=>/(なぜなら|理由は|例えば|たとえば|具体的には|というのも)/.test(t.text)).length;
- return Math.min(8,turns.length);
+ return turns.length;
 }
 function updateLiveAnalysis(){
  if(!$('liveTurns'))return;
