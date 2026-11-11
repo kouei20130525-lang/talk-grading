@@ -124,6 +124,13 @@ body:before{opacity:.12;background-size:22px 22px}
 #aiReply{resize:vertical;min-height:130px;line-height:1.6}
 @media(max-width:720px){.nav-actions{gap:7px}.settings-toggle{width:35px;height:35px}.settings-head{align-items:flex-start}.settings-card{padding:16px}}
 
+
+.settings-card{background:rgba(255,255,255,.34)}
+.settings-line b{font-weight:700}
+.release{padding-bottom:17px}
+.release b{display:block}
+#manualAI{display:none!important}
+
 </style></head>
 <body><main class="app">
 <header class="nav"><div class="nav-orbit orbit-one" aria-hidden="true"></div><div class="nav-orbit orbit-two" aria-hidden="true"></div><div class="brand"><div class="logo">TB</div><div><strong>TALK BATTLE</strong><small>CONVERSATION INTELLIGENCE</small></div></div><div class="nav-actions"><button class="settings-toggle" id="openSettings" aria-label="設定を開く">⚙</button><div class="livepill">● SYSTEM READY</div></div></header>
@@ -146,10 +153,15 @@ body:before{opacity:.12;background-size:22px 22px}
 <p class="hint">話す人が変わったら、上のボタンを押して話者を切り替えてね。</p>
 <div id="transcript" class="transcript"><div class="empty">会話がここに文字起こしされます。</div></div>
 <div class="record-controls"><button id="finish" class="stop">■ 会話を終了して採点</button><button id="cancel" class="softbtn">キャンセル</button></div></section>
-<section id="result" class="glass panel result"><div class="heading">04 / AI CONVERSATION REPORT</div><div id="aiStatus" class="rank">AI ANALYZING</div><div class="scoreline"><div class="score" id="total">--<small> / 100</small></div><div style="text-align:right"><div id="grade" class="rank">OVERALL SCORE</div><div id="names" style="font-size:12px;color:var(--muted);margin-top:6px"></div></div></div>
+<section id="result" class="glass panel result"><div class="heading">04 / AI CONVERSATION REPORT</div><div id="aiStatus" class="rank">LOCAL ANALYZING</div><div class="scoreline"><div class="score" id="total">--<small> / 100</small></div><div style="text-align:right"><div id="grade" class="rank">OVERALL SCORE</div><div id="names" style="font-size:12px;color:var(--muted);margin-top:6px"></div></div></div>
 <div class="resultgrid" id="metrics"></div><div class="feedback"><h3>✦ AI SUMMARY / 総合講評</h3><p id="summary">分析結果を待っています。</p></div><div class="feedback"><h3>✦ GOOD POINTS / 良かったところ</h3><ul id="good"></ul></div><div class="feedback"><h3>↗ NEXT STEP / 改善アドバイス</h3><ul id="advice"></ul></div><div class="feedback"><h3>◉ EACH SPEAKER / 話者別コメント</h3><div id="speakers"></div></div><div class="feedback"><h3>▤ CONVERSATION LOG / 会話ログ</h3><div id="log" style="font-size:11px;line-height:1.9;white-space:pre-wrap;max-height:220px;overflow:auto"></div></div>
 <div class="feedback" id="manualAI" style="display:none"><h3>✦ CHATGPT HANDOFF / API不要の採点</h3><p>①採点指示をコピー → ②ChatGPTを開いて貼り付け → ③返ってきたJSONを下に貼り付けて反映。</p><div class="record-controls"><button class="softbtn" id="copyPrompt">採点指示をコピー</button><button class="softbtn" id="openChatGPT">ChatGPTを開く</button></div><textarea id="aiReply" rows="7" placeholder="ChatGPTの回答（JSON）をここに貼り付け" style="width:100%;margin-top:12px;padding:13px;border:1px solid rgba(255,255,255,.8);border-radius:13px;background:rgba(255,255,255,.48);font:12px monospace;color:var(--ink)"></textarea><button class="primary" id="applyAI" style="margin-top:10px">採点結果を反映</button><textarea id="promptText" aria-label="採点指示" readonly style="position:absolute;left:-9999px;top:-9999px"></textarea></div><button class="primary" id="retry" style="margin-top:18px">↻ NEW CONVERSATION</button></section>
-<section id="settings" class="glass panel settings-screen" style="display:none"><div class="settings-head"><div><div class="heading">SYSTEM PREFERENCES</div><h2 style="margin:0 0 5px">設定</h2><p class="hint" style="margin:0">アプリの動作や情報を管理します。</p></div><button class="softbtn" id="closeSettings">← 戻る</button></div><div class="settings-card"><h3>AI採点</h3><p>標準はAPI不要のChatGPT連携です。下記URLを設定すると、従来のAPIサーバー方式も利用できます。</p><label class="settings-label" for="apiUrl">任意のAI採点サーバーURL</label><input id="apiUrl" placeholder="https://your-worker.workers.dev"></div><div class="settings-card"><h3>更新履歴</h3><div class="release"><time>2026.11.11</time><b>Spatial Minimal Glass</b><p>ヘッダーやロゴ、入力欄を整理し、透明感と操作性を調整。</p></div><div class="release"><time>2026.11.06</time><b>Conversation Analysis</b><p>2人の会話録音、話者切替、文字起こし、AI評価レポートに対応。</p></div></div><div class="settings-card about-card"><h3>アプリ情報</h3><div class="settings-line"><span>アプリ名</span><b>TALK BATTLE</b></div><div class="settings-line"><span>エディション</span><b>Conversation Intelligence</b></div><div class="settings-line"><span>バージョン</span><b>1.2.0</b></div><div class="settings-line"><span>AI採点方式</span><b>ChatGPT連携 / API任意</b></div></div></section><footer class="footer">TALK BATTLE · CONVERSATION INTELLIGENCE · LIQUID GLASS UI</footer></main>
+<section id="settings" class="glass panel settings-screen" style="display:none"><div class="settings-head"><div><div class="heading">SYSTEM PREFERENCES</div><h2 style="margin:0 0 5px">設定</h2><p class="hint" style="margin:0">アプリの動作や情報を管理します。</p></div><button class="softbtn" id="closeSettings">← 戻る</button></div><div class="settings-card"><h3>採点方式</h3><p>標準の採点はアプリ内で完結します。会話テキストは採点のために外部サーバーへ送信しません。</p><div class="settings-line"><span>採点エンジン</span><b>ローカル自動分析</b></div><div class="settings-line"><span>APIキー</span><b>不要</b></div><div class="settings-line"><span>通信</span><b>採点時の外部送信なし</b></div></div><div class="settings-card"><h3>更新履歴</h3>
+<div class="release"><time>2026.11.11 · v1.3.0</time><b>Offline Scoring & Settings</b><p>API不要のアプリ内自動採点を追加。設定画面と更新履歴を拡充し、採点結果の説明を明確化。</p></div>
+<div class="release"><time>2026.11.11 · v1.2.0</time><b>Spatial Minimal Glass</b><p>ヘッダーやロゴ、入力欄を整理し、透明感と操作性を調整。</p></div>
+<div class="release"><time>2026.11.06 · v1.1.0</time><b>Conversation Analysis</b><p>2人の会話録音、話者切替、文字起こし、会話レポートに対応。</p></div>
+<div class="release"><time>2026.11.05 · v1.0.0</time><b>First Release</b><p>TALK BATTLEの初期バージョンを公開。</p></div>
+</div><div class="settings-card about-card"><h3>アプリ情報</h3><div class="settings-line"><span>アプリ名</span><b>TALK BATTLE</b></div><div class="settings-line"><span>エディション</span><b>Conversation Intelligence</b></div><div class="settings-line"><span>バージョン</span><b>1.3.0</b></div><div class="settings-line"><span>AI採点方式</span><b>アプリ内ローカル分析</b></div></div></section><footer class="footer">TALK BATTLE · CONVERSATION INTELLIGENCE · LIQUID GLASS UI</footer></main>
 <script>
 const $=id=>document.getElementById(id);let active=1,recognition=null,turns=[],timer=null,startAt=0,seconds=180,elapsed=0,interim='';
 function setSpeaker(n){active=n;$('speaker1').classList.toggle('active',n===1);$('speaker2').classList.toggle('active',n===2);$('activeName').textContent=(n===1?$('name1').value:$('name2').value)+' の発言を記録中'}
@@ -162,10 +174,52 @@ try{const test=await navigator.mediaDevices.getUserMedia({audio:true});test.getT
 turns=[];interim='';drawLog();active=1;setSpeaker(1);seconds=Number($('duration').value);elapsed=0;startAt=Date.now();$('setup').style.display='none';$('result').classList.remove('show');$('record').classList.add('show');
 recognition=new SR();recognition.lang='ja-JP';recognition.continuous=true;recognition.interimResults=true;recognition.onresult=e=>{interim='';for(let i=e.resultIndex;i<e.results.length;i++){const text=e.results[i][0].transcript;if(e.results[i].isFinal&&text.trim()){turns.push({speaker:active,name:active===1?$('name1').value:$('name2').value,text:text.trim()})}else interim+=text}drawLog()};recognition.onerror=e=>{if(e.error!=='no-speech')$('aiStatus').textContent='音声認識エラー: '+e.error};recognition.onend=()=>{if($('record').classList.contains('show')){try{recognition&&recognition.start()}catch(e){}}};try{recognition.start()}catch(e){alert('音声認識を開始できませんでした。');}
 timer=setInterval(()=>{elapsed=Math.floor((Date.now()-startAt)/1000);$('timer').textContent=String(Math.floor(elapsed/60)).padStart(2,'0')+':'+String(elapsed%60).padStart(2,'0');if(elapsed>=seconds)finish()},300)}
-function finish(){clearInterval(timer);stopRecognition();$('record').classList.remove('show');$('result').classList.add('show');$('total').innerHTML='…<small> / 100</small>';$('aiStatus').textContent='AI ANALYZING';$('summary').textContent='ChatGPTが会話を分析しています…';$('names').textContent=$('name1').value+' × '+$('name2').value;$('log').textContent=turns.map(t=>t.name+'：'+t.text).join('\n');if(!turns.length){$('aiStatus').textContent='NO TRANSCRIPT';$('summary').textContent='会話を文字起こしできませんでした。ChromeまたはEdgeでマイクを確認して、もう一度試してください。';$('total').innerHTML='--<small> / 100</small>';return}gradeWithAI()}
-function makePrompt(){return `あなたは会話コミュニケーションの専門評価者です。次の2人の会話を中立・公平に評価してください。中学生にも分かる具体的な日本語で講評してください。発言数だけで優劣を決めず、会話の質を評価してください。各スコアは0〜20点、合計100点です。必ず指定JSONだけを返してください。Markdownやコードフェンスは付けないでください。\n\nテーマ：${$('theme').value}\n話者1：${$('name1').value}\n話者2：${$('name2').value}\n会話時間：${elapsed}秒\n会話ログ：\n${turns.map(t=>t.name+'：'+t.text).join('\\n')}\n\n返却JSON形式：\n{"total_score":0,"grade":"評価ランク","scores":{"naturalness":0,"balance":0,"interaction":0,"listening":0,"development":0},"summary":"総合講評","good_points":["良かった点"],"improvements":["改善点"],"speaker1_comment":"話者1への具体的コメント","speaker2_comment":"話者2への具体的コメント"}\n各項目は0〜20点、total_scoreは5項目の合計にしてください。`}
-async function gradeWithAI(){const url=$('apiUrl').value.trim();if(!url){$('aiStatus').textContent='READY FOR CHATGPT';$('summary').textContent='会話ログを準備できました。下の「採点指示をコピー」からChatGPTに渡して採点できます。';$('manualAI').style.display='block';return}
-$('manualAI').style.display='none';try{const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({speaker1:$('name1').value,speaker2:$('name2').value,theme:$('theme').value,duration:elapsed,turns})});if(!res.ok)throw new Error('サーバー応答 '+res.status);const data=await res.json();if(!data.ok)throw new Error(data.error||'AI採点に失敗');renderAI(data.result)}catch(e){$('aiStatus').textContent='AI CONNECTION ERROR';$('summary').textContent='AI採点サーバーに接続できませんでした：'+e.message+'。設定画面でURLを確認するか、API不要のChatGPT採点を利用してください。';$('manualAI').style.display='block'}}
+function finish(){clearInterval(timer);stopRecognition();$('record').classList.remove('show');$('result').classList.add('show');$('total').innerHTML='…<small> / 100</small>';$('aiStatus').textContent='AI ANALYZING';$('summary').textContent='アプリ内で会話の特徴を分析しています…';$('names').textContent=$('name1').value+' × '+$('name2').value;$('log').textContent=turns.map(t=>t.name+'：'+t.text).join('\n');if(!turns.length){$('aiStatus').textContent='NO TRANSCRIPT';$('summary').textContent='会話を文字起こしできませんでした。ChromeまたはEdgeでマイクを確認して、もう一度試してください。';$('total').innerHTML='--<small> / 100</small>';return}gradeWithAI()}
+function localAnalyze(){
+ const clean=turns.map(t=>({...t,text:String(t.text||'').trim()})).filter(t=>t.text);
+ const a=clean.filter(t=>t.speaker===1),b=clean.filter(t=>t.speaker===2);
+ const count1=a.length,count2=b.length,total=clean.length;
+ const ratio=total?Math.min(count1,count2)/Math.max(count1,count2,1):0;
+ const balance=Math.round(20*(0.45+0.55*ratio));
+ const qCount=clean.filter(t=>/[？?]|(なぜ|どうして|どう思う|どんな|いつ|どこ|誰|何が|かな)/.test(t.text)).length;
+ const questionRate=total?qCount/total:0;
+ const interaction=Math.min(20,Math.round(7+questionRate*28+Math.min(total,12)*.45));
+ const words=clean.map(t=>t.text);
+ const avgLen=total?words.reduce((s,x)=>s+x.length,0)/total:0;
+ const varied=words.length?new Set(words.map(x=>x.slice(0,5))).size/words.length:0;
+ const naturalness=Math.max(5,Math.min(20,Math.round(10+Math.min(avgLen,35)*.16+varied*4)));
+ const followWords=['そうなんだ','なるほど','たしかに','わかる','それで','でも','だから','いいね','すごい','どういう','私も','僕も','そう思う','それは'];
+ const followCount=clean.filter((t,i)=>i>0&&followWords.some(w=>t.text.includes(w))).length;
+ const listening=Math.min(20,Math.round(8+(total?followCount/total:0)*24+Math.min(qCount,5)*.7));
+ const unique=words.join('').replace(/[\s、。,.!?！？]/g,'');
+ const diversity=unique.length?new Set(Array.from(unique)).size/unique.length:0;
+ const development=Math.min(20,Math.max(5,Math.round(8+Math.min(total,15)*.45+diversity*8)));
+ const scores={naturalness,balance,interaction,listening,development};
+ const total_score=Object.values(scores).reduce((s,n)=>s+n,0);
+ const grade=total_score>=90?'S — EXCELLENT':total_score>=80?'A — GREAT':total_score>=65?'B — GOOD':total_score>=50?'C — TRY MORE':'D — KEEP PRACTICING';
+ const good_points=[];
+ if(balance>=15)good_points.push('2人の発言量のバランスが比較的よく取れています。');
+ if(interaction>=14)good_points.push('質問を交えながら会話を進めています。');
+ if(listening>=14)good_points.push('相づちや反応の言葉が見られ、相手を意識しています。');
+ if(total>=8)good_points.push('複数回のやり取りがあり、会話を続けようとしています。');
+ if(!good_points.length)good_points.push('会話を始め、相手とやり取りしようとできています。');
+ const improvements=[];
+ if(balance<15)improvements.push('発言が少ない側にも質問を振り、交互に話すことを意識しましょう。');
+ if(interaction<14)improvements.push('「どう思う？」「なぜ？」などの質問を増やすと会話が広がります。');
+ if(listening<14)improvements.push('相手の言葉を受けて「なるほど」「それで？」など、内容に沿った返事を加えましょう。');
+ if(development<14)improvements.push('理由や具体例、体験談を付け足して、話題を一歩深めてみましょう。');
+ if(!improvements.length)improvements.push('今の会話を土台に、理由や具体例を加えてさらに深めましょう。');
+ const speakerComment=(arr,name)=>arr.length?name+'は'+arr.length+'回発言しました。'+(arr.length>=3?'自分の考えを伝えられています。':'もう少し発言を増やすと、会話への参加がより伝わります。'):'発言が記録されていません。マイクの話者切替を確認しましょう。';
+ return {total_score,grade,scores,summary:'会話の記録 '+total+'ターンをもとに、発言バランス・質問の数・反応表現・語彙の広がりなどをブラウザ内で分析しました。これはルールベースの参考評価で、発言の意味や本当の傾聴をAIが理解した評価ではありません。',good_points,improvements,speaker1_comment:speakerComment(a,$('name1').value),speaker2_comment:speakerComment(b,$('name2').value)};
+}
+function gradeWithAI(){
+ $('manualAI').style.display='none';
+ $('aiStatus').textContent='LOCAL ANALYSIS';
+ $('summary').textContent='会話の特徴をアプリ内で分析しています…';
+ const result=localAnalyze();
+ renderAI(result);
+ $('aiStatus').textContent='✓ ON-DEVICE ANALYSIS COMPLETE';
+}
 function renderAI(r){$('aiStatus').textContent='✦ CHATGPT EVALUATION COMPLETE';$('total').innerHTML=Number(r.total_score)+'<small> / 100</small>';$('grade').textContent=r.grade||'OVERALL SCORE';$('summary').textContent=r.summary||'';const labels=[['自然さ','naturalness'],['発言バランス','balance'],['質問・返答','interaction'],['傾聴・理解','listening'],['話題の広がり','development']];$('metrics').innerHTML=labels.map(([l,k])=>'<div class="stat"><b>'+Number(r.scores?.[k]??0)+'</b><span>'+l+'</span></div>').join('');$('good').innerHTML=(r.good_points||[]).map(x=>'<li>'+escapeHtml(x)+'</li>').join('');$('advice').innerHTML=(r.improvements||[]).map(x=>'<li>'+escapeHtml(x)+'</li>').join('');$('speakers').innerHTML='<p><b>'+$('name1').value+'：</b>'+escapeHtml(r.speaker1_comment||'')+'</p><p><b>'+$('name2').value+'：</b>'+escapeHtml(r.speaker2_comment||'')+'</p>'}
 $('openSettings').onclick=()=>{$('setup').style.display='none';$('record').classList.remove('show');$('result').classList.remove('show');$('settings').style.display='block'};$('closeSettings').onclick=()=>{$('settings').style.display='none';$('setup').style.display='block'};
 $('copyPrompt').onclick=async()=>{const p=makePrompt();$('promptText').value=p;try{await navigator.clipboard.writeText(p);$('copyPrompt').textContent='コピーしました ✓'}catch(e){$('promptText').style.position='static';$('promptText').style.left='auto';$('promptText').style.top='auto';$('promptText').style.width='100%';$('promptText').style.height='100px';$('promptText').select();$('copyPrompt').textContent='文章を選択してコピーしてください'}};
