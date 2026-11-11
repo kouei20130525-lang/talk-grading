@@ -250,7 +250,7 @@ function updateLiveAnalysis(){
  $('missionTip').textContent=goal?(count>=goal?'MISSION COMPLETE — 目標を達成しました。':m.tip):m.tip;
 }
 function missionSummary(){
- const id=$('mission')?.value||'free',m=missionData[id]||missionData.free,count=missionCount();
+ const id=$('mission')?.value||'free',m=missionData[id]||missionData.free,count=missionCount(),level=Number($('missionLevel')?.value||2);
  if(!m.goal)return 'フリーミッションを選択しました。自由な会話に挑戦できています。';
  const goal=m.goal+(level===1?-1:level===3?2:0),done=count>=Math.max(1,goal);
  return m.title+'：'+(done?'達成':'未達成')+'（'+count+' / '+Math.max(1,goal)+' '+m.unit+'）。'+(done?'目標をクリアしました。次は相手の発言をさらに深掘りしてみましょう。':'次回は「'+m.tip+'」を意識して再挑戦しましょう。');
