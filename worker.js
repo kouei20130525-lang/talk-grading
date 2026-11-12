@@ -28,7 +28,7 @@ export default {
       if (!env.TALK_INSIGHT_KV) throw new Error("TALK_INSIGHT_KV binding is not configured");
       return await env.TALK_INSIGHT_KV.get("global-settings", "json") || null;
     };
-    const b64 = bytes => btoa(String.fromCharCode(...new Uint8Array(bytes))).replace(/=/g,"").replace(/\\+/g,"-").replace(/\\//g,"_");
+    const b64 = bytes => btoa(String.fromCharCode(...new Uint8Array(bytes))).replace(/=/g,"").replace(/\+/g,"-").replace(/\//g,"_");
     const makeToken = async () => {
       if (!env.ADMIN_TOKEN_SECRET) throw new Error("ADMIN_TOKEN_SECRET is not configured");
       const payload=b64(new TextEncoder().encode(JSON.stringify({sub:"admin",exp:Date.now()+8*60*60*1000})));
@@ -39,7 +39,7 @@ export default {
       try {
         const [payload,signature]=String(token||"").split(".");
         if(!payload||!signature||!env.ADMIN_TOKEN_SECRET)return false;
-        const decode=x=>Uint8Array.from(atob(x.replace(/-/g,"+").replace(/_/g,"/")+"===".slice((x.length+3)%4)),c=>c.charCodeAt(0));
+        const decode=x=>Uint8Array.from(atob(x.replace(/-/g,"+").replace(/_/g,"/")+"===".slice((4-x.length%4)%4)),c=>c.charCodeAt(0));
         const data=JSON.parse(new TextDecoder().decode(decode(payload)));
         const key=await crypto.subtle.importKey("raw",new TextEncoder().encode(env.ADMIN_TOKEN_SECRET),{name:"HMAC",hash:"SHA-256"},false,["verify"]);
         return data.sub==="admin"&&data.exp>Date.now()&&await crypto.subtle.verify("HMAC",key,decode(signature),new TextEncoder().encode(payload));
@@ -58,7 +58,7 @@ export default {
     }
     if(url.pathname.endsWith("/admin/settings")&&request.method==="POST"){
       try{
-        const token=(request.headers.get("Authorization")||"").replace(/^Bearer\\s+/i,"");
+        const token=(request.headers.get("Authorization")||"").replace(/^Bearer\s+/i,"");
         if(!await validToken(token))return json({ok:false,error:"認証の有効期限が切れています"},401);
         if(!env.TALK_INSIGHT_KV)return json({ok:false,error:"TALK_INSIGHT_KV binding is not configured"},503);
         const body=await request.json();
