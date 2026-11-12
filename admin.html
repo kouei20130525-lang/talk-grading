@@ -23,7 +23,8 @@
 <div class="page" id="page-security"><div class="eyebrow">09 / SECURITY</div><h2>管理者設定</h2><div class="warning"><b>この認証は暫定的なローカルロックです。</b><br>パスワードのハッシュはこのブラウザに保存されます。ソースコードを確認できる利用者から管理画面を守るものではありません。公開運用前にサーバー側認証へ移行してください。</div><div class="field"><label>新しい管理者パスワード</label><input id="newPassword" type="password" autocomplete="new-password" minlength="12" placeholder="12文字以上"></div><button class="btn primary" id="changePassword">パスワードを変更</button></div>
 </section></div><footer>ADMIN CONTROL CENTER · GLOBAL SETTINGS API READY / APP INTEGRATION PENDING</footer></main>
 <script>
-const $=id=>document.getElementById(id),KEY='ti-admin-config-v1',HASH='ti-admin-password-hash',LOG='ti-admin-logs-v1',WORKER='ti-admin-worker-url';\nlet remoteToken=null,saveTimer=null;
+const $=id=>document.getElementById(id),KEY='ti-admin-config-v1',HASH='ti-admin-password-hash',LOG='ti-admin-logs-v1',WORKER='ti-admin-worker-url';
+let remoteToken=null,saveTimer=null;
 const defaults={features:{'音声認識':true,'手動文字入力':true,'会話分析':true,'採点・評価':true,'AI採点':true,'ミッション機能':true,'会話履歴':true,'コーチ機能':true,'スキル分析':true,'Talk Ready':true,'結果画面':true},scores:{naturalness:20,balance:20,interaction:20,listening:20,development:20},scoreNotes:'',design:{yellow:'#f2ce48',purple:'#9875ed',green:'#55c995',blue:'#55a9ec',opacity:27,blur:32},releases:[{version:'2.2.0',title:'管理者メニュー初期実装',body:'ロゴ5回クリックから管理コンソールを起動\n開発者向け管理UIを追加',date:'2026.11.12'}]};
 let config=load(),page='overview';
 function load(){try{return {...defaults,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch(e){return structuredClone(defaults)}}
@@ -50,7 +51,8 @@ async function auth(){
  }
  sessionStorage.setItem('ti-admin-auth','1');$('auth').classList.add('hide');$('console').classList.remove('hide');$('password').value='';renderAll()
 }
-$('login').onclick=auth;$('password').addEventListener('keydown',e=>{if(e.key==='Enter')auth()});$('back').onclick=()=>location.href='index.html';$('logout').onclick=()=>{sessionStorage.removeItem('ti-admin-auth');sessionStorage.removeItem('ti-admin-token');location.reload()};\n$('workerUrl').value=localStorage.getItem(WORKER)||'';remoteToken=sessionStorage.getItem('ti-admin-token');
+$('login').onclick=auth;$('password').addEventListener('keydown',e=>{if(e.key==='Enter')auth()});$('back').onclick=()=>location.href='index.html';$('logout').onclick=()=>{sessionStorage.removeItem('ti-admin-auth');sessionStorage.removeItem('ti-admin-token');location.reload()};
+$('workerUrl').value=localStorage.getItem(WORKER)||'';remoteToken=sessionStorage.getItem('ti-admin-token');
 if(sessionStorage.getItem('ti-admin-auth')==='1'){$('auth').classList.add('hide');$('console').classList.remove('hide')}
 $('nav').addEventListener('click',e=>{const b=e.target.closest('[data-page]');if(!b)return;page=b.dataset.page;document.querySelectorAll('.navbtn').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id==='page-'+page))});
 function renderFeatures(){$('featureList').innerHTML=Object.entries(config.features).map(([k,v])=>'<div class="item row"><b>'+k+'</b><label><input class="switch" type="checkbox" data-feature="'+k+'" '+(v?'checked':'')+'> <span class="status">'+(v?'ON':'OFF')+'</span></label></div>').join('');$('featureList').querySelectorAll('[data-feature]').forEach(x=>x.onchange=()=>{config.features[x.dataset.feature]=x.checked;x.nextElementSibling.textContent=x.checked?'ON':'OFF';save('機能設定を自動保存')})}
