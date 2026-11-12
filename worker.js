@@ -44,7 +44,7 @@ export default {
       .replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
     const decodeB64 = value => {
       const s = String(value).replace(/-/g, "+").replace(/_/g, "/");
-      return Uint8Array.from(atob(s + "===".slice((4 - s.length % 4) % 4)), c => c.charCodeAt(0));
+      return Uint8Array.from(atob(s + "=".repeat((4 - s.length % 4) % 4)), c => c.charCodeAt(0));
     };
     const makeToken = async () => {
       if (!env.ADMIN_TOKEN_SECRET) throw new Error("ADMIN_TOKEN_SECRET is not configured");
