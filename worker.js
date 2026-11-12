@@ -57,14 +57,17 @@ export default {
     };
     const validToken = async token => {
       try {
-        const [payload, signature] = String(token || "").split(".");
-        if (!payload || !signature || !env.ADMIN_TOKEN_SECRET) return false;
-        const data = JSON.parse(new TextDecoder().decode(decodeB64(payload)));
+        const parts = String(token || "").split(".");
+        if (parts.length !== 2 || !parts[0] || !parts[1]) return "トークン形式が不正です";
+        if (!env.ADMIN_TOKEN_SECRET) return "ADMIN_TOKEN_SECRETが未設定です";
+        const data = JSON.parse(new TextDecoder().decode(decodeB64(parts[0])));
+        if (data.sub !== "admin") return "トークンの利用者情報が不正です";
+        if (!(data.exp > Date.now())) return "トークンの有効期限が切れています";
         const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(env.ADMIN_TOKEN_SECRET),
           { name: "HMAC", hash: "SHA-256" }, false, ["verify"]);
-        return data.sub === "admin" && data.exp > Date.now() &&
-          await crypto.subtle.verify("HMAC", key, decodeB64(signature), new TextEncoder().encode(payload));
-      } catch { return false; }
+        const verified = await crypto.subtle.verify("HMAC", key, decodeB64(parts[1]), new TextEncoder().encode(parts[0]));
+        return verified ? true : "署名が一致しません（ログイン時と現在のADMIN_TOKEN_SECRETが異なる可能性があります）";
+      } catch (e) { return "トークン検証エラー: " + (e.message || "不明なエラー"); }
     };
 
     if (url.pathname.endsWith("/settings") && request.method === "GET") {
@@ -95,7 +98,8 @@ export default {
     if (url.pathname.endsWith("/admin/settings") && request.method === "POST") {
       try {
         const token = (request.headers.get("Authorization") || "").replace(/^Bearer\s+/i, "");
-        if (!await validToken(token)) return json({ ok: false, error: "認証の有効期限が切れています" }, 401);
+        const tokenCheck = await validToken(token);
+        if (tokenCheck !== true) return json({ ok: false, error: tokenCheck }, 401);
         if (!env.TALK_INSIGHT_KV) return json({ ok: false, error: "TALK_INSIGHT_KV binding is not configured" }, 503);
         const body = await request.json();
         if (!body.settings || typeof body.settings !== "object" ||
