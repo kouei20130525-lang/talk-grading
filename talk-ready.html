@@ -163,6 +163,38 @@ mark{background:var(--mark);color:var(--mark-ink);border-radius:4px;padding:0 3p
 .export{background:linear-gradient(120deg,rgba(255,225,118,.18),rgba(190,168,245,.18),rgba(137,208,171,.15),rgba(145,184,245,.18))}
 @media(max-width:600px){.wrap{padding:20px 13px 36px}section{padding:17px 14px;border-radius:18px}}
 
+
+/* v2.0.1 — Liquid Glass and full-width responsive practice */
+html,body{width:100%;min-width:0;overflow-x:hidden}
+body{
+ background-color:#f7f8fc;
+ background-image:
+  radial-gradient(ellipse at 0% 0%,rgba(255,222,112,.32),transparent 38%),
+  radial-gradient(ellipse at 100% 0%,rgba(170,139,246,.29),transparent 40%),
+  radial-gradient(ellipse at 0% 100%,rgba(113,211,166,.24),transparent 38%),
+  radial-gradient(ellipse at 100% 100%,rgba(117,171,250,.27),transparent 40%),
+  linear-gradient(135deg,#fbfcff,#f4f5fc 48%,#fbfcff);
+ background-attachment:fixed;
+}
+.wrap{width:100%;max-width:none;min-width:0;margin:0;padding:clamp(18px,3vw,42px) clamp(16px,3vw,48px) 52px}
+section{
+ background:linear-gradient(135deg,rgba(255,255,255,.58),rgba(255,255,255,.24) 55%,rgba(242,239,255,.3));
+ border:1px solid rgba(255,255,255,.88);border-radius:26px;
+ box-shadow:0 22px 70px rgba(55,62,96,.10),inset 0 1px 0 rgba(255,255,255,.95);
+ backdrop-filter:blur(32px) saturate(170%);-webkit-backdrop-filter:blur(32px) saturate(170%);
+}
+.phrase,.chip,.stair,.toggle,.export-btn,.say{
+ background:rgba(255,255,255,.42);border:1px solid rgba(255,255,255,.9);
+ box-shadow:0 10px 30px rgba(55,62,96,.06),inset 0 1px 0 #fff;
+ backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+}
+.chip[aria-pressed="true"],.stair[aria-pressed="true"]{
+ background:linear-gradient(115deg,rgba(255,222,112,.5),rgba(170,139,246,.38),rgba(113,211,166,.3),rgba(117,171,250,.34));
+}
+.phrase{border-radius:20px}
+.export{background:linear-gradient(120deg,rgba(255,222,112,.28),rgba(170,139,246,.25),rgba(113,211,166,.2),rgba(117,171,250,.24))}
+@media(max-width:720px){.wrap{padding:16px 12px 34px}section{border-radius:20px}}
+
 </style>
 </head>
 <body>
