@@ -494,25 +494,27 @@ body{
 }
 
 
-/* v2.1.1 — compact settings and scrollable release notes */
-.settings-screen{width:min(100%,1040px);max-height:calc(100dvh - 36px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:rgba(134,98,214,.48) rgba(255,255,255,.12);padding:4px 12px 28px}
-.settings-screen::-webkit-scrollbar{width:8px}
-.settings-screen::-webkit-scrollbar-track{background:rgba(255,255,255,.12);border-radius:99px}
-.settings-screen::-webkit-scrollbar-thumb{background:linear-gradient(180deg,rgba(255,222,112,.8),rgba(170,139,246,.8),rgba(113,211,166,.8),rgba(117,171,250,.8));border:2px solid transparent;background-clip:padding-box;border-radius:99px}
-.release-list{max-height:290px;overflow-y:auto;overscroll-behavior:contain;padding:2px 12px 3px 2px;margin-right:-5px;scrollbar-width:thin;scrollbar-color:rgba(134,98,214,.5) rgba(255,255,255,.12)}
-.release-list::-webkit-scrollbar{width:7px}
-.release-list::-webkit-scrollbar-track{background:rgba(255,255,255,.14);border-radius:99px}
-.release-list::-webkit-scrollbar-thumb{background:linear-gradient(180deg,rgba(255,222,112,.85),rgba(170,139,246,.85),rgba(113,211,166,.85),rgba(117,171,250,.85));border:1px solid rgba(255,255,255,.48);border-radius:99px}
-.settings-card{background:rgba(255,255,255,.20);border-color:rgba(255,255,255,.68);box-shadow:0 18px 52px rgba(45,58,105,.08),inset 0 1px 0 rgba(255,255,255,.78);backdrop-filter:blur(34px) saturate(185%);-webkit-backdrop-filter:blur(34px) saturate(185%)}
-.settings-head{position:sticky;top:0;z-index:5;padding:12px 0;background:linear-gradient(180deg,rgba(239,242,252,.82),rgba(239,242,252,.45));backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
-@media(max-width:720px){.settings-screen{max-height:calc(100dvh - 18px);padding-inline:4px}.release-list{max-height:250px}}
+/* v2.1.2 — compact settings and scrollable release notes */
+/* v2.1.2 — settings fit without scrolling */
+.settings-screen{width:min(100%,1040px);max-height:none;overflow:visible;overscroll-behavior:auto;padding:4px 12px 8px}
+.settings-card{margin-top:8px;padding:12px 15px;background:rgba(255,255,255,.20);border-color:rgba(255,255,255,.68);box-shadow:0 18px 52px rgba(45,58,105,.08),inset 0 1px 0 rgba(255,255,255,.78);backdrop-filter:blur(34px) saturate(185%);-webkit-backdrop-filter:blur(34px) saturate(185%)}
+.settings-head{position:static;padding:4px 0 8px;margin-bottom:4px;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none}
+.settings-card h3{margin-bottom:6px}
+.settings-card>p,.release p{font-size:10px;line-height:1.55;margin-bottom:6px}
+.settings-line{padding:5px 0}
+.release-list{max-height:none;overflow:visible;padding:0;margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 14px}
+.release:nth-child(n+3){display:none}
+.release{padding:5px 0;border-bottom:1px solid rgba(255,255,255,.42)}
+.release time,.release b{font-size:10px}
+.release p{display:none}
+@media(max-width:720px){.settings-screen{padding:2px 4px 6px}.settings-card{padding:10px 12px;margin-top:6px}.settings-head{padding:2px 0 5px}.release-list{grid-template-columns:1fr;gap:2px}.release:nth-child(n+3){display:none}.settings-card>p{font-size:9px}.settings-line{font-size:10px}.settings-line b{font-size:10px}}
 
 </style></head>
 <body><main class="app">
 <header class="nav"><div class="nav-orbit orbit-one" aria-hidden="true"></div><div class="nav-orbit orbit-two" aria-hidden="true"></div><div class="brand"><div class="logo">TI</div><div><strong>TALK INSIGHT</strong><small>CONVERSATION INTELLIGENCE</small></div></div><div class="nav-actions"><button class="tutorial-help" id="openTutorial" type="button">使い方</button><button class="settings-toggle" id="openSettings" aria-label="設定を開く"><span class="settings-glyph" aria-hidden="true"></span></button><div class="livepill">SYSTEM READY</div></div></header>
 <section class="hero"><div class="eyebrow">LISTEN · CONNECT · COMMUNICATE</div><h1>Talk, Together.</h1><p>2人の会話を、5つの視点から分析。</p></section>
 <div class="tabs"><button class="tab active" id="tabAnalysis" type="button">CONVERSATION ANALYSIS</button><button class="tab" id="tabTalkReady" type="button">TALK READY / ENGLISH PRACTICE</button></div>
-<section id="talkReadyPanel" class="glass panel" style="display:none;padding:0;overflow:hidden"><iframe class="talk-ready-frame" src="talk-ready.html?v=2.1.1" title="Talk Ready 英会話フレーズ練習" loading="eager" scrolling="auto"></iframe></section>
+<section id="talkReadyPanel" class="glass panel" style="display:none;padding:0;overflow:hidden"><iframe class="talk-ready-frame" src="talk-ready.html?v=2.1.2" title="Talk Ready 英会話フレーズ練習" loading="eager" scrolling="auto"></iframe></section>
 <section id="setup" class="glass panel"><div class="grid">
 <div><h2 class="heading">01 / CONVERSATION SETUP</h2>
 <div class="field"><label>会話形式</label><select id="playMode"><option value="solo">個人</option><option value="duo" selected>2人</option></select></div>
@@ -536,8 +538,8 @@ body{
 <div class="resultgrid" id="metrics"></div><div class="feedback"><h3>01 / SUMMARY　総合講評</h3><p id="summary">分析結果を待っています。</p></div><div class="feedback"><h3>02 / STRENGTHS　良かったところ</h3><ul id="good"></ul></div><div class="feedback"><h3>03 / NEXT STEP　改善アドバイス</h3><ul id="advice"></ul></div><div class="feedback"><h3>04 / SPEAKER REVIEW　話者別コメント</h3><div id="speakers"></div></div><div class="feedback"><h3>05 / TRANSCRIPT　会話ログ</h3><div id="log" style="font-size:11px;line-height:1.9;white-space:pre-wrap;max-height:220px;overflow:auto"></div></div><div class="feedback"><h3>06 / CONVERSATION REPLAY　会話リプレイ</h3><p>録音音声ではなく、文字起こしを発言順・経過時間に沿って再生します。</p><div class="replay-screen" id="replayScreen"><span>REPLAY READY</span><b id="replayText">会話ログを時間順に振り返れます。</b><small id="replayMeta">00:00 / 00:00</small></div><div class="record-controls"><button class="softbtn" id="replayStart">リプレイ開始</button><button class="softbtn" id="replayStop">停止</button></div></div><div class="feedback"><h3>07 / AI COACH　会話コーチ</h3><p id="coachIntro">会話の分析結果から、次に試すと効果的な練習を提案します。</p><ul id="coachList"></ul></div><div class="feedback"><h3>08 / SKILL PROFILE　会話スキル診断</h3><p>5つの観点から、今回の会話スキルを診断します。</p><div id="skillProfile" class="skill-profile"></div></div><div class="feedback"><h3>09 / MISSION RESULT　ミッション結果</h3><p id="missionResult">ミッションの達成状況を表示します。</p></div>
 <div class="feedback" id="manualAI" style="display:none"><h3>CHATGPT HANDOFF / API不要の採点</h3><p>①採点指示をコピー → ②ChatGPTを開いて貼り付け → ③返ってきたJSONを下に貼り付けて反映。</p><div class="record-controls"><button class="softbtn" id="copyPrompt">採点指示をコピー</button><button class="softbtn" id="openChatGPT">ChatGPTを開く</button></div><textarea id="aiReply" rows="7" placeholder="ChatGPTの回答（JSON）をここに貼り付け" style="width:100%;margin-top:12px;padding:13px;border:1px solid rgba(255,255,255,.8);border-radius:13px;background:rgba(255,255,255,.48);font:12px monospace;color:var(--ink)"></textarea><button class="primary" id="applyAI" style="margin-top:10px">採点結果を反映</button><textarea id="promptText" aria-label="採点指示" readonly style="position:absolute;left:-9999px;top:-9999px"></textarea></div><button class="primary" id="retry" style="margin-top:18px">NEW CONVERSATION</button></section>
 <section id="settings" class="glass panel settings-screen" style="display:none"><div class="settings-head"><div><div class="heading">SYSTEM PREFERENCES</div><h2 style="margin:0 0 5px">設定</h2><p class="hint" style="margin:0">アプリの動作や情報を管理します。</p></div><button class="softbtn" id="closeSettings">← 戻る</button></div><div class="settings-card"><h3>採点方式</h3><p>標準の採点はアプリ内で完結します。会話テキストは採点のために外部サーバーへ送信しません。</p><div class="settings-line"><span>採点エンジン</span><b>ローカル自動分析</b></div><div class="settings-line"><span>APIキー</span><b>不要</b></div><div class="settings-line"><span>通信</span><b>採点時の外部送信なし</b></div></div><div class="settings-card"><h3>更新履歴</h3>
-<div class="release-list" aria-label="更新履歴・スクロール可能">
-<div class="release"><time>2026.11.12 · v2.1.1</time><b>設定画面を整理</b><p>更新履歴に高さの上限を設けてスクロール表示に変更。バージョン管理の説明を削除し、アプリ情報を見やすく整理しました。</p></div><div class="release"><time>2026.11.12 · v2.1.0</time><b>iOS風リキッドグラスを強化</b><p>透明度を高め、背景が透けるガラス素材・強いぼかし・彩度・内側の反射光を全画面に適用。会話分析、設定、TALK READYの質感を統一しました。</p></div><div class="release"><time>2026.11.12 · v2.0.3</time><b>外枠を一周する光の動きを修正</b><p>パネル自体を回転させず、外周のグラデーション角度を動かす方式に変更。光が角丸の外枠に沿って一周するようにしました。</p></div><div class="release"><time>2026.11.12 · v2.0.2</time><b>外枠に回転するきらめきを追加</b><p>リキッドグラスのパネル外周に、黄色・紫・緑・青・白の光がゆっくり巡るアニメーションを追加しました。</p></div><div class="release"><time>2026.11.12 · v2.0.1</time><b>iPad横画面とリキッドグラスを改善</b><p>画面幅いっぱいに広がるレイアウトへ調整し、左右の不要な余白や項目の見切れを防止。背景・パネル・入力欄・分析カードに透明感と奥行きのあるリキッドグラス表現を追加しました。</p></div><div class="release"><time>2026.11.12 · v2.0.0</time><b>デザインを全面リニューアル</b><p>PREMIUM GLASSとAI CONTROL CENTERを融合。黄色・紫・緑・青の4色をアクセントに、会話分析を中心としたデザインへ刷新しました。リアルタイム分析を大型化し、設定と英会話練習画面も統一しました。</p></div><div class="release"><time>2026.11.12 · v1.9.0</time><b>はじめてガイドを追加</b><p>初回起動時に4ステップの短いチュートリアルを表示。ヘッダーからいつでも見直せます。</p></div>
+<div class="release-list" aria-label="更新履歴">
+<div class="release"><time>2026.11.12 · v2.1.2</time><b>設定画面のスクロールを撤廃</b><p>設定画面をスクロール不要のコンパクト表示に変更。更新履歴は最新2件を表示します。</p></div><div class="release"><time>2026.11.12 · v2.1.0</time><b>iOS風リキッドグラスを強化</b><p>透明度を高め、背景が透けるガラス素材・強いぼかし・彩度・内側の反射光を全画面に適用。会話分析、設定、TALK READYの質感を統一しました。</p></div><div class="release"><time>2026.11.12 · v2.0.3</time><b>外枠を一周する光の動きを修正</b><p>パネル自体を回転させず、外周のグラデーション角度を動かす方式に変更。光が角丸の外枠に沿って一周するようにしました。</p></div><div class="release"><time>2026.11.12 · v2.0.2</time><b>外枠に回転するきらめきを追加</b><p>リキッドグラスのパネル外周に、黄色・紫・緑・青・白の光がゆっくり巡るアニメーションを追加しました。</p></div><div class="release"><time>2026.11.12 · v2.0.1</time><b>iPad横画面とリキッドグラスを改善</b><p>画面幅いっぱいに広がるレイアウトへ調整し、左右の不要な余白や項目の見切れを防止。背景・パネル・入力欄・分析カードに透明感と奥行きのあるリキッドグラス表現を追加しました。</p></div><div class="release"><time>2026.11.12 · v2.0.0</time><b>デザインを全面リニューアル</b><p>PREMIUM GLASSとAI CONTROL CENTERを融合。黄色・紫・緑・青の4色をアクセントに、会話分析を中心としたデザインへ刷新しました。リアルタイム分析を大型化し、設定と英会話練習画面も統一しました。</p></div><div class="release"><time>2026.11.12 · v1.9.0</time><b>はじめてガイドを追加</b><p>初回起動時に4ステップの短いチュートリアルを表示。ヘッダーからいつでも見直せます。</p></div>
 <div class="release"><time>2026.11.12 · v1.8.1</time><b>音声認識の案内を改善</b><p>マイクの利用条件を分かりやすくし、手動入力で採点した場合に結果へ表示するようにしました。</p></div>
 <div class="release"><time>2026.11.12 · v1.8.0</time><b>iPad・ロイロWebカードに最適化</b><p>タッチ操作と縦画面表示を改善。音声認識が使えない場合の手動入力モードを追加しました。</p></div>
 <div class="release"><time>2026.11.12 · v1.7.2</time><b>英会話練習画面の視認性を改善</b><p>文字の大きさや色のコントラスト、項目間の間隔を調整しました。</p></div>
@@ -551,7 +553,7 @@ body{
 <div class="release"><time>2026.11.06 · v1.1.0</time><b>会話分析機能を追加</b><p>会話の録音、話者切替、文字起こし、結果表示に対応しました。</p></div>
 <div class="release"><time>2026.11.05 · v1.0.0</time><b>初回リリース</b><p>TALK INSIGHTを公開しました。</p></div>
 </div>
-</div><div class="settings-card about-card"><h3>アプリ情報</h3><div class="settings-line"><span>アプリ名</span><b>TALK INSIGHT</b></div><div class="settings-line"><span>エディション</span><b>Conversation Intelligence</b></div><div class="settings-line"><span>バージョン</span><b>2.1.1</b></div><div class="settings-line"><span>AI採点方式</span><b>アプリ内ローカル分析</b></div></div></section>
+</div><div class="settings-card about-card"><h3>アプリ情報</h3><div class="settings-line"><span>アプリ名</span><b>TALK INSIGHT</b></div><div class="settings-line"><span>エディション</span><b>Conversation Intelligence</b></div><div class="settings-line"><span>バージョン</span><b>2.1.2</b></div><div class="settings-line"><span>AI採点方式</span><b>アプリ内ローカル分析</b></div></div></section>
 <div class="tutorial-backdrop" id="tutorial" hidden>
  <section class="tutorial-card" role="dialog" aria-modal="true" aria-labelledby="tutorialTitle" aria-describedby="tutorialText">
   <div class="tutorial-top"><span class="tutorial-kicker">TALK INSIGHT / QUICK GUIDE</span><span class="tutorial-count" id="tutorialCount">01 / 04</span></div>
