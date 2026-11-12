@@ -191,9 +191,11 @@ body:before{opacity:.12;background-size:22px 22px}
 <section id="talkReadyPanel" class="glass panel" style="display:none;padding:0;overflow:hidden"><iframe class="talk-ready-frame" src="talk-ready.html" title="Talk Ready 英会話フレーズ練習" loading="lazy"></iframe></section>
 <section id="setup" class="glass panel"><div class="grid">
 <div><h2 class="heading">01 / CONVERSATION SETUP</h2>
+<div class="field"><label>プレイモード</label><select id="playMode"><option value="solo">個人</option><option value="duo" selected>2人</option></select></div>
 <div class="field"><label>話者1の名前</label><input id="name1" maxlength="18" value="PLAYER 1"></div>
-<div class="field"><label>話者2の名前</label><input id="name2" maxlength="18" value="PLAYER 2"></div>
-<div class="field"><label>会話テーマ</label><select id="theme"><option>フリートーク</option><option>お互いの趣味を紹介</option><option>休日の計画を立てる</option><option>意見交換・ディスカッション</option><option>初対面の自己紹介</option><option>学校生活について話す</option></select></div>
+<div class="field" id="name2Field"><label>話者2の名前</label><input id="name2" maxlength="18" value="PLAYER 2"></div>
+<div class="field"><label>会話テーマ（20テーマ）</label><select id="theme"><option value="自己紹介">自己紹介</option><option value="趣味">趣味</option><option value="学校生活">学校生活</option><option value="週末の予定">週末の予定</option><option value="旅行">旅行</option><option value="食べ物">食べ物</option><option value="音楽">音楽</option><option value="映画・ドラマ">映画・ドラマ</option><option value="スポーツ">スポーツ</option><option value="家族">家族</option><option value="友達">友達</option><option value="将来の夢">将来の夢</option><option value="買い物">買い物</option><option value="天気・季節">天気・季節</option><option value="健康">健康</option><option value="地元・住んでいる町">地元・住んでいる町</option><option value="動物・ペット">動物・ペット</option><option value="テクノロジー・スマホ">テクノロジー・スマホ</option><option value="環境問題">環境問題</option><option value="日本の文化">日本の文化</option><option value="その他">その他</option></select></div>
+<div class="field" id="customThemeField" style="display:none"><label>テーマを入力</label><input id="customTheme" maxlength="80" placeholder="話したい内容を入力してください"></div>
 <div class="field"><label>会話時間</label><select id="duration"><option value="60">1分</option><option value="180" selected>3分</option><option value="300">5分</option><option value="600">10分</option></select></div><div class="field"><label>お題ミッション</label><select id="mission"><option value="free">フリーミッション</option><option value="question">質問マスター：質問を3回する</option><option value="listen">聞き上手：相手への反応を3回する</option><option value="deep">深掘り名人：理由や具体例を加える</option><option value="balance">バランス：交互に4回以上話す</option></select></div><div class="field"><label>ミッション難易度</label><select id="missionLevel"><option value="1">LEVEL 1 / BASIC</option><option value="2" selected>LEVEL 2 / STANDARD</option><option value="3">LEVEL 3 / ADVANCED</option></select></div></div>
 <div><h2 class="heading">02 / LOCAL EVALUATION</h2><div class="topic"><small>ANALYSIS TARGET</small><h3>会話の特徴を多角的に分析</h3><p>自然さ・発言バランス・質問・返答・反応表現・話題の広がりを、会話ログから分析します。</p><div class="topic-foot"><span style="font-size:10px;color:#6b82b7">LOCAL ANALYSIS ENGINE</span></div></div>
 <p class="hint" style="margin-top:15px"><b>API不要のChatGPT採点に対応。</b> 会話終了後に採点指示をコピーしてChatGPTに貼り付け、結果を戻せます。詳細設定は右上の設定から。</p></div></div>
@@ -217,7 +219,7 @@ body:before{opacity:.12;background-size:22px 22px}
 </div><div class="settings-card about-card"><h3>アプリ情報</h3><div class="settings-line"><span>アプリ名</span><b>TALK BATTLE</b></div><div class="settings-line"><span>エディション</span><b>Conversation Intelligence</b></div><div class="settings-line"><span>バージョン</span><b>1.6.0</b></div><div class="settings-line"><span>AI採点方式</span><b>アプリ内ローカル分析</b></div></div></section><footer class="footer">TALK BATTLE · CONVERSATION INTELLIGENCE · LIQUID GLASS UI</footer></main>
 <script>
 const $=id=>document.getElementById(id);let active=1,recognition=null,turns=[],timer=null,startAt=0,seconds=180,elapsed=0,interim='',replayTimer=null,replayIndex=0;
-function setSpeaker(n){active=n;$('speaker1').classList.toggle('active',n===1);$('speaker2').classList.toggle('active',n===2);$('activeName').textContent=(n===1?$('name1').value:$('name2').value)+' の発言を記録中'}
+function setSpeaker(n){if(n===2&&$('playMode')?.value==='solo')return;active=n;$('speaker1').classList.toggle('active',n===1);$('speaker2').classList.toggle('active',n===2);$('activeName').textContent=(n===1?$('name1').value:$('name2').value)+' の発言を記録中'}
 $('speaker1').onclick=()=>setSpeaker(1);$('speaker2').onclick=()=>setSpeaker(2);
 function drawLog(){updateLiveAnalysis();if(!turns.length){$('transcript').innerHTML='<div class="empty">会話がここに文字起こしされます。</div>';return}$('transcript').innerHTML=turns.map(t=>'<div class="turn '+(t.speaker===2?'s2':'')+'"><b>'+escapeHtml(t.name)+'：</b>'+escapeHtml(t.text)+'</div>').join('')+(interim?'<div class="turn" style="opacity:.5">'+escapeHtml(interim)+'</div>':'');$('transcript').scrollTop=$('transcript').scrollHeight}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -244,7 +246,7 @@ function updateLiveAnalysis(){
  const reacts=turns.filter((t,i)=>i>0&&['そうなんだ','なるほど','たしかに','わかる','それで','でも','だから','いいね','すごい','どういう','私も','僕も','そう思う'].some(w=>t.text.includes(w))).length;
  $('liveTurns').textContent=total;$('liveQuestions').textContent=q;$('liveReactions').textContent=reacts;
  $('liveCount1').textContent=n1;$('liveCount2').textContent=n2;
- $('liveBalance').textContent=total?Math.round(Math.min(n1,n2)/Math.max(n1,n2,1)*100)+'%':'--';
+ $('liveBalance').textContent=$('playMode')?.value==='solo'?(total?'100%':'--'):(total?Math.round(Math.min(n1,n2)/Math.max(n1,n2,1)*100)+'%':'--');
  $('liveBar1').style.width=(total?n1/total*100:0)+'%';$('liveBar2').style.width=(total?n2/total*100:0)+'%';
  const id=$('mission')?.value||'free',m=missionData[id]||missionData.free,count=missionCount(),base=m.goal,level=Number($('missionLevel')?.value||2),goal=base?Math.max(1,base+(level===1?-1:level===3?2:0)):0;
  $('missionLiveTitle').textContent=m.title;$('missionProgress').textContent=goal?Math.min(count,goal)+' / '+goal:'自由練習';
@@ -287,16 +289,16 @@ function buildSkillProfile(r){
 function stopRecognition(){if(recognition){try{recognition.stop()}catch(e){}recognition=null}}
 async function start(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert('このブラウザは音声認識に対応していません。ChromeまたはEdgeをお試しください。');return}
 try{const test=await navigator.mediaDevices.getUserMedia({audio:true});test.getTracks().forEach(t=>t.stop());}catch(e){alert('マイクを利用できません。ブラウザのマイク権限を確認してください。');return}
-turns=[];interim='';drawLog();active=1;setSpeaker(1);seconds=Number($('duration').value);elapsed=0;startAt=Date.now();$('setup').style.display='none';$('result').classList.remove('show');$('record').classList.add('show');
+turns=[];interim='';drawLog();active=1;setSpeaker(1);seconds=Number($('duration').value);elapsed=0;if($('playMode').value==='solo')setSpeaker(1);startAt=Date.now();$('setup').style.display='none';$('result').classList.remove('show');$('record').classList.add('show');
 recognition=new SR();recognition.lang='ja-JP';recognition.continuous=true;recognition.interimResults=true;recognition.onresult=e=>{interim='';for(let i=e.resultIndex;i<e.results.length;i++){const text=e.results[i][0].transcript;if(e.results[i].isFinal&&text.trim()){turns.push({speaker:active,name:active===1?$('name1').value:$('name2').value,text:text.trim(),time:Math.floor((Date.now()-startAt)/1000)})}else interim+=text}drawLog()};recognition.onerror=e=>{if(e.error!=='no-speech')$('aiStatus').textContent='音声認識エラー: '+e.error};recognition.onend=()=>{if($('record').classList.contains('show')){try{recognition&&recognition.start()}catch(e){}}};try{recognition.start()}catch(e){alert('音声認識を開始できませんでした。');}
 timer=setInterval(()=>{elapsed=Math.floor((Date.now()-startAt)/1000);$('timer').textContent=String(Math.floor(elapsed/60)).padStart(2,'0')+':'+String(elapsed%60).padStart(2,'0');updateLiveAnalysis();if(elapsed>=seconds)finish()},300)}
-function finish(){clearInterval(timer);stopRecognition();$('record').classList.remove('show');$('result').classList.add('show');$('total').innerHTML='…<small> / 100</small>';$('aiStatus').textContent='LOCAL ANALYZING';$('summary').textContent='アプリ内で会話の特徴を分析しています…';$('names').textContent=$('name1').value+' × '+$('name2').value;$('log').textContent=turns.map(t=>t.name+'：'+t.text).join('\n');if(!turns.length){$('aiStatus').textContent='NO TRANSCRIPT';$('summary').textContent='会話を文字起こしできませんでした。ChromeまたはEdgeでマイクを確認して、もう一度試してください。';$('total').innerHTML='--<small> / 100</small>';return}gradeWithAI()}
+function finish(){clearInterval(timer);stopRecognition();$('record').classList.remove('show');$('result').classList.add('show');$('total').innerHTML='…<small> / 100</small>';$('aiStatus').textContent='LOCAL ANALYZING';$('summary').textContent='アプリ内で会話の特徴を分析しています…';$('names').textContent=$('playMode').value==='solo'?$('name1').value:$('name1').value+' × '+$('name2').value;$('log').textContent=turns.map(t=>t.name+'：'+t.text).join('\n');if(!turns.length){$('aiStatus').textContent='NO TRANSCRIPT';$('summary').textContent='会話を文字起こしできませんでした。ChromeまたはEdgeでマイクを確認して、もう一度試してください。';$('total').innerHTML='--<small> / 100</small>';return}gradeWithAI()}
 function localAnalyze(){
  const clean=turns.map(t=>({...t,text:String(t.text||'').trim()})).filter(t=>t.text);
  const a=clean.filter(t=>t.speaker===1),b=clean.filter(t=>t.speaker===2);
  const count1=a.length,count2=b.length,total=clean.length;
  const ratio=total?Math.min(count1,count2)/Math.max(count1,count2,1):0;
- const balance=Math.round(20*(0.45+0.55*ratio));
+ const balance=$('playMode')?.value==='solo'?20:Math.round(20*(0.45+0.55*ratio));
  const qCount=clean.filter(t=>/[？?]|(なぜ|どうして|どう思う|どんな|いつ|どこ|誰|何が|かな)/.test(t.text)).length;
  const questionRate=total?qCount/total:0;
  const interaction=Math.min(20,Math.round(7+questionRate*28+Math.min(total,12)*.45));
@@ -326,7 +328,7 @@ function localAnalyze(){
  if(development<14)improvements.push('理由や具体例、体験談を付け足して、話題を一歩深めてみましょう。');
  if(!improvements.length)improvements.push('今の会話を土台に、理由や具体例を加えてさらに深めましょう。');
  const speakerComment=(arr,name)=>arr.length?name+'は'+arr.length+'回発言しました。'+(arr.length>=3?'自分の考えを伝えられています。':'もう少し発言を増やすと、会話への参加がより伝わります。'):'発言が記録されていません。マイクの話者切替を確認しましょう。';
- return {total_score,grade,scores,summary:'会話の記録 '+total+'ターンをもとに、発言バランス・質問の数・反応表現・語彙の広がりなどをブラウザ内で分析しました。これはルールベースの参考評価で、発言の意味や本当の傾聴をAIが理解した評価ではありません。',good_points,improvements,speaker1_comment:speakerComment(a,$('name1').value),speaker2_comment:speakerComment(b,$('name2').value)};
+ return {total_score,grade,scores,summary:'会話の記録 '+total+'ターンをもとに、'+($('playMode')?.value==='solo'?'個人の発話内容':'発言バランス')+'・質問の数・反応表現・語彙の広がりなどをブラウザ内で分析しました。これはルールベースの参考評価で、発言の意味や本当の傾聴をAIが理解した評価ではありません。',good_points,improvements,speaker1_comment:speakerComment(a,$('name1').value),speaker2_comment:speakerComment(b,$('name2').value)};
 }
 function gradeWithAI(){
  $('manualAI').style.display='none';
@@ -336,11 +338,15 @@ function gradeWithAI(){
  renderAI(result);
  $('aiStatus').textContent='ON-DEVICE ANALYSIS COMPLETE';
 }
-function renderAI(r){$('aiStatus').textContent='LOCAL ANALYSIS COMPLETE';$('total').innerHTML=Number(r.total_score)+'<small> / 100</small>';$('grade').textContent=r.grade||'OVERALL SCORE';$('summary').textContent=r.summary||'';const labels=[['自然さ','naturalness'],['発言バランス','balance'],['質問・返答','interaction'],['傾聴・理解','listening'],['話題の広がり','development']];$('metrics').innerHTML=labels.map(([l,k])=>'<div class="stat"><b>'+Number(r.scores?.[k]??0)+'</b><span>'+l+'</span></div>').join('');$('good').innerHTML=(r.good_points||[]).map(x=>'<li>'+escapeHtml(x)+'</li>').join('');$('advice').innerHTML=(r.improvements||[]).map(x=>'<li>'+escapeHtml(x)+'</li>').join('');$('speakers').innerHTML='<p><b>'+$('name1').value+'：</b>'+escapeHtml(r.speaker1_comment||'')+'</p><p><b>'+$('name2').value+'：</b>'+escapeHtml(r.speaker2_comment||'')+'</p>'}
+function renderAI(r){$('aiStatus').textContent='LOCAL ANALYSIS COMPLETE';$('total').innerHTML=Number(r.total_score)+'<small> / 100</small>';$('grade').textContent=r.grade||'OVERALL SCORE';$('summary').textContent=r.summary||'';const labels=[['自然さ','naturalness'],['発言バランス','balance'],['質問・返答','interaction'],['傾聴・理解','listening'],['話題の広がり','development']];$('metrics').innerHTML=labels.map(([l,k])=>'<div class="stat"><b>'+Number(r.scores?.[k]??0)+'</b><span>'+l+'</span></div>').join('');$('good').innerHTML=(r.good_points||[]).map(x=>'<li>'+escapeHtml(x)+'</li>').join('');$('advice').innerHTML=(r.improvements||[]).map(x=>'<li>'+escapeHtml(x)+'</li>').join('');$('speakers').innerHTML='<p><b>'+$('name1').value+'：</b>'+escapeHtml(r.speaker1_comment||'')+'</p>'+($('playMode')?.value==='solo'?'':'<p><b>'+$('name2').value+'：</b>'+escapeHtml(r.speaker2_comment||'')+'</p>')}
 $('openSettings').onclick=()=>{$('setup').style.display='none';$('record').classList.remove('show');$('result').classList.remove('show');$('settings').style.display='block'};$('closeSettings').onclick=()=>{$('settings').style.display='none';$('setup').style.display='block'};
 $('copyPrompt').onclick=async()=>{const p=makePrompt();$('promptText').value=p;try{await navigator.clipboard.writeText(p);$('copyPrompt').textContent='コピーしました'}catch(e){$('promptText').style.position='static';$('promptText').style.left='auto';$('promptText').style.top='auto';$('promptText').style.width='100%';$('promptText').style.height='100px';$('promptText').select();$('copyPrompt').textContent='文章を選択してコピーしてください'}};
 $('openChatGPT').onclick=()=>window.open('https://chatgpt.com/','_blank','noopener');
 $('applyAI').onclick=()=>{try{let raw=$('aiReply').value.trim().replace(/^```(?:json)?\\s*/i,'').replace(/\\s*```$/,'');const data=JSON.parse(raw);renderAI(data);$('manualAI').style.display='none'}catch(e){alert('JSONを読み取れませんでした。ChatGPTに「指定したJSON形式だけで返して」と伝えて、回答をもう一度貼り付けてください。')}};
+
+function syncPlayMode(){const solo=$('playMode').value==='solo';$('name2Field').style.display=solo?'none':'block';$('speaker2').style.display=solo?'none':'';if(solo){$('mission').querySelector('option[value="balance"]').disabled=true;if($('mission').value==='balance')$('mission').value='free';setSpeaker(1)}else{$('mission').querySelector('option[value="balance"]').disabled=false}updateLiveAnalysis()}
+function syncTheme(){const custom=$('theme').value==='その他';$('customThemeField').style.display=custom?'block':'none';$('customTheme').required=custom}
+$('playMode').onchange=syncPlayMode;$('theme').onchange=syncTheme;syncPlayMode();syncTheme();
 $('mission').onchange=updateLiveAnalysis;$('missionLevel').onchange=updateLiveAnalysis;$('replayStart').onclick=replayStart;$('replayStop').onclick=replayStop;$('start').onclick=start;$('finish').onclick=finish;$('cancel').onclick=()=>{clearInterval(timer);stopRecognition();$('record').classList.remove('show');$('setup').style.display='block'};$('retry').onclick=()=>{$('result').classList.remove('show');$('setup').style.display='block'};
 function setMainTab(tab){
  if(tab==='talk' && $('record').classList.contains('show')){alert('会話を終了してから英会話練習に切り替えてください。');return}
