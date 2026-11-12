@@ -41,7 +41,7 @@ export default {
       return await env.TALK_INSIGHT_KV.get("global-settings", "json") || null;
     };
     const b64 = bytes => btoa(String.fromCharCode(...new Uint8Array(bytes)))
-      .replace(/=/g, "").replace(/\\+/g, "-").replace(/\\//g, "_");
+      .replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
     const decodeB64 = value => {
       const s = String(value).replace(/-/g, "+").replace(/_/g, "/");
       return Uint8Array.from(atob(s + "===".slice((4 - s.length % 4) % 4)), c => c.charCodeAt(0));
@@ -94,7 +94,7 @@ export default {
 
     if (url.pathname.endsWith("/admin/settings") && request.method === "POST") {
       try {
-        const token = (request.headers.get("Authorization") || "").replace(/^Bearer\\s+/i, "");
+        const token = (request.headers.get("Authorization") || "").replace(/^Bearer\s+/i, "");
         if (!await validToken(token)) return json({ ok: false, error: "認証の有効期限が切れています" }, 401);
         if (!env.TALK_INSIGHT_KV) return json({ ok: false, error: "TALK_INSIGHT_KV binding is not configured" }, 503);
         const body = await request.json();
@@ -136,7 +136,7 @@ export default {
       const transcript = body.turns.map((t, i) => {
         const who = t.speaker === 2 ? (body.speaker2 || "話者2") : (body.speaker1 || "話者1");
         return (i + 1) + ". " + who + "：" + String(t.text || "").slice(0, 500);
-      }).join("\\n").slice(0, 16000);
+      }).join("\n").slice(0, 16000);
       const instructions = "あなたは会話コミュニケーションの専門コーチです。中学生にも分かる日本語で公平に評価してください。" +
         "総合点と5指標は0〜100。発言量の完全な同量を要求せず、自然な応答、質問、相手への反応、話題展開を評価してください。" +
         "会話の長さや文字起こしの誤りに配慮し、根拠のない断定を避けてください。" +
