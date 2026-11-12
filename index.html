@@ -730,13 +730,33 @@ function localAnalyze(){
  const speakerComment=(arr,name)=>arr.length?name+'は'+arr.length+'回発言しました。'+(arr.length>=3?'自分の考えを伝えられています。':'もう少し発言を増やすと、会話への参加がより伝わります。'):'発言が記録されていません。マイクの話者切替を確認しましょう。';
  return {total_score,grade,scores,summary:(manualMode?'手動入力された会話記録 ':'音声認識で記録した会話 ') + total+'ターンをもとに、'+($('playMode')?.value==='solo'?'個人の発話内容':'発言バランス')+'・質問の数・反応表現・語彙の広がりなどをブラウザ内で分析しました。これはルールベースの参考評価で、発言の意味や本当の傾聴をAIが理解した評価ではありません。',good_points,improvements,speaker1_comment:speakerComment(a,$('name1').value),speaker2_comment:speakerComment(b,$('name2').value)};
 }
-function gradeWithAI(){
+const AI_WORKER_URL='https://talk-insight-api.kouei20130525.workers.dev';
+async function gradeWithAI(){
  $('manualAI').style.display='none';
- $('aiStatus').textContent='LOCAL ANALYSIS';
- $('summary').textContent='会話の特徴をアプリ内で分析しています…';
- const result=localAnalyze();
- renderAI(result);
- $('aiStatus').textContent='ON-DEVICE ANALYSIS COMPLETE';
+ $('aiStatus').textContent='GEMINI AI ANALYZING';
+ $('summary').textContent='Gemini AIが会話内容を分析しています…';
+ const fallback=()=>{const result=localAnalyze();renderAI(result);$('aiStatus').textContent='LOCAL ANALYSIS（AI利用不可・通常採点）';};
+ try{
+  const response=await fetch(AI_WORKER_URL.replace(/\\/$/,'')+'/',{
+   method:'POST',
+   headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({
+    turns:turns.map(t=>({speaker:t.speaker,text:t.text})),
+    speaker1:$('name1').value||'話者1',
+    speaker2:$('name2').value||'話者2',
+    theme:$('theme').value==='その他'?$('customTheme').value:$('theme').value,
+    duration:Math.max(0,Math.floor((Date.now()-startAt)/1000))
+   })
+  });
+  const data=await response.json();
+  if(!response.ok||!data.ok||!data.result)throw new Error(data.error||'AI採点に失敗しました');
+  renderAI(data.result);
+  $('aiStatus').textContent='GEMINI AI COMPLETE'+(data.usage?' · 今月 '+data.usage.used+'/'+data.usage.limit:'');
+ }catch(error){
+  console.warn('Gemini AI scoring unavailable; using local scoring.',error);
+  fallback();
+  $('summary').textContent+='（AI採点に接続できなかったため、通常採点に切り替えました：'+(error.message||'通信エラー')+'）';
+ }
 }
 function renderAI(r){$('aiStatus').textContent='LOCAL ANALYSIS COMPLETE';$('total').innerHTML=Number(r.total_score)+'<small> / 100</small>';$('grade').textContent=r.grade||'OVERALL SCORE';$('summary').textContent=r.summary||'';const labels=[['自然さ','naturalness'],['発言バランス','balance'],['質問・返答','interaction'],['傾聴・理解','listening'],['話題の広がり','development']];$('metrics').innerHTML=labels.map(([l,k])=>'<div class="stat"><b>'+Number(r.scores?.[k]??0)+'</b><span>'+l+'</span></div>').join('');$('good').innerHTML=(r.good_points||[]).map(x=>'<li>'+escapeHtml(x)+'</li>').join('');$('advice').innerHTML=(r.improvements||[]).map(x=>'<li>'+escapeHtml(x)+'</li>').join('');$('speakers').innerHTML='<p><b>'+$('name1').value+'：</b>'+escapeHtml(r.speaker1_comment||'')+'</p>'+($('playMode')?.value==='solo'?'':'<p><b>'+$('name2').value+'：</b>'+escapeHtml(r.speaker2_comment||'')+'</p>')}
 $('openSettings').onclick=()=>{$('setup').style.display='none';$('record').classList.remove('show');$('result').classList.remove('show');$('settings').style.display='block'};$('closeSettings').onclick=()=>{$('settings').style.display='none';$('setup').style.display='block'};
