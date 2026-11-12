@@ -40,11 +40,13 @@ export default {
       if (!env.TALK_INSIGHT_KV) throw new Error("TALK_INSIGHT_KV binding is not configured");
       return await env.TALK_INSIGHT_KV.get("global-settings", "json") || null;
     };
-    const b64 = bytes => btoa(String.fromCharCode(...new Uint8Array(bytes)))
-      .replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
+    // Use standard Base64 (with padding) consistently for token payloads and signatures.
+    const b64 = bytes => btoa(String.fromCharCode(...new Uint8Array(bytes)));
     const decodeB64 = value => {
-      const s = String(value).replace(/-/g, "+").replace(/_/g, "/");
-      return Uint8Array.from(atob(s + "=".repeat((4 - s.length % 4) % 4)), c => c.charCodeAt(0));
+      const s = String(value || "");
+      if (!/^[A-Za-z0-9+/]*={0,2}$/.test(s) || s.length % 4 !== 0)
+        throw new Error("Base64形式が不正です");
+      return Uint8Array.from(atob(s), c => c.charCodeAt(0));
     };
     const makeToken = async () => {
       if (!env.ADMIN_TOKEN_SECRET) throw new Error("ADMIN_TOKEN_SECRET is not configured");
