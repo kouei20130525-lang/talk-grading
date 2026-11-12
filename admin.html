@@ -24,7 +24,7 @@
 </section></div><footer>ADMIN CONTROL CENTER · GLOBAL SETTINGS API READY / APP INTEGRATION PENDING</footer></main>
 <script>
 const $=id=>document.getElementById(id),KEY='ti-admin-config-v1',HASH='ti-admin-password-hash',LOG='ti-admin-logs-v1',WORKER='ti-admin-worker-url';\nlet remoteToken=null,saveTimer=null;
-const defaults={features:{'音声認識':true,'手動文字入力':true,'会話分析':true,'採点・評価':true,'ミッション機能':true,'会話履歴':true,'コーチ機能':true,'スキル分析':true,'Talk Ready':true,'結果画面':true},scores:{naturalness:20,balance:20,interaction:20,listening:20,development:20},scoreNotes:'',design:{yellow:'#f2ce48',purple:'#9875ed',green:'#55c995',blue:'#55a9ec',opacity:27,blur:32},releases:[{version:'2.2.0',title:'管理者メニュー初期実装',body:'ロゴ5回クリックから管理コンソールを起動\n開発者向け管理UIを追加',date:'2026.11.12'}]};
+const defaults={features:{'音声認識':true,'手動文字入力':true,'会話分析':true,'採点・評価':true,'AI採点':true,'ミッション機能':true,'会話履歴':true,'コーチ機能':true,'スキル分析':true,'Talk Ready':true,'結果画面':true},scores:{naturalness:20,balance:20,interaction:20,listening:20,development:20},scoreNotes:'',design:{yellow:'#f2ce48',purple:'#9875ed',green:'#55c995',blue:'#55a9ec',opacity:27,blur:32},releases:[{version:'2.2.0',title:'管理者メニュー初期実装',body:'ロゴ5回クリックから管理コンソールを起動\n開発者向け管理UIを追加',date:'2026.11.12'}]};
 let config=load(),page='overview';
 function load(){try{return {...defaults,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch(e){return structuredClone(defaults)}}
 function log(action){let a=[];try{a=JSON.parse(localStorage.getItem(LOG)||'[]')}catch(e){}a.unshift({time:new Date().toLocaleString('ja-JP'),action});localStorage.setItem(LOG,JSON.stringify(a.slice(0,100)));renderLogs()}
