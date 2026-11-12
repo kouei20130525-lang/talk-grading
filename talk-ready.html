@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Talk Ready | TALK BATTLE</title>
+<title>Talk Ready | TALK INSIGHT</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700&family=M+PLUS+Rounded+1c:wght@400;500;700&display=swap" rel="stylesheet">
@@ -144,6 +144,24 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
  .say{width:44px;height:44px}
  .stairs{height:120px;gap:5px}
 }
+
+
+/* v2.0.0 — shared PREMIUM GLASS visual system */
+:root{--bg:#f7f8fc;--surface:rgba(255,255,255,.78);--ink:#20263a;--muted:#667087;--line:rgba(255,255,255,.95);--accent:#8662d6;--accent-ink:#fff;--mark:#ffe176;--mark-ink:#20263a;--step:#e4e6f0;--yellow:#e2b62f;--purple:#8662d6;--green:#3b9c76;--blue:#4779d6;color-scheme:light}
+body{background-color:#f7f8fc;background-image:radial-gradient(ellipse at 8% 8%,rgba(255,221,104,.3),transparent 32%),radial-gradient(ellipse at 92% 12%,rgba(169,137,239,.24),transparent 32%),radial-gradient(ellipse at 10% 88%,rgba(113,207,161,.2),transparent 32%),radial-gradient(ellipse at 92% 88%,rgba(111,166,245,.22),transparent 32%);background-attachment:fixed}
+:root[data-theme="dark"]{--bg:#f7f8fc;--surface:rgba(255,255,255,.78);--ink:#20263a;--muted:#667087;--line:#fff;--accent:#8662d6;--accent-ink:#fff;--mark:#ffe176;--mark-ink:#20263a;--step:#e4e6f0}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#f7f8fc;--surface:rgba(255,255,255,.78);--ink:#20263a;--muted:#667087;--line:#fff;--accent:#8662d6;--accent-ink:#fff;--mark:#ffe176;--mark-ink:#20263a;--step:#e4e6f0}}
+.wrap{max-width:900px;padding:30px 22px 48px}
+h1{background:linear-gradient(100deg,var(--yellow),var(--purple) 36%,var(--green) 68%,var(--blue));background-clip:text;-webkit-background-clip:text;color:transparent;letter-spacing:-1.5px}
+.lead{color:#626c82}
+section{background:rgba(255,255,255,.68);border:1px solid rgba(255,255,255,.96);border-radius:22px;box-shadow:0 16px 44px rgba(55,62,96,.075);backdrop-filter:blur(24px) saturate(155%);-webkit-backdrop-filter:blur(24px) saturate(155%);padding:22px}
+section h2{color:#505a78}
+.chip,.stair,.toggle,.export-btn,.say{border:1px solid #fff;box-shadow:0 5px 16px rgba(55,62,96,.06);border-radius:13px;background:rgba(255,255,255,.82);color:#505a78}
+.chip[aria-pressed="true"],.stair[aria-pressed="true"]{background:linear-gradient(110deg,rgba(255,225,118,.55),rgba(190,168,245,.45),rgba(137,208,171,.35),rgba(145,184,245,.35));border-color:rgba(134,98,214,.28);color:#493c79}
+.phrase{border:1px solid #edf0f7;border-radius:16px;background:rgba(255,255,255,.8);padding:17px}.en{color:#28334d}.ja{color:#68738a}.say{color:var(--purple)}
+mark{background:var(--mark);color:var(--mark-ink);border-radius:4px;padding:0 3px}.level-note{color:#657087}
+.export{background:linear-gradient(120deg,rgba(255,225,118,.18),rgba(190,168,245,.18),rgba(137,208,171,.15),rgba(145,184,245,.18))}
+@media(max-width:600px){.wrap{padding:20px 13px 36px}section{padding:17px 14px;border-radius:18px}}
 
 </style>
 </head>
