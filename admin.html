@@ -29,11 +29,11 @@ const defaults={features:{'音声認識':true,'手動文字入力':true,'会話�
 let config=load(),page='overview';
 function load(){try{return {...defaults,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch(e){return structuredClone(defaults)}}
 function log(action){let a=[];try{a=JSON.parse(localStorage.getItem(LOG)||'[]')}catch(e){}a.unshift({time:new Date().toLocaleString('ja-JP'),action});localStorage.setItem(LOG,JSON.stringify(a.slice(0,100)));renderLogs()}
-async function remoteSave(){const base=localStorage.getItem(WORKER);if(!base||!remoteToken){$('apiStatus').textContent='未接続';return}try{const res=await fetch(base.replace(/\\/$/,'')+'/admin/settings',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+remoteToken},body:JSON.stringify({settings:config})});const data=await res.json();if(!res.ok)throw Error(data.error||'共有保存に失敗');$('apiStatus').textContent='同期済み v'+data.version;$('localStatus').textContent='全体に保存済み'}catch(e){$('apiStatus').textContent='同期エラー';$('localStatus').textContent='ローカルのみ';console.error(e)}}
+async function remoteSave(){const base=localStorage.getItem(WORKER);if(!base||!remoteToken){$('apiStatus').textContent='未接続';return}try{const res=await fetch(base.replace(/\/$/,'')+'/admin/settings',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+remoteToken},body:JSON.stringify({settings:config})});const data=await res.json();if(!res.ok)throw Error(data.error||'共有保存に失敗');$('apiStatus').textContent='同期済み v'+data.version;$('localStatus').textContent='全体に保存済み'}catch(e){$('apiStatus').textContent='同期エラー';$('localStatus').textContent='ローカルのみ';console.error(e)}}
 function save(action){localStorage.setItem(KEY,JSON.stringify(config));$('localStatus').textContent='ローカル保存済み';if(action)log(action);clearTimeout(saveTimer);saveTimer=setTimeout(()=>remoteSave(),350)}
 async function digest(s){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
 async function auth(){
- const v=$('password').value,base=$('workerUrl').value.trim().replace(/\\/$/,'');
+ const v=$('password').value,base=$('workerUrl').value.trim().replace(/\/$/,'');
  if(base){
   try{
    localStorage.setItem(WORKER,base);
