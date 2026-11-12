@@ -8,7 +8,7 @@
 </style></head><body><main class="wrap">
 <header><div class="brand">TALK INSIGHT<small>DEVELOPER CONTROL CENTER</small></div><div class="row"><span class="pill">ADMIN / DEV MODE</span><button class="btn" id="logout">ログアウト</button></div></header>
 <section class="hero glass"><div class="eyebrow" style="color:#aebcf1">GLOBAL SYSTEM MANAGEMENT</div><h1>ADMIN CONTROL</h1><p>機能・採点・デザイン・データ・開発環境を一元管理</p></section>
-<section id="auth" class="glass content" style="max-width:520px;margin:8vh auto"><div class="eyebrow">ADMIN AUTHENTICATION</div><h2 id="authTitle">管理者パスワード</h2><p class="muted" id="authDesc">管理者パスワードを入力してください。</p><div class="field"><label for="password">PASSWORD</label><input id="password" type="password" autocomplete="current-password" placeholder="管理者パスワード"></div><div class="row"><button class="btn primary" id="login">認証して入る</button><button class="btn" id="back">アプリに戻る</button></div><p class="muted" id="authMsg" role="status"></p></section>
+<section id="auth" class="glass content" style="max-width:520px;margin:8vh auto"><div class="eyebrow">ADMIN AUTHENTICATION</div><h2 id="authTitle">管理者パスワード</h2><p class="muted" id="authDesc">管理者パスワードを入力してください。</p><div class="field"><label for="password">PASSWORD</label><input id="password" type="password" autocomplete="current-password" placeholder="管理者パスワード"></div><div class="field"><label for="workerUrl">CLOUDFLARE WORKER URL（共有設定API）</label><input id="workerUrl" type="url" placeholder="https://your-worker.workers.dev"><p class="muted">Worker URLを設定するとサーバー認証と全利用者共通設定を利用します。</p></div><div class="row"><button class="btn primary" id="login">認証して入る</button><button class="btn" id="back">アプリに戻る</button></div><p class="muted" id="authMsg" role="status"></p></section>
 <div id="console" class="layout hide"><aside class="side glass" id="nav">
 <button class="navbtn active" data-page="overview">◈ システム概要</button><button class="navbtn" data-page="features">◉ 機能管理</button><button class="navbtn" data-page="scoring">✳ 採点エンジン</button><button class="navbtn" data-page="design">◇ デザイン管理</button><button class="navbtn" data-page="data">▤ データ管理</button><button class="navbtn" data-page="lab">⌘ テストラボ</button><button class="navbtn" data-page="updates">↻ 更新管理</button><button class="navbtn" data-page="logs">≡ 操作ログ</button><button class="navbtn" data-page="security">▣ 管理者設定</button></aside>
 <section class="glass content">
@@ -23,15 +23,34 @@
 <div class="page" id="page-security"><div class="eyebrow">09 / SECURITY</div><h2>管理者設定</h2><div class="warning"><b>この認証は暫定的なローカルロックです。</b><br>パスワードのハッシュはこのブラウザに保存されます。ソースコードを確認できる利用者から管理画面を守るものではありません。公開運用前にサーバー側認証へ移行してください。</div><div class="field"><label>新しい管理者パスワード</label><input id="newPassword" type="password" autocomplete="new-password" minlength="12" placeholder="12文字以上"></div><button class="btn primary" id="changePassword">パスワードを変更</button></div>
 </section></div><footer>ADMIN CONTROL CENTER · LOCAL PROTOTYPE / GLOBAL SYNC NOT CONNECTED</footer></main>
 <script>
-const $=id=>document.getElementById(id),KEY='ti-admin-config-v1',HASH='ti-admin-password-hash',LOG='ti-admin-logs-v1';
+const $=id=>document.getElementById(id),KEY='ti-admin-config-v1',HASH='ti-admin-password-hash',LOG='ti-admin-logs-v1',WORKER='ti-admin-worker-url';\nlet remoteToken=null,saveTimer=null;
 const defaults={features:{'音声認識':true,'手動文字入力':true,'会話分析':true,'採点・評価':true,'ミッション機能':true,'会話履歴':true,'コーチ機能':true,'スキル分析':true,'Talk Ready':true,'結果画面':true},scores:{naturalness:20,balance:20,interaction:20,listening:20,development:20},scoreNotes:'',design:{yellow:'#f2ce48',purple:'#9875ed',green:'#55c995',blue:'#55a9ec',opacity:27,blur:32},releases:[{version:'2.2.0',title:'管理者メニュー初期実装',body:'ロゴ5回クリックから管理コンソールを起動\n開発者向け管理UIを追加',date:'2026.11.12'}]};
 let config=load(),page='overview';
 function load(){try{return {...defaults,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch(e){return structuredClone(defaults)}}
 function log(action){let a=[];try{a=JSON.parse(localStorage.getItem(LOG)||'[]')}catch(e){}a.unshift({time:new Date().toLocaleString('ja-JP'),action});localStorage.setItem(LOG,JSON.stringify(a.slice(0,100)));renderLogs()}
-function save(action){localStorage.setItem(KEY,JSON.stringify(config));$('localStatus').textContent='保存済み';if(action)log(action)}
+async function remoteSave(){const base=localStorage.getItem(WORKER);if(!base||!remoteToken){$('apiStatus').textContent='未接続';return}try{const res=await fetch(base.replace(/\\/$/,'')+'/admin/settings',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+remoteToken},body:JSON.stringify({settings:config})});const data=await res.json();if(!res.ok)throw Error(data.error||'共有保存に失敗');$('apiStatus').textContent='同期済み v'+data.version;$('localStatus').textContent='全体に保存済み'}catch(e){$('apiStatus').textContent='同期エラー';$('localStatus').textContent='ローカルのみ';console.error(e)}}
+function save(action){localStorage.setItem(KEY,JSON.stringify(config));$('localStatus').textContent='ローカル保存済み';if(action)log(action);clearTimeout(saveTimer);saveTimer=setTimeout(()=>remoteSave(),350)}
 async function digest(s){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
-async function auth(){const saved=localStorage.getItem(HASH),v=$('password').value;if(!saved){$('authTitle').textContent='管理者パスワードの初期設定';$('authDesc').textContent='初回のみ、管理者パスワードを設定してください（12文字以上）。';if(v.length<12){$('authMsg').textContent='12文字以上のパスワードを入力してください。';return}localStorage.setItem(HASH,await digest(v));$('authMsg').textContent='初期パスワードを設定しました。';}else if(await digest(v)!==saved){$('authMsg').textContent='パスワードが違います。';return}sessionStorage.setItem('ti-admin-auth','1');$('auth').classList.add('hide');$('console').classList.remove('hide');$('password').value='';renderAll()}
-$('login').onclick=auth;$('password').addEventListener('keydown',e=>{if(e.key==='Enter')auth()});$('back').onclick=()=>location.href='index.html';$('logout').onclick=()=>{sessionStorage.removeItem('ti-admin-auth');location.reload()};
+async function auth(){
+ const v=$('password').value,base=$('workerUrl').value.trim().replace(/\\/$/,'');
+ if(base){
+  try{
+   localStorage.setItem(WORKER,base);
+   const res=await fetch(base+'/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:v})});
+   const data=await res.json();if(!res.ok)throw Error(data.error||'認証に失敗しました');
+   remoteToken=data.token;sessionStorage.setItem('ti-admin-token',remoteToken);
+   const loaded=await fetch(base+'/settings');const state=await loaded.json();if(!loaded.ok)throw Error(state.error||'共有設定を読み込めません');
+   if(state.settings?.settings)config={...defaults,...state.settings.settings};else if(state.settings)config={...defaults,...state.settings};
+   localStorage.setItem(KEY,JSON.stringify(config));$('apiStatus').textContent='接続済み';
+  }catch(e){$('authMsg').textContent=e.message;return}
+ }else{
+  const saved=localStorage.getItem(HASH);
+  if(!saved){$('authTitle').textContent='管理者パスワードの初期設定';$('authDesc').textContent='Worker URL未設定のローカル試作モードです。12文字以上。';if(v.length<12){$('authMsg').textContent='12文字以上のパスワードを入力してください。';return}localStorage.setItem(HASH,await digest(v));}
+  else if(await digest(v)!==saved){$('authMsg').textContent='パスワードが違います。';return}
+ }
+ sessionStorage.setItem('ti-admin-auth','1');$('auth').classList.add('hide');$('console').classList.remove('hide');$('password').value='';renderAll()
+}
+$('login').onclick=auth;$('password').addEventListener('keydown',e=>{if(e.key==='Enter')auth()});$('back').onclick=()=>location.href='index.html';$('logout').onclick=()=>{sessionStorage.removeItem('ti-admin-auth');sessionStorage.removeItem('ti-admin-token');location.reload()};\n$('workerUrl').value=localStorage.getItem(WORKER)||'';remoteToken=sessionStorage.getItem('ti-admin-token');
 if(sessionStorage.getItem('ti-admin-auth')==='1'){$('auth').classList.add('hide');$('console').classList.remove('hide')}
 $('nav').addEventListener('click',e=>{const b=e.target.closest('[data-page]');if(!b)return;page=b.dataset.page;document.querySelectorAll('.navbtn').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id==='page-'+page))});
 function renderFeatures(){$('featureList').innerHTML=Object.entries(config.features).map(([k,v])=>'<div class="item row"><b>'+k+'</b><label><input class="switch" type="checkbox" data-feature="'+k+'" '+(v?'checked':'')+'> <span class="status">'+(v?'ON':'OFF')+'</span></label></div>').join('');$('featureList').querySelectorAll('[data-feature]').forEach(x=>x.onchange=()=>{config.features[x.dataset.feature]=x.checked;x.nextElementSibling.textContent=x.checked?'ON':'OFF'})}
@@ -39,7 +58,7 @@ function renderScores(){$('scoreRows').innerHTML=Object.entries(config.scores).m
 function renderDesign(){$('colorInputs').innerHTML=['yellow','purple','green','blue'].map(k=>'<div class="field"><label>'+k.toUpperCase()+'</label><input type="color" data-color="'+k+'" value="'+config.design[k]+'"></div>').join('');$('opacity').value=config.design.opacity;$('blur').value=config.design.blur}
 function renderReleases(){$('releaseList').innerHTML=config.releases.map((r,i)=>'<div class="item"><b>v'+r.version+' · '+r.title+'</b><p class="muted">'+r.date+'<br>'+r.body.replace(/</g,'&lt;')+'</p><button class="btn danger" data-del-release="'+i+'">削除</button></div>').join('');$('releaseList').querySelectorAll('[data-del-release]').forEach(b=>b.onclick=()=>{if(confirm('この更新履歴を削除しますか？')){config.releases.splice(+b.dataset.delRelease,1);save('更新履歴を削除');renderReleases()}})}
 function renderLogs(){let a=[];try{a=JSON.parse(localStorage.getItem(LOG)||'[]')}catch(e){}$('logList').textContent=a.map(x=>x.time+'  '+x.action).join('\n')||'操作ログはありません。'}
-function renderAll(){config=load();renderFeatures();renderScores();renderDesign();renderReleases();renderLogs();$('scoreNotes').value=config.scoreNotes||'';$('version').value='2.2.0';}
+function renderAll(){if(!remoteToken)config=load();renderFeatures();renderScores();renderDesign();renderReleases();renderLogs();$('scoreNotes').value=config.scoreNotes||'';$('version').value='2.2.0';}
 $('saveFeatures').onclick=()=>save('機能フラグを保存');$('saveScores').onclick=()=>{const total=Object.values(config.scores).reduce((a,b)=>a+b,0);if(total!==100){alert('配点合計を100点にしてください。現在：'+total+'点');return}save('採点配点を保存')};
 $('saveScoreNotes').onclick=()=>{config.scoreNotes=$('scoreNotes').value;save('採点基準メモを保存')};
 $('saveDesign').onclick=()=>{document.querySelectorAll('[data-color]').forEach(x=>config.design[x.dataset.color]=x.value);config.design.opacity=+$('opacity').value;config.design.blur=+$('blur').value;save('デザイン設定を保存')};
