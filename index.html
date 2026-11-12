@@ -296,6 +296,103 @@ body:before{opacity:.16;background-image:radial-gradient(rgba(255,255,255,.95) 1
 @media(max-width:720px){.app{padding:16px 12px 32px}.panel{padding:19px}.live-dashboard{padding:17px}.live-stats{gap:8px}.live-stats>div{padding:14px 8px}.live-stats strong{font-size:25px}.tabs{justify-content:stretch}.tab{flex:1;padding:12px 9px;font-size:9px}.record-ring{width:145px;height:145px}}
 @media(prefers-reduced-motion:reduce){.glass,.live-stats>div{transition:none!important}}
 
+
+/* v2.0.1 — full-width iPad layout + immersive Liquid Glass */
+:root{
+ --liquid-yellow:rgba(255,222,112,.34);
+ --liquid-purple:rgba(170,139,246,.30);
+ --liquid-green:rgba(113,211,166,.25);
+ --liquid-blue:rgba(117,171,250,.29);
+ --glass:rgba(255,255,255,.34);
+ --line:rgba(255,255,255,.78);
+ --shadow:0 24px 80px rgba(55,62,96,.13);
+}
+html{width:100%;min-width:0;overflow-x:hidden}
+body{
+ width:100%;min-width:0;overflow-x:hidden;
+ background-color:#f7f8fc;
+ background-image:
+  radial-gradient(ellipse at 0% 0%,var(--liquid-yellow),transparent 38%),
+  radial-gradient(ellipse at 100% 0%,var(--liquid-purple),transparent 40%),
+  radial-gradient(ellipse at 0% 100%,var(--liquid-green),transparent 38%),
+  radial-gradient(ellipse at 100% 100%,var(--liquid-blue),transparent 40%),
+  linear-gradient(135deg,#fbfcff 0%,#f4f5fc 48%,#fbfcff 100%);
+ background-attachment:fixed;
+}
+body:before{
+ opacity:.2;background-size:26px 26px;
+ background-image:radial-gradient(rgba(255,255,255,.95) 1px,transparent 1px);
+}
+.app{
+ width:100%;max-width:none;min-width:0;margin:0;
+ padding:clamp(18px,2.4vw,38px) clamp(16px,3vw,48px) 60px;
+}
+.nav{width:100%;min-width:0;margin-bottom:clamp(28px,4vw,52px)}
+.hero{width:100%;max-width:100%;margin-inline:auto}
+.tabs{width:100%;justify-content:center;flex-wrap:wrap}
+#setup,#result,.settings-screen,#talkReadyPanel{width:100%;max-width:none;min-width:0}
+.panel{
+ width:100%;min-width:0;overflow:hidden;
+ background:linear-gradient(135deg,rgba(255,255,255,.58),rgba(255,255,255,.26) 48%,rgba(245,244,255,.38));
+ border:1px solid rgba(255,255,255,.88);
+ box-shadow:0 26px 90px rgba(55,62,96,.12),inset 0 1px 0 rgba(255,255,255,.95),inset 0 -1px 0 rgba(255,255,255,.25);
+ backdrop-filter:blur(34px) saturate(175%);
+ -webkit-backdrop-filter:blur(34px) saturate(175%);
+}
+.grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,3vw,42px)}
+.grid>*{min-width:0}
+.field,.field input,.field select{min-width:0;max-width:100%}
+.glass,.settings-card,.live-dashboard,.stat,.feedback,.transcript,.config,.topic,.record-ring,.tutorial-card{
+ border:1px solid rgba(255,255,255,.84);
+ box-shadow:0 18px 55px rgba(54,66,108,.09),inset 0 1px 0 rgba(255,255,255,.85);
+ backdrop-filter:blur(26px) saturate(165%);
+ -webkit-backdrop-filter:blur(26px) saturate(165%);
+}
+.glass{background:linear-gradient(135deg,rgba(255,255,255,.48),rgba(255,255,255,.22))}
+.settings-card,.stat,.feedback,.transcript,.config{
+ background:linear-gradient(135deg,rgba(255,255,255,.58),rgba(255,255,255,.27));
+}
+.live-dashboard{
+ background:linear-gradient(125deg,rgba(255,255,255,.68),rgba(255,255,255,.28) 55%,rgba(220,211,255,.24));
+ border-radius:26px;padding:clamp(20px,2.5vw,34px);
+}
+.live-stats>div{
+ background:linear-gradient(145deg,rgba(255,255,255,.8),rgba(255,255,255,.34));
+ border:1px solid rgba(255,255,255,.94);
+ box-shadow:0 10px 30px rgba(55,62,96,.07),inset 0 1px 0 #fff;
+ backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+}
+.field input,.field select{
+ background:rgba(255,255,255,.54);
+ border:1px solid rgba(255,255,255,.92);
+ box-shadow:0 8px 24px rgba(55,62,96,.045),inset 0 1px 0 rgba(255,255,255,.95);
+ backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+}
+.tab,.softbtn,.speaker,.tutorial-help,.settings-toggle,.primary{
+ backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+}
+.tab{background:rgba(255,255,255,.34);border:1px solid rgba(255,255,255,.82);box-shadow:0 8px 26px rgba(55,62,96,.055)}
+.tab.active{background:rgba(255,255,255,.74);box-shadow:0 12px 35px rgba(55,62,96,.11),inset 0 1px 0 #fff}
+.topic{background:linear-gradient(135deg,rgba(255,222,112,.24),rgba(255,255,255,.38) 42%,rgba(170,139,246,.22))}
+.primary{background:linear-gradient(110deg,rgba(134,98,214,.94),rgba(71,121,214,.94));box-shadow:0 14px 36px rgba(102,111,205,.24),inset 0 1px 0 rgba(255,255,255,.3)}
+.nav-orbit{filter:blur(3px);opacity:.7}
+.footer{width:100%}
+@media(min-width:1100px){
+ .grid{gap:clamp(28px,3.4vw,56px)}
+ .panel{padding:clamp(28px,3vw,44px);border-radius:32px}
+}
+@media(max-width:900px){
+ .app{padding:18px 18px 42px}
+ .grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
+}
+@media(max-width:720px){
+ .app{padding:14px 12px 34px}
+ .grid{grid-template-columns:minmax(0,1fr);gap:12px}
+ .panel{padding:18px;border-radius:22px}
+ .live-dashboard{padding:16px;border-radius:20px}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
 </style></head>
 <body><main class="app">
 <header class="nav"><div class="nav-orbit orbit-one" aria-hidden="true"></div><div class="nav-orbit orbit-two" aria-hidden="true"></div><div class="brand"><div class="logo">TI</div><div><strong>TALK INSIGHT</strong><small>CONVERSATION INTELLIGENCE</small></div></div><div class="nav-actions"><button class="tutorial-help" id="openTutorial" type="button">使い方</button><button class="settings-toggle" id="openSettings" aria-label="設定を開く"><span class="settings-glyph" aria-hidden="true"></span></button><div class="livepill">SYSTEM READY</div></div></header>
