@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Talk Ready | TALK BATTLE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700&family=M+PLUS+Rounded+1c:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F9FB; --surface:#FFFFFF; --ink:#16283F; --muted:#5B6B80;
+  --line:#DCE3EC; --accent:#1F4E79; --accent-ink:#FFFFFF;
+  --mark:#FFE066; --mark-ink:#16283F; --step:#C9D6E5;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1A28; --surface:#172536; --ink:#E8EEF5; --muted:#9DB0C6;
+    --line:#2A3D54; --accent:#7FB3E6; --accent-ink:#0F1A28;
+    --mark:#8A7414; --mark-ink:#FFF6CC; --step:#2F4560;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1A28; --surface:#172536; --ink:#E8EEF5; --muted:#9DB0C6;
+  --line:#2A3D54; --accent:#7FB3E6; --accent-ink:#0F1A28;
+  --mark:#8A7414; --mark-ink:#FFF6CC; --step:#2F4560;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragino Sans","Yu Gothic",sans-serif;
+  line-height:1.6;-webkit-text-size-adjust:100%}
+.wrap{max-width:640px;margin:0 auto;padding:28px 18px 48px}
+h1{font-family:"Lexend",system-ui,sans-serif;font-weight:700;font-size:2.4rem;letter-spacing:-0.02em;margin:0;line-height:1.1}
+.lead{color:var(--muted);margin:6px 0 28px;font-size:.95rem}
+h2{font-size:1rem;font-weight:700;margin:0 0 12px}
+section{margin-bottom:28px}
+.themes{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;font-size:.9rem;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);
+  padding:6px 13px;border-radius:999px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
+.stairs{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;align-items:end;height:128px}
+.stair{font-family:"Lexend",system-ui,sans-serif;font-weight:700;font-size:1rem;border:none;cursor:pointer;
+  background:var(--step);color:var(--ink);border-radius:8px 8px 3px 3px;display:flex;align-items:flex-start;
+  justify-content:center;padding-top:8px;transition:background .15s}
+.stair[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.stair:nth-child(1){height:34%}.stair:nth-child(2){height:47%}.stair:nth-child(3){height:60%}
+.stair:nth-child(4){height:73%}.stair:nth-child(5){height:86%}.stair:nth-child(6){height:100%}
+.level-note{margin:10px 0 0;color:var(--muted);font-size:.9rem;min-height:1.6em}
+.level-note b{color:var(--ink)}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.toggle{font:inherit;font-size:.85rem;background:none;border:1.5px solid var(--line);color:var(--muted);
+  padding:5px 12px;border-radius:999px;cursor:pointer}
+.hint{font-size:.85rem;color:var(--muted);margin:0 0 14px}
+.hint mark{background:var(--mark);color:var(--mark-ink);padding:0 4px;border-radius:3px}
+ol.phrases{list-style:none;margin:0;padding:0;border-top:1.5px solid var(--line)}
+.phrase{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:16px 2px;border-bottom:1.5px solid var(--line)}
+.en{font-family:"Lexend",system-ui,sans-serif;font-size:1.12rem;line-height:1.5;font-weight:500}
+.en mark{background:var(--mark);color:var(--mark-ink);padding:0 3px;border-radius:3px;font-weight:500}
+.ja{grid-column:1/2;color:var(--muted);font-size:.88rem}
+.sub{font-size:.85rem;font-weight:700;color:var(--accent);margin:0 0 6px}
+.ask-h{margin-top:22px}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;color:var(--accent);margin-bottom:2px}
+.hide-ja .ja{display:none}
+.say{grid-row:1/3;grid-column:2;align-self:center;width:44px;height:44px;border-radius:50%;
+  border:1.5px solid var(--line);background:var(--surface);color:var(--accent);cursor:pointer;display:grid;place-items:center}
+.say.playing{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.say svg{width:20px;height:20px}
+.export{margin-top:28px}
+.export-btn{font:inherit;font-weight:700;font-size:1rem;width:100%;padding:14px;border-radius:12px;border:none;
+  background:var(--accent);color:var(--accent-ink);cursor:pointer;display:flex;gap:10px;align-items:center;justify-content:center}
+.export-btn svg{width:20px;height:20px}
+.export-btn:disabled{opacity:.6;cursor:wait}
+.export-note{font-size:.82rem;color:var(--muted);margin:8px 0 0;text-align:center;min-height:1.4em}
+.foot{margin-top:10px;font-size:.82rem;color:var(--muted)}
+.modal{position:fixed;inset:0;background:rgba(10,20,35,.7);display:none;align-items:center;justify-content:center;padding:20px;z-index:10}
+.modal.open{display:flex}
+.modal-box{background:var(--surface);border-radius:14px;padding:16px;max-width:480px;width:100%;max-height:90%;overflow:auto;text-align:center}
+.modal-box img{width:100%;height:auto;border-radius:8px;border:1px solid var(--line)}
+.modal-box p{font-size:.9rem;margin:10px 0}
+button:focus-visible{outline:3px solid var(--mark);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1>Talk Ready</h1>
+  <p class="lead">テーマとレベルを選ぶと、最初の一言に使えるフレーズが出ます。</p>
+
+  <section>
+    <h2>① 何について話す？</h2>
+    <div class="themes" id="themes" role="group" aria-label="テーマ"></div>
+  </section>
+
+  <section>
+    <h2>② 自分のレベル(CEFR)</h2>
+    <div class="stairs" id="stairs" role="group" aria-label="CEFRレベル"></div>
+    <p class="level-note" id="levelNote"></p>
+  </section>
+
+  <section aria-live="polite">
+    <div class="bar">
+      <h2 id="resultTitle" style="margin:0"></h2>
+      <button class="toggle" id="jaToggle" type="button">日本語訳を隠す</button>
+    </div>
+    <p class="hint"><mark>黄色の部分</mark>は自分の内容に入れ替えて話してみよう。発音ボタンで音声を確認できます。</p>
+    <h3 class="sub">自分のことを話す</h3>
+    <ol class="phrases" id="phrases"></ol>
+    <h3 class="sub ask-h">相手に聞き返す</h3>
+    <ol class="phrases" id="asks"></ol>
+    <p class="foot" id="foot"></p>
+  </section>
+
+  <section class="export">
+    <button class="export-btn" id="exportBtn" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+      画像として保存
+    </button>
+    <p class="export-note" id="exportNote">表示中のフレーズを1枚の画像(PNG)にします。</p>
+  </section>
+</main>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="画像プレビュー">
+  <div class="modal-box">
+    <img id="modalImg" alt="フレーズの画像">
+    <p>画像を長押し(または右クリック)して保存してください。</p>
+    <button class="toggle" id="modalClose" type="button">閉じる</button>
+  </div>
+</div>
+
+<script>
+const THEMES=[
+ ["intro","自己紹介"],["hobby","趣味"],["school","学校生活"],["weekend","週末の予定"],["travel","旅行"],
+ ["food","食べ物"],["music","音楽"],["movies","映画・ドラマ"],["sports","スポーツ"],["family","家族"],
+ ["friends","友達"],["future","将来の夢"],["shopping","買い物"],["weather","天気・季節"],["health","健康"],
+ ["hometown","地元・住んでいる町"],["animals","動物・ペット"],["tech","テクノロジー・スマホ"],["environment","環境問題"],["culture","日本の文化"]
+].map(([id,ja])=>({id,ja}));
+const LEVELS=[
+ {id:"A1",ja:"入門",desc:"短い決まり文句で、自分のことを言える",rate:.75},
+ {id:"A2",ja:"初級",desc:"身近な話題を簡単な文でつなげられる",rate:.82},
+ {id:"B1",ja:"中級",desc:"経験や理由を加えて話を広げられる",rate:.9},
+ {id:"B2",ja:"中上級",desc:"意見や仮定を交えて自然にやり取りできる",rate:.95},
+ {id:"C1",ja:"上級",desc:"考えを深め、相手に問いを投げかけられる",rate:1},
+ {id:"C2",ja:"熟達",desc:"含みのある表現で、繊細に語れる",rate:1}
+];
+// "英語|日本語"。[ ]=入れ替えポイント。各レベル最後は「相手への質問」
+const P={
+intro:{
+A1:["Hi, I'm [name].|こんにちは、[名前]です。","I'm [16] years old.|[16]歳です。","I live in [Tokyo].|[東京]に住んでいます。","Nice to meet you. What's your name?|はじめまして。お名前は？"],
+A2:["My name is [name], and I'm a high school student.|[名前]です。高校生です。","I'm from [Osaka], but now I live in [Kyoto].|[大阪]出身ですが、今は[京都]に住んでいます。","In my free time, I like [playing soccer].|暇なときは[サッカー]が好きです。","How about you? Where are you from?|あなたは？どこの出身ですか？"],
+B1:["Let me introduce myself. I'm [name], a second-year student.|自己紹介させてください。[名前]、2年生です。","I've been interested in [music] since I was a child.|子どもの頃から[音楽]に興味があります。","People often say I'm [friendly], but I'm a little shy at first.|よく[人なつっこい]と言われますが、最初は少し人見知りです。","What do you usually do when you're not studying?|勉強していないときは、ふだん何をしていますか？"],
+B2:["I'd describe myself as someone who [enjoys trying new things].|自分は[新しいことに挑戦するのが好きな]人間だと思います。","One thing that's shaped who I am is [my experience in the brass band].|今の自分をつくったのは[吹奏楽部での経験]です。","Although I'm [quiet] at first, I tend to open up once I get to know people.|最初は[おとなしい]ですが、仲良くなると打ち解けるタイプです。","I'd love to hear a bit about your background, too.|あなたのこれまでのことも少し聞いてみたいです。"],
+C1:["If I had to sum myself up in a few words, I'd say I'm [curious and determined].|一言で表すなら、[好奇心旺盛で粘り強い]人間です。","What really drives me is [a desire to understand different cultures].|私の原動力は[異文化を理解したいという気持ち]です。","I've come to realize that [failure is part of learning], which has changed how I approach challenges.|[失敗も学びの一部だ]と気づき、挑戦への向き合い方が変わりました。","What experiences would you say have shaped you the most?|あなたを一番形づくった経験は何だと思いますか？"],
+C2:["I suppose I'm something of a [late bloomer] — [my passion for languages only surfaced in high school].|私はどちらかと言えば[遅咲き]で、[語学への情熱は高校で初めて芽生えました]。","Much as I value [independence], I've learned that collaboration often yields richer results.|[自立]を大切にしつつも、協力の方が豊かな成果を生むと学びました。","Were I to pinpoint a turning point in my life, it would undoubtedly be [studying abroad].|人生の転機を挙げるなら、間違いなく[留学]です。","I'm curious — how do you think your upbringing has influenced your outlook?|育ってきた環境はあなたの物の見方にどう影響していると思いますか？"]},
+hobby:{
+A1:["I like [music].|[音楽]が好きです。","I play [tennis].|[テニス]をします。","I [read books] every day.|毎日[本を読み]ます。","Do you like [music]?|[音楽]は好きですか？"],
+A2:["My hobby is [taking photos].|趣味は[写真を撮ること]です。","I usually [play the guitar] on weekends.|週末はたいてい[ギターを弾いて]います。","I started [dancing] two years ago.|2年前に[ダンス]を始めました。","What's your favorite [movie]?|好きな[映画]は何ですか？"],
+B1:["I've been [playing the piano] for about [five] years.|[ピアノ]を[5]年くらい続けています。","What I like most about [cooking] is that [it helps me relax].|[料理]の一番好きなところは[リラックスできる]ところです。","I'm thinking of trying [skateboarding] because [it looks fun].|[楽しそうな]ので[スケボー]を始めようかと思っています。","Have you ever tried [it] yourself?|あなたも[やって]みたことありますか？"],
+B2:["I got into [anime] when [a friend recommended a series to me].|[友達にシリーズを勧められて]から[アニメ]にハマりました。","It's not just a hobby for me; it's [a way to express myself].|私にとって単なる趣味ではなく、[自己表現の手段]です。","If I had more time, I'd definitely [learn to draw properly].|もっと時間があれば、絶対に[ちゃんと絵を習い]たいです。","What is it about your hobby that keeps you hooked?|あなたの趣味の、どこがそんなに夢中にさせるんですか？"],
+C1:["What initially drew me to [photography] was [the challenge of capturing fleeting moments].|[写真]に惹かれたきっかけは[一瞬を切り取る難しさ]でした。","Over time, it's evolved from a casual pastime into [something I'm genuinely passionate about].|いつの間にか気軽な暇つぶしから[本気で打ち込めるもの]になりました。","I find it strikes a nice balance between [creativity] and [technical skill].|[創造性]と[技術]のバランスがちょうどいいんです。","Do you think hobbies should be purely for fun, or is it good to push yourself?|趣味は純粋に楽しむもの？それとも自分を追い込むのもいいと思う？"],
+C2:["I'd be lying if I said [chess] didn't consume a disproportionate amount of my free time.|正直、[チェス]に自由時間の大半を奪われています。","There's something almost meditative about [it], which I suspect is why I keep coming back.|[それ]にはどこか瞑想的なところがあって、だから続けてしまうんだと思います。","It's taught me [patience] in a way no classroom ever could.|教室では決して学べない形で[忍耐]を教えてくれました。","Would you say your hobbies reflect your personality, or have they shaped it?|趣味は性格を映すもの？それとも性格を形づくるもの？"]},
+school:{
+A1:["I'm in the [tennis] club.|[テニス]部に入っています。","My favorite subject is [English].|好きな教科は[英語]です。","I go to school by [bike].|[自転車]で通学しています。","What club are you in?|何部に入っていますか？"],
+A2:["I have [six] classes every day.|毎日[6]時間授業があります。","Lunch time is my favorite part of the day.|一日で一番好きなのは昼休みです。","We have a [school festival] in [September].|[9月]に[文化祭]があります。","Which subject do you like the best?|どの教科が一番好きですか？"],
+B1:["At my school, we [clean the classrooms ourselves] every day.|私の学校では毎日[自分たちで教室を掃除]します。","The hardest part of school life for me is [balancing club activities and study].|学校生活で一番大変なのは[部活と勉強の両立]です。","Recently, I've been busy preparing for [the sports day].|最近は[体育祭]の準備で忙しいです。","What's school like in your country?|あなたの国の学校はどんな感じですか？"],
+B2:["One thing I appreciate about my school is [how supportive the teachers are].|うちの学校のいいところは[先生たちがとても親身な]ところです。","If I could change one thing, I'd [make the school day shorter].|一つ変えられるなら、[授業時間を短く]したいです。","Club activities have taught me [the importance of teamwork].|部活で[チームワークの大切さ]を学びました。","How do you think schools could better prepare students for the future?|学校は生徒の将来のためにどうすればもっと良くなると思いますか？"],
+C1:["Looking back, [the school trip] was a real turning point in how I [relate to my classmates].|振り返ると、[修学旅行]は[クラスメートとの関わり方]の転機でした。","There's a growing debate about whether [school uniforms] are still necessary, and I lean toward [keeping them].|[制服]は今も必要かという議論がありますが、私は[残す]派です。","The pressure of [entrance exams] can be overwhelming, but it's also pushed me to [manage my time better].|[受験]のプレッシャーはきついですが、[時間管理がうまくなる]きっかけにもなりました。","To what extent do you think exams measure real ability?|試験は本当の実力をどこまで測れると思いますか？"],
+C2:["Much of what I've learned at school, arguably the most valuable part, has come from [outside the classroom].|学校で学んだことの中で、おそらく最も価値があるのは[教室の外]で得たものです。","I'm somewhat ambivalent about [the club system]; it fosters dedication, yet it can crowd out other interests.|[部活制度]には複雑な思いがあります。打ち込む力は育つけれど、他の興味を締め出すこともある。","Had it not been for [my homeroom teacher], I doubt I'd have [found the confidence to speak up].|[担任の先生]がいなければ、[意見を言う自信は持てなかった]と思います。","Do you believe the purpose of education has shifted in recent years?|近年、教育の目的は変わってきていると思いますか？"]},
+weekend:{
+A1:["I'm free on [Saturday].|[土曜日]はひまです。","I will [go shopping].|[買い物に行き]ます。","I want to [see a movie].|[映画を見]たいです。","What do you do on weekends?|週末は何をしますか？"],
+A2:["Last weekend, I [went to the beach] with [my family].|先週末、[家族]と[海に行き]ました。","This weekend, I'm going to [visit my grandparents].|今週末は[祖父母の家に行く]予定です。","It was a lot of fun.|とても楽しかったです。","Do you have any plans for this weekend?|今週末は何か予定ありますか？"],
+B1:["I'm planning to [go hiking] if the weather is nice.|天気がよければ[ハイキングに行く]つもりです。","Last Sunday, I [stayed home and watched movies all day], which was really relaxing.|先週の日曜は[一日中家で映画を見ていて]、すごくリラックスできました。","I haven't decided yet, but I might [meet up with friends].|まだ決めてないけど、[友達と会う]かもしれません。","Would you like to join us?|一緒に来ませんか？"],
+B2:["I've been meaning to [clean my room] for ages, so I'll probably do that this weekend.|ずっと[部屋の片付け]をしようと思っていたので、今週末たぶんやります。","Ideally, I'd spend the whole day [at a café reading], but I have [homework] to finish.|理想は一日中[カフェで読書]ですが、[宿題]を終わらせないといけません。","Last weekend turned out to be [more tiring] than I'd expected because [our match went into extra time].|[試合が延長戦になって]、先週末は思ったより[疲れ]ました。","How do you usually recharge after a busy week?|忙しい一週間のあと、どうやってリフレッシュしていますか？"],
+C1:["I try not to overschedule my weekends; I've found [a bit of downtime] makes a real difference.|週末は予定を詰め込みすぎないようにしています。[少しの休息]が大きな違いを生むので。","If all goes to plan, I'll be [volunteering at a local event] on Saturday.|予定通りなら、土曜は[地域のイベントでボランティア]をしています。","Last weekend was a bit of a whirlwind — [we had three events in two days].|先週末はバタバタでした。[2日で3つも行事があって]。","Do you think weekends should be for rest or for getting things done?|週末は休むためのもの？それとも用事を片付けるためのもの？"],
+C2:["Truth be told, my weekends tend to evaporate before I've [done half of what I intended].|正直なところ、週末は[やろうと思ったことの半分も終わらない]うちに消えてしまいます。","I've recently made a point of [switching off my phone] on Sundays, and it's been surprisingly liberating.|最近は日曜に[スマホの電源を切る]ようにしていて、意外なほど解放感があります。","Barring any last-minute changes, I'll be [heading to the mountains] with a few friends.|直前の変更がなければ、友達数人と[山へ行く]予定です。","How do you strike a balance between being productive and genuinely unwinding?|生産的に過ごすことと、本当にくつろぐことのバランスをどう取っていますか？"]},
+travel:{
+A1:["I want to go to [Hawaii].|[ハワイ]に行きたいです。","I went to [Okinawa].|[沖縄]に行きました。","It was [beautiful].|[きれい]でした。","Where do you want to go?|どこに行きたいですか？"],
+A2:["I went to [Hokkaido] with my family last [summer].|去年の[夏]、家族で[北海道]に行きました。","We ate [delicious seafood] there.|そこで[おいしい海鮮]を食べました。","I'd like to visit [Australia] someday.|いつか[オーストラリア]に行ってみたいです。","Have you ever been to [Japan]?|[日本]に行ったことはありますか？"],
+B1:["The best trip I've ever taken was to [Kyoto], because [the temples were amazing].|今までで一番の旅行は[京都]です。[お寺が素晴らしかった]からです。","If I could go anywhere, I'd go to [Canada] to [see the aurora].|どこでも行けるなら、[オーロラを見]に[カナダ]へ行きたいです。","When I travel, I always try to [eat local food].|旅行ではいつも[地元の料理を食べる]ようにしています。","What's the most memorable place you've visited?|今まで行った中で一番印象に残っている場所はどこですか？"],
+B2:["What struck me most about [Taiwan] was [how friendly the people were].|[台湾]で一番印象的だったのは[人々の親切さ]でした。","I'd rather [explore on my own] than join a guided tour, since [it gives me more freedom].|ツアーより[一人で探検する]方が好きです。[自由がきく]ので。","Traveling abroad made me realize [how much I take for granted at home].|海外に行って、[普段どれだけ多くを当たり前に思っているか]に気づきました。","Do you prefer traveling to big cities or the countryside?|旅行するなら都会派？それとも田舎派？"],
+C1:["Traveling to [Vietnam] completely changed my perception of [street food culture].|[ベトナム]への旅で[屋台文化]への見方ががらりと変わりました。","I'm increasingly drawn to [slow travel], where you spend longer in fewer places.|最近は、少ない場所に長く滞在する[スロートラベル]に惹かれています。","Language barriers can be frustrating, but they often lead to [the most memorable encounters].|言葉の壁はもどかしいけれど、[一番記憶に残る出会い]につながることも多いです。","How do you think tourism affects local communities?|観光は地域社会にどんな影響を与えると思いますか？"],
+C2:["There's a world of difference between merely visiting a place and [genuinely immersing yourself in it].|ただ訪れることと[本当にその土地に浸ること]の間には大きな違いがあります。","Having [backpacked through Europe], I've become rather skeptical of [itineraries packed with landmarks].|[ヨーロッパをバックパックで回って]から、[名所だらけの旅程]には懐疑的になりました。","What lingers with me isn't the sights so much as [the conversations with strangers].|心に残るのは景色よりも、むしろ[見知らぬ人との会話]です。","Do you think travel broadens the mind, or is that something of a cliché?|旅は視野を広げると思いますか？それともそれは決まり文句にすぎない？"]},
+food:{
+A1:["I like [sushi].|[寿司]が好きです。","I eat [rice] for breakfast.|朝ごはんに[ごはん]を食べます。","It's [delicious].|[おいしい]です。","What food do you like?|何の食べ物が好きですか？"],
+A2:["My favorite food is [ramen].|一番好きな食べ物は[ラーメン]です。","I often eat [curry] at home.|家でよく[カレー]を食べます。","I can't eat [natto].|[納豆]は食べられません。","Can you cook?|料理はできますか？"],
+B1:["I've never tried [Indian food], but I'd like to.|[インド料理]は食べたことがないけど、食べてみたいです。","My mother makes the best [hamburg steak].|母の作る[ハンバーグ]が最高です。","I usually eat [a bento] because [it's cheaper].|[安い]ので、たいてい[弁当]を食べます。","What's a popular dish in your country?|あなたの国で人気の料理は何ですか？"],
+B2:["I'm trying to [eat more vegetables], but it's harder than it sounds.|[野菜を多く食べ]ようとしていますが、思ったより難しいです。","If you visit [Osaka], you really should try [takoyaki].|[大阪]に行くなら、ぜひ[たこ焼き]を食べてみて。","What I love about [Japanese food] is [how seasonal it is].|[和食]の好きなところは[季節感がある]ところです。","Is there any food you just can't stand?|どうしても苦手な食べ物はありますか？"],
+C1:["I've developed a real appreciation for [fermented foods] over the past year.|この一年で[発酵食品]の良さがわかってきました。","Food says a lot about a culture — [the way people share meals] is especially telling.|食は文化をよく表します。特に[食事の分け合い方]にそれが表れます。","I'm a bit torn about [fast food]; it's convenient, but [the health costs are real].|[ファストフード]には複雑な気持ちです。便利だけど[健康面の代償]がある。","How do you think eating habits will change in the future?|食習慣は将来どう変わると思いますか？"],
+C2:["For me, [my grandmother's miso soup] is inextricably tied to [a sense of home].|私にとって[祖母の味噌汁]は[家の温もり]と切り離せません。","I'm wary of food trends that [prize appearance over flavor].|[味より見た目を重視する]食のトレンドには警戒しています。","There's an art to [a simple meal] that's easy to overlook.|[素朴な食事]には見過ごされがちな技があります。","Do you think food can ever truly be separated from its cultural context?|食べ物は文化的背景から本当に切り離せると思いますか？"]},
+music:{
+A1:["I like [J-pop].|[J-POP]が好きです。","I sing [every day].|[毎日]歌います。","My favorite singer is [name].|好きな歌手は[名前]です。","Do you like music?|音楽は好きですか？"],
+A2:["I listen to music [on the train].|[電車で]音楽を聴きます。","I can play [the piano] a little.|[ピアノ]が少し弾けます。","I went to a [concert] last month.|先月[コンサート]に行きました。","What kind of music do you listen to?|どんな音楽を聴きますか？"],
+B1:["I've been listening to [this band] a lot lately.|最近[このバンド]をよく聴いています。","Music helps me [concentrate when I study].|音楽は[勉強中に集中する]のに役立ちます。","I got into [K-pop] after [watching a music video].|[MVを見て]から[K-POP]にハマりました。","Who's your favorite artist right now?|今一番好きなアーティストは誰ですか？"],
+B2:["What I love about [their songs] is [how honest the lyrics are].|[彼らの曲]の好きなところは[歌詞が正直な]ところです。","I tend to listen to [upbeat songs] when I need [a boost of energy].|[元気が欲しい]ときは[明るい曲]を聴きがちです。","If I could see any artist live, it would be [name].|誰のライブでも見られるなら[名前]です。","Is there a song that brings back special memories for you?|特別な思い出がよみがえる曲はありますか？"],
+C1:["[This album] came out when [I was struggling], so it means a lot to me.|[このアルバム]は[私が悩んでいた]時期に出たので、特別な意味があります。","I've noticed my taste shifting from [mainstream pop] toward [indie music].|好みが[メジャーなポップ]から[インディー]へ移ってきました。","Streaming has made music more accessible, but arguably [less valued].|配信で音楽は身近になったけど、[価値は下がった]とも言えます。","Do you think music has the power to change society?|音楽に社会を変える力があると思いますか？"],
+C2:["There's a rawness to [live performances] that no recording can quite capture.|[生演奏]には録音では捉えきれない生々しさがあります。","I find myself drawn to [songs that leave things unsaid].|[語りすぎない歌]に惹かれてしまいます。","Music was, in many ways, [my first language for emotions].|音楽はある意味、[感情を表す最初の言語]でした。","To what extent do you think our musical taste is shaped by the people around us?|音楽の好みは周りの人にどの程度影響されると思いますか？"]},
+movies:{
+A1:["I like [anime].|[アニメ]が好きです。","I watch TV [at night].|[夜]にテレビを見ます。","This movie is [funny].|この映画は[おもしろい]です。","Do you like movies?|映画は好きですか？"],
+A2:["My favorite movie is [title].|好きな映画は[タイトル]です。","I watched [a drama] on Netflix last night.|昨夜Netflixで[ドラマ]を見ました。","The story was [exciting].|ストーリーが[わくわくし]ました。","What movie did you see recently?|最近どんな映画を見ましたか？"],
+B1:["I've watched [this series] three times.|[このシリーズ]は3回見ました。","The main character is [brave], so I [really like her].|主人公が[勇敢]なので[大好き]です。","I prefer watching movies [at home] because [I can relax].|[くつろげる]ので映画は[家で]見る方が好きです。","Can you recommend a good movie?|おすすめの映画はありますか？"],
+B2:["Without giving too much away, [the ending completely surprised me].|ネタバレしない程度に言うと、[結末に本当に驚きました]。","It's the kind of movie that [makes you think about your own life].|[自分の人生を考えさせられる]ような映画です。","I'd rather watch it [with subtitles] than [dubbed].|[吹き替え]より[字幕]で見る方がいいです。","What makes a movie worth watching twice?|2回見る価値のある映画って何が違うと思う？"],
+C1:["What sets [this film] apart is [the way it handles silence].|[この映画]が際立っているのは[沈黙の使い方]です。","I was initially skeptical, but [the second half] won me over.|最初は懐疑的でしたが、[後半]で心をつかまれました。","It raises some uncomfortable questions about [social media].|[SNS]について居心地の悪い問いを投げかけてきます。","Do you think remakes ever live up to the original?|リメイクが原作を超えることはあると思いますか？"],
+C2:["The film lingers precisely because [it refuses to offer easy answers].|[安易な答えを出さない]からこそ、この映画は心に残ります。","There's a restraint in [the director's style] that I find deeply compelling.|[監督の作風]にある抑制に強く惹かれます。","It's less a story about [war] than about [what people cling to].|[戦争]の話というより、[人が何にすがるか]の物語です。","Would you say films reflect society, or actively shape it?|映画は社会を映すもの？それとも積極的に形づくるもの？"]},
+sports:{
+A1:["I play [soccer].|[サッカー]をします。","I like [baseball].|[野球]が好きです。","I run [every morning].|[毎朝]走ります。","Do you play sports?|スポーツはしますか？"],
+A2:["I'm on the [basketball] team.|[バスケ]部に入っています。","We practice [five days] a week.|週に[5日]練習します。","We won our game [last Sunday].|[先週の日曜]、試合に勝ちました。","What sports do you like to watch?|見るならどのスポーツが好きですか？"],
+B1:["I've been playing [volleyball] since [junior high school].|[中学]から[バレー]をやっています。","My goal is to [win the regional tournament].|目標は[地区大会で優勝する]ことです。","Practice is tough, but [my teammates keep me going].|練習はきついけど、[仲間がいるから頑張れます]。","Which team do you support?|どのチームを応援していますか？"],
+B2:["What I enjoy most about [tennis] is [the mental side of the game].|[テニス]で一番好きなのは[メンタル面の駆け引き]です。","If I hadn't [injured my knee], I might [still be playing].|[膝をけが]していなければ、[今も続けていた]かもしれません。","Watching [the World Cup] made me appreciate [how global the sport is].|[W杯]を見て[競技の世界的な広がり]を実感しました。","Do you think sports teach skills you can't learn in class?|スポーツには授業で学べない力があると思いますか？"],
+C1:["[Losing in the final] taught me more than any victory ever has.|[決勝での敗北]は、どんな勝利よりも多くを教えてくれました。","There's been a lot of debate about [how much pressure young athletes face].|[若い選手が受けるプレッシャー]について多くの議論があります。","I've come to see [running] less as competition and more as [a way to clear my head].|[ランニング]を競争というより[頭を整理する手段]と思うようになりました。","Should schools put more emphasis on sports, or less?|学校はスポーツをもっと重視すべき？それとも減らすべき？"],
+C2:["Sport, at its best, strips away [pretense] and reveals [character].|スポーツは最良の形では[見せかけ]をはぎ取り、[人柄]をあらわにします。","I'm uneasy about [how commercialized professional sports have become].|[プロスポーツの商業化]には不安を覚えます。","Few things rival [the silence before a penalty kick].|[PKの前の静寂]に匹敵するものはそうありません。","Is it possible to separate an athlete's achievements from their conduct off the field?|選手の功績とフィールド外の言動は切り離せると思いますか？"]},
+family:{
+A1:["I have [a brother].|[兄]がいます。","My mother is [kind].|母は[優しい]です。","There are [four] people in my family.|家族は[4]人です。","Do you have any brothers or sisters?|兄弟姉妹はいますか？"],
+A2:["My father works at [a bank].|父は[銀行]で働いています。","My sister is [two] years older than me.|姉は私より[2]歳上です。","We often [eat dinner together].|よく[一緒に夕食を食べ]ます。","What does your family do on weekends?|あなたの家族は週末何をしますか？"],
+B1:["I get along well with my [grandmother].|[祖母]とはとても仲がいいです。","My family always [goes camping] in summer.|私の家族は夏になると必ず[キャンプに行き]ます。","I sometimes argue with my [brother] about [the TV].|[テレビ]のことで時々[兄]とけんかします。","Who are you closest to in your family?|家族で一番仲がいいのは誰ですか？"],
+B2:["My [father] has had a big influence on [the way I think about work].|[父]は[仕事に対する私の考え方]に大きな影響を与えました。","We're not the kind of family that [talks about feelings much].|うちは[あまり気持ちを話し合う]家族ではありません。","As I've gotten older, I've started to appreciate [my parents' hard work].|年を重ねるにつれ、[両親の苦労]がわかるようになりました。","How do family roles differ in your culture?|あなたの文化では家族の役割はどう違いますか？"],
+C1:["Growing up [as the eldest], I often felt [responsible for my siblings].|[長子]として育ち、よく[弟妹への責任]を感じていました。","Our family dynamics shifted considerably when [my grandfather moved in].|[祖父が同居し始めて]から家族の関係がかなり変わりました。","I think [small daily rituals] hold families together more than [big events].|[大きなイベント]より[日々の小さな習慣]が家族をつなぐと思います。","Do you think the idea of family is changing in modern society?|現代社会で家族の概念は変わってきていると思いますか？"],
+C2:["It's only in hindsight that I've understood [why my mother was so strict].|今になってようやく[母があれほど厳しかった理由]がわかりました。","Families are rarely as simple as they appear from the outside.|家族というものは外から見えるほど単純ではありません。","I've inherited [my grandfather's stubbornness], for better or worse.|良くも悪くも[祖父の頑固さ]を受け継いでいます。","How much do you think we're shaped by our families, as opposed to our own choices?|私たちは自分の選択よりも家族にどれほど形づくられていると思いますか？"]},
+friends:{
+A1:["This is my friend, [name].|友達の[名前]です。","She is [funny].|彼女は[おもしろい]です。","We play [games] together.|一緒に[ゲーム]をします。","Let's be friends!|友達になろう！"],
+A2:["I met my best friend in [junior high school].|親友とは[中学]で出会いました。","We often [go to karaoke] after school.|放課後よく[カラオケに行き]ます。","He is always [kind] to me.|彼はいつも私に[優しい]です。","How did you meet your best friend?|親友とはどうやって出会いましたか？"],
+B1:["We've been friends for [ten] years.|[10]年来の友達です。","I can talk to [her] about anything.|[彼女]には何でも話せます。","We sometimes disagree, but we [always make up quickly].|意見が合わないこともあるけど、[すぐ仲直りします]。","What do you usually do with your friends?|友達とふだん何をしていますか？"],
+B2:["A good friend, in my opinion, is someone who [tells you the truth even when it hurts].|いい友達とは[耳の痛いことでも本当のことを言ってくれる]人だと思います。","We drifted apart for a while after [we went to different schools].|[別々の学校に進んで]から、しばらく疎遠になりました。","I'd rather have [a few close friends] than [lots of casual ones].|[浅い友達がたくさん]より[親しい友達が少し]の方がいいです。","Have you ever made a friend online?|ネットで友達ができたことはありますか？"],
+C1:["Our friendship has survived [a lot of misunderstandings], which I think made it stronger.|私たちの友情は[多くの誤解]を乗り越え、それで強くなったと思います。","I've learned that friendship requires [effort], not just [shared interests].|友情には[共通の趣味]だけでなく[努力]が必要だと学びました。","Social media makes it easy to stay in touch, but arguably [harder to be close].|SNSで連絡は取りやすくなったけど、[親密になるのは難しくなった]とも言えます。","What do you think makes a friendship last?|友情が長続きする秘訣は何だと思いますか？"],
+C2:["The friends who matter most are often [the ones who've seen you at your worst].|本当に大切な友達は、[最悪の自分を見てきた人]であることが多いです。","There's a quiet comfort in [being able to sit together without talking].|[黙って一緒にいられる]ことには静かな安心感があります。","I've come to accept that [some friendships belong to a certain time in life].|[人生のある時期だけの友情もある]と受け入れられるようになりました。","Is it possible for friendship to survive fundamentally different values?|根本的に価値観が違っても友情は成り立つと思いますか？"]},
+future:{
+A1:["I want to be a [teacher].|[先生]になりたいです。","I like [children].|[子ども]が好きです。","I want to live in [America].|[アメリカ]に住みたいです。","What do you want to be?|何になりたいですか？"],
+A2:["In the future, I want to work as a [nurse].|将来は[看護師]として働きたいです。","I want to [help people].|[人の役に立ち]たいです。","I'm going to study [English] hard.|[英語]を一生懸命勉強するつもりです。","What's your dream?|あなたの夢は何ですか？"],
+B1:["I'd like to become [an engineer] because [I love making things].|[ものづくりが大好き]なので[エンジニア]になりたいです。","To do that, I need to [go to university and study science].|そのためには[大学で理系を学ぶ]必要があります。","I'm not sure yet, but I'm interested in [design].|まだ決めていないけど、[デザイン]に興味があります。","What are you planning to do after high school?|高校卒業後はどうするつもりですか？"],
+B2:["I've always dreamed of [working abroad], but I'm a little worried about [the language barrier].|ずっと[海外で働く]ことが夢ですが、[言葉の壁]が少し不安です。","Whatever I end up doing, I want it to be something that [makes a difference].|何をするにしても、[世の中の役に立つ]ことがしたいです。","If I could go back, I'd [start studying English earlier].|戻れるなら[もっと早く英語を始め]ます。","Where do you see yourself in ten years?|10年後の自分はどうなっていると思いますか？"],
+C1:["My ambition is to [bridge the gap between technology and education].|私の目標は[テクノロジーと教育の橋渡し]をすることです。","I've realized that [the path matters as much as the destination].|[目的地と同じくらい過程も大切だ]と気づきました。","Rather than chasing [a stable job], I'd like to [pursue something meaningful].|[安定した仕事]を追うより[意義あること]を追求したいです。","How do you think AI will affect the jobs of the future?|AIは将来の仕事にどう影響すると思いますか？"],
+C2:["I'm wary of defining myself too narrowly by [a single career].|[一つの職業]で自分を狭く定義することには慎重です。","If there's one thing I aspire to, it's [a life of continual learning].|目指すものがあるとすれば、[学び続ける人生]です。","The future I envision is less about [status] than about [contribution].|私の思い描く未来は[地位]より[貢献]が中心です。","Is it wiser to follow your passion or to cultivate it?|情熱に従うのと、情熱を育てるのとではどちらが賢明だと思いますか？"]},
+shopping:{
+A1:["How much is this?|これはいくらですか？","I want [this T-shirt].|[このTシャツ]が欲しいです。","Do you have a [bigger] size?|[大きい]サイズはありますか？","Where is the [shoe shop]?|[靴屋]はどこですか？"],
+A2:["I went shopping at [the mall] yesterday.|昨日[ショッピングモール]に買い物に行きました。","I bought [a new bag] for [my trip].|[旅行]のために[新しいかばん]を買いました。","Can I try this on?|試着してもいいですか？","Where do you usually go shopping?|ふだんどこで買い物しますか？"],
+B1:["I usually buy [clothes] online because [it's easier].|[楽な]ので[服]はたいていネットで買います。","I'm saving money to buy [a new phone].|[新しいスマホ]を買うためにお金を貯めています。","I was going to buy [it], but [it was too expensive].|[それ]を買うつもりだったけど、[高すぎ]ました。","Do you prefer shopping online or in stores?|ネットと店舗、どちらで買う方が好きですか？"],
+B2:["I try not to [buy things on impulse], but [sales] make it hard.|[衝動買い]しないようにしていますが、[セール]があると難しいです。","I'd rather pay a bit more for [something that lasts].|[長持ちするもの]なら少し高くても払います。","I regretted buying [those shoes] because [I never wore them].|[一度も履かなかった]ので[あの靴]は買って後悔しました。","Do you think advertising influences what you buy?|広告は自分の買い物に影響していると思いますか？"],
+C1:["I've become more conscious of [where my clothes are made].|[服の生産地]を以前より意識するようになりました。","There's a fine line between [treating yourself] and [overspending].|[自分へのご褒美]と[使いすぎ]は紙一重です。","Second-hand shopping has gone from [something embarrassing] to [something trendy].|古着は[恥ずかしいもの]から[おしゃれなもの]に変わりました。","Do you think consumer culture makes people happier?|消費文化は人を幸せにすると思いますか？"],
+C2:["I'm increasingly skeptical of [the idea that buying more equals living better].|[多く買うほど豊かに暮らせる]という考えにはますます懐疑的です。","The most satisfying purchases, I find, are [the ones I waited a long time for].|一番満足する買い物は[長く待った末に買ったもの]です。","Brands sell [identity] as much as [products].|ブランドは[商品]と同じくらい[アイデンティティ]を売っています。","To what extent are our shopping choices genuinely our own?|私たちの買い物の選択は、どの程度本当に自分のものだと思いますか？"]},
+weather:{
+A1:["It's [sunny] today.|今日は[晴れ]です。","It's [hot].|[暑い]です。","I like [spring].|[春]が好きです。","What's your favorite season?|好きな季節は何ですか？"],
+A2:["It rained a lot [yesterday].|[昨日]は雨がたくさん降りました。","In [winter], it's very cold here.|[冬]はここはとても寒いです。","I like [autumn] because [the leaves are beautiful].|[紅葉がきれいな]ので[秋]が好きです。","How's the weather where you live?|住んでいる所の天気はどうですか？"],
+B1:["It's been [really humid] lately, so I [can't sleep well].|最近[すごく蒸し暑くて]、[よく眠れません]。","In Japan, [the rainy season] starts in [June].|日本では[6月]に[梅雨]が始まります。","I can't wait for [summer] because [we can go to the beach].|[海に行ける]から[夏]が待ち遠しいです。","What do you like to do on rainy days?|雨の日は何をするのが好きですか？"],
+B2:["I'm not really a [summer] person; I'd take [a cool autumn day] any time.|私はあまり[夏]派ではなく、いつでも[涼しい秋の日]の方がいいです。","The weather has been unusually [warm] for [this time of year].|[この時期]にしては珍しく[暖かい]です。","Seasons in Japan are closely linked to [food and festivals].|日本の季節は[食べ物や祭り]と深く結びついています。","Do you think the weather affects your mood?|天気は気分に影響すると思いますか？"],
+C1:["It feels like [spring and autumn] are getting shorter every year.|[春と秋]が年々短くなっている気がします。","[Extreme heat] has become something we have to plan our lives around.|[猛暑]は生活を合わせて計画しなければならないものになりました。","There's something about [the first snow] that makes everything feel [new].|[初雪]には何もかもを[新しく]感じさせる何かがあります。","How has climate change affected the place where you live?|気候変動はあなたの住む地域にどんな影響を与えていますか？"],
+C2:["The Japanese sensitivity to [seasonal change] runs deeper than most people realize.|日本人の[季節の移ろい]への感受性は、多くの人が思うより深いものです。","I've always found [the stillness after a storm] strangely reassuring.|[嵐の後の静けさ]には、なぜか安心させられます。","We treat the weather as small talk, yet [it quietly shapes how we live].|天気は雑談の話題なのに、[私たちの暮らし方を静かに形づくっています]。","Do you think modern life has distanced us from the rhythm of the seasons?|現代の生活は私たちを季節のリズムから遠ざけたと思いますか？"]},
+health:{
+A1:["I'm [tired].|[疲れて]います。","I sleep [seven] hours.|[7]時間寝ます。","I drink [water] every day.|毎日[水]を飲みます。","Are you OK?|大丈夫？"],
+A2:["I go to bed at [eleven].|[11]時に寝ます。","I walk to school [every day].|[毎日]歩いて通学しています。","I had a [cold] last week.|先週[風邪]をひきました。","What do you do to stay healthy?|健康のために何をしていますか？"],
+B1:["I try to [eat breakfast] every morning.|毎朝[朝ごはんを食べる]ようにしています。","I've been [using my phone too much] before bed, so [I'm sleepy in class].|寝る前に[スマホを使いすぎて]、[授業中眠い]です。","When I feel stressed, I [listen to music].|ストレスを感じたら[音楽を聴き]ます。","How many hours do you usually sleep?|ふだん何時間寝ていますか？"],
+B2:["I've started [stretching before bed], and I've noticed [I sleep better].|[寝る前のストレッチ]を始めたら、[よく眠れる]ようになりました。","It's easy to ignore [mental health] when you're busy.|忙しいと[心の健康]を後回しにしがちです。","If I had more discipline, I'd [cut down on sweets].|もっと自制心があれば[甘いものを減らす]のに。","Do you think students get enough sleep these days?|最近の学生は十分寝ていると思いますか？"],
+C1:["I've come to see [rest] not as laziness but as [part of being productive].|[休息]を怠けではなく[生産性の一部]と考えるようになりました。","There's a lot of conflicting advice about [diet], which can be confusing.|[食事]については矛盾するアドバイスが多く、混乱します。","Small habits, like [walking instead of taking the bus], add up over time.|[バスでなく歩く]といった小さな習慣が積み重なります。","Should schools teach more about mental health?|学校は心の健康についてもっと教えるべきだと思いますか？"],
+C2:["We tend to treat health as [a personal responsibility], overlooking [the social factors behind it].|健康を[個人の責任]とみなしがちで、[その背後の社会的要因]を見落としています。","I'm skeptical of [wellness trends] that promise quick fixes.|即効性をうたう[ウェルネスの流行]には懐疑的です。","Being healthy, for me, is less about [numbers] and more about [how I feel day to day].|私にとって健康とは[数値]より[日々の体の感じ方]です。","How far should governments go in encouraging healthy lifestyles?|政府は健康的な生活をどこまで奨励すべきだと思いますか？"]},
+hometown:{
+A1:["I live in [Nagoya].|[名古屋]に住んでいます。","My town is [small].|私の町は[小さい]です。","There is a [big park].|[大きな公園]があります。","Where do you live?|どこに住んでいますか？"],
+A2:["My town is famous for [its hot springs].|私の町は[温泉]で有名です。","There are many [temples] near my house.|家の近くに[お寺]がたくさんあります。","It takes [twenty] minutes to get to the station.|駅まで[20]分かかります。","What's your town like?|あなたの町はどんなところですか？"],
+B1:["I've lived in [this city] since I was [five].|[5]歳の頃から[この市]に住んでいます。","If you come here, you should visit [the castle].|ここに来たら[お城]に行くべきです。","It's [quiet], but there aren't many [places to hang out].|[静か]だけど、[遊ぶ場所]があまりありません。","What do you like about the place you live?|住んでいる場所のどこが好きですか？"],
+B2:["My town has changed a lot since [the new station opened].|[新しい駅ができて]から町はかなり変わりました。","What I'd miss most if I moved away is [the sense of community].|引っ越したら一番恋しくなるのは[地域のつながり]です。","I'd like to see [more young people stay here] rather than [move to Tokyo].|[東京に出ていく]より[若い人がもっと地元に残って]ほしいです。","Would you rather live in a big city or a small town?|大都市と小さな町、どちらに住みたいですか？"],
+C1:["Like many rural areas, my town is facing [an aging population].|多くの地方と同じく、私の町も[高齢化]に直面しています。","I've only recently come to appreciate [how much history this area has].|最近になってようやく[この地域の歴史の深さ]がわかってきました。","Tourism has brought [money] but also [crowding and rising prices].|観光は[お金]をもたらしたが、[混雑と物価上昇]ももたらしました。","What could be done to revitalize local communities?|地域を活性化するには何ができると思いますか？"],
+C2:["There's a particular melancholy to [watching the shops you grew up with close].|[子どもの頃からの店が閉まっていく]のを見ることには独特の寂しさがあります。","My sense of home is tied less to [the place itself] than to [the people in it].|私にとっての故郷は[場所そのもの]より[そこにいる人々]と結びついています。","I'm torn between [the pull of the city] and [a loyalty to where I'm from].|[都会の魅力]と[地元への愛着]の間で揺れています。","Is it possible to feel truly at home in more than one place?|複数の場所を本当の故郷と感じることはできると思いますか？"]},
+animals:{
+A1:["I have a [dog].|[犬]を飼っています。","Its name is [Pochi].|名前は[ポチ]です。","It's [cute].|[かわいい]です。","Do you have a pet?|ペットを飼っていますか？"],
+A2:["My [cat] is [three] years old.|うちの[猫]は[3]歳です。","I walk my dog [every morning].|[毎朝]犬の散歩をします。","I want to have a [rabbit].|[うさぎ]を飼いたいです。","What's your favorite animal?|好きな動物は何ですか？"],
+B1:["I've had [my dog] for [six] years, so he's like [a brother] to me.|[犬]を[6]年飼っていて、[兄弟]のような存在です。","My favorite animal is [the penguin] because [it walks in a funny way].|[歩き方がおもしろい]ので[ペンギン]が一番好きです。","Taking care of a pet is [a lot of work], but [it's worth it].|ペットの世話は[大変]だけど[その価値があります]。","Have you ever been to a zoo or aquarium?|動物園や水族館に行ったことはありますか？"],
+B2:["Having a pet has taught me [responsibility] in a way nothing else has.|ペットを飼うことで、他では学べない形で[責任感]を学びました。","I'm more of a [cat] person, since [they're independent].|[自立している]ので、どちらかというと[猫]派です。","I'd love to see [elephants] in the wild someday.|いつか野生の[ゾウ]を見てみたいです。","Are you more of a dog person or a cat person?|あなたは犬派？猫派？"],
+C1:["I have mixed feelings about [zoos]; they [protect species] but [limit animals' freedom].|[動物園]には複雑な思いがあります。[種を守る]けど[動物の自由を奪う]。","The bond between [people and pets] is often underestimated.|[人とペット]の絆は過小評価されがちです。","It's alarming how many species are [disappearing because of human activity].|[人間の活動によって消えつつある]種の多さには驚かされます。","Do you think animals should have legal rights?|動物に法的な権利を認めるべきだと思いますか？"],
+C2:["Observing [animals] has made me question [how unique human emotions really are].|[動物]を観察して、[人間の感情はどれほど特別なのか]疑問を持つようになりました。","There's an uncomfortable contradiction in [loving some animals while eating others].|[ある動物を愛しながら別の動物を食べる]ことには居心地の悪い矛盾があります。","A world without [wild spaces] would be immeasurably poorer.|[野生の空間]のない世界は計り知れないほど貧しいものになるでしょう。","Where should we draw the line between using animals and exploiting them?|動物を利用することと搾取することの境界線はどこにあると思いますか？"]},
+tech:{
+A1:["I have a [smartphone].|[スマホ]を持っています。","I use [LINE] every day.|毎日[LINE]を使います。","I play [games] on my phone.|スマホで[ゲーム]をします。","What app do you use?|どのアプリを使いますか？"],
+A2:["I use my phone for [three] hours a day.|1日に[3]時間スマホを使います。","I often watch videos on [YouTube].|よく[YouTube]で動画を見ます。","I got a new [tablet] last year.|去年新しい[タブレット]を手に入れました。","How long do you use your phone every day?|毎日どれくらいスマホを使いますか？"],
+B1:["I use [AI apps] to help me [study English].|[英語の勉強]に[AIアプリ]を使っています。","I think I spend too much time on [social media].|[SNS]に時間を使いすぎていると思います。","I can't imagine life without [my phone].|[スマホ]のない生活は想像できません。","What's the most useful app you have?|一番便利なアプリは何ですか？"],
+B2:["While [technology] makes life easier, it can also [make us less patient].|[テクノロジー]は生活を便利にする一方で、[私たちを短気にする]こともあります。","I've started [turning off notifications] to help me [focus].|[集中する]ために[通知をオフに]し始めました。","If I could invent something, it would be [an app that translates in real time].|何か発明できるなら[リアルタイム翻訳アプリ]です。","Do you think smartphones should be allowed in class?|授業中のスマホは許可すべきだと思いますか？"],
+C1:["AI is advancing so quickly that [it's hard to predict which jobs will remain].|AIの進歩が速すぎて、[どの仕事が残るか予測しにくい]です。","I'm concerned about [how much personal data we give away without thinking].|[何も考えずにどれほど個人情報を差し出しているか]が心配です。","Technology itself is neutral; what matters is [how we choose to use it].|技術そのものは中立で、大切なのは[どう使うか]です。","How do you think AI will change the way we learn?|AIは学び方をどう変えると思いますか？"],
+C2:["We've grown so used to [instant answers] that [sitting with uncertainty] feels almost foreign.|[すぐに答えが出る]ことに慣れすぎて、[不確かさと向き合う]ことが異質に感じられます。","The question isn't whether [AI] will change society, but [who gets to decide how].|問題は[AI]が社会を変えるかではなく、[誰がその方向を決めるか]です。","I'm ambivalent about [being constantly connected]; it's liberating and exhausting in equal measure.|[常時接続]には複雑な思いがあります。解放的であり、同じくらい疲れます。","Are we shaping our technology, or is it shaping us?|私たちが技術を形づくっているのか、技術が私たちを形づくっているのか？"]},
+environment:{
+A1:["I like [nature].|[自然]が好きです。","I use [my own bag].|[マイバッグ]を使います。","Let's [save water].|[水を節約]しよう。","Do you recycle?|リサイクルしていますか？"],
+A2:["I always [separate the garbage] at home.|家ではいつも[ゴミを分別]しています。","I try not to use [plastic bottles].|[ペットボトル]を使わないようにしています。","It's getting [hotter] every year.|年々[暑く]なっています。","What do you do to help the environment?|環境のために何をしていますか？"],
+B1:["I think [plastic waste] is a serious problem.|[プラスチックごみ]は深刻な問題だと思います。","We can [turn off the lights] to save energy.|[電気を消す]ことで省エネできます。","Our school started [a recycling project] last year.|去年うちの学校は[リサイクル活動]を始めました。","Which environmental problem worries you the most?|一番心配な環境問題は何ですか？"],
+B2:["Individual actions matter, but [companies and governments] need to [do much more].|個人の行動も大切ですが、[企業や政府]が[もっと多くのことをする]必要があります。","I was shocked to learn that [so much food is wasted in Japan].|[日本でこんなに食品が廃棄されている]と知って衝撃を受けました。","If everyone [took public transport], it would make a big difference.|みんなが[公共交通機関を使え]ば、大きな違いが生まれるでしょう。","Do you think young people care more about the environment than older generations?|若い世代は上の世代より環境に関心があると思いますか？"],
+C1:["There's often a tension between [economic growth] and [environmental protection].|[経済成長]と[環境保護]の間にはしばしば緊張関係があります。","I'm cautiously optimistic about [renewable energy], though [progress is slow].|[再生可能エネルギー]には慎重ながら楽観的ですが、[進みは遅い]です。","Climate change affects [poorer countries] disproportionately, which raises questions of fairness.|気候変動は[貧しい国]に不均衡に影響し、公平性の問題を提起します。","What role should schools play in environmental education?|環境教育において学校はどんな役割を果たすべきだと思いますか？"],
+C2:["It's tempting to feel [helpless], yet collective action has [changed the course of history before].|[無力感]を抱きたくなりますが、集団の行動は[これまでも歴史の流れを変えてきました]。","Much of what's marketed as [eco-friendly] is, frankly, [greenwashing].|[環境に優しい]と宣伝されるものの多くは、率直に言って[見せかけ]です。","The real challenge lies not in [the technology] but in [changing deeply rooted habits].|本当の課題は[技術]ではなく[深く根付いた習慣を変えること]にあります。","Is it fair to ask future generations to pay for today's choices?|今日の選択のツケを将来の世代に払わせるのは公平だと思いますか？"]},
+culture:{
+A1:["I like [kimono].|[着物]が好きです。","This is [mochi].|これは[おもち]です。","We eat [osechi] at New Year.|お正月に[おせち]を食べます。","Do you know [origami]?|[折り紙]を知っていますか？"],
+A2:["In Japan, we [take off our shoes] at home.|日本では家で[靴を脱ぎ]ます。","I went to a [summer festival] with my friends.|友達と[夏祭り]に行きました。","[Hanami] is very popular in [April].|[4月]は[お花見]がとても人気です。","What traditions do you have in your country?|あなたの国にはどんな伝統がありますか？"],
+B1:["One Japanese custom I like is [bowing], because [it shows respect].|私が好きな日本の習慣は[お辞儀]です。[敬意を表す]からです。","I've tried [the tea ceremony] once, and it was [more difficult than I thought].|[茶道]を一度体験したら、[思ったより難しかった]です。","Many foreigners are surprised by [how clean the streets are].|多くの外国人が[道のきれいさ]に驚きます。","What do you think is unique about Japanese culture?|日本文化の独特なところは何だと思いますか？"],
+B2:["Japanese culture places a lot of value on [harmony], sometimes more than [individual opinions].|日本の文化は[和]を重んじ、時に[個人の意見]以上に大切にします。","I think [anime and manga] have done a lot to spread Japanese culture abroad.|[アニメや漫画]は日本文化を海外に広めるのに大きく貢献したと思います。","Some traditions, like [New Year's cards], are slowly disappearing.|[年賀状]のような伝統は少しずつ消えつつあります。","Which Japanese tradition would you most like to experience?|どの日本の伝統を一番体験してみたいですか？"],
+C1:["The concept of [omotenashi] is hard to translate, but it roughly means [anticipating others' needs].|[おもてなし]は訳しにくい概念ですが、大まかには[相手の求めることを先回りすること]です。","I think [reading the air] can be both [a strength] and [a burden].|[空気を読む]ことは[長所]にも[重荷]にもなると思います。","Traditions survive not by staying frozen, but by [adapting to the times].|伝統は凍結されてではなく[時代に適応すること]で生き残ります。","How do you think globalization is affecting traditional cultures?|グローバル化は伝統文化にどう影響していると思いますか？"],
+C2:["[Wabi-sabi], finding beauty in imperfection, offers [a quiet counterpoint to modern perfectionism].|不完全さに美を見出す[わびさび]は、[現代の完璧主義への静かな対抗軸]となります。","Culture is often presented as [something fixed], when in reality it's [constantly negotiated].|文化は[固定されたもの]として語られがちですが、実際は[常に交渉されているもの]です。","What outsiders see as [politeness] can sometimes mask [a reluctance to engage openly].|外から見た[礼儀正しさ]が、時に[率直に向き合うことへのためらい]を隠していることもあります。","Can a culture be truly understood by someone who wasn't raised in it?|そこで育っていない人が文化を本当に理解できると思いますか？"]}
+};
+
+// 追加の「聞き返す」質問(各レベル3つ)
+const Q={
+intro:{A1:["Where do you live?|どこに住んでいますか？","How old are you?|何歳ですか？","What do you like?|何が好きですか？"],
+A2:["What grade are you in?|何年生ですか？","What do you do in your free time?|暇なときは何をしていますか？","Do you have any brothers or sisters?|兄弟姉妹はいますか？"],
+B1:["How would your friends describe you?|友達はあなたをどんな人だと言いますか？","What are you interested in these days?|最近何に興味がありますか？","Have you lived there all your life?|ずっとそこに住んでいるんですか？"],
+B2:["What's something most people don't know about you?|あまり人に知られていないあなたの一面は？","What are you most proud of so far?|これまでで一番誇りに思っていることは？","How would you describe yourself in three words?|自分を3語で表すと？"],
+C1:["What's a belief you hold that others might find surprising?|人が意外に思いそうな、あなたの信念は？","How have you changed over the past few years?|ここ数年であなたはどう変わりましたか？","What values matter most to you?|あなたが一番大切にしている価値観は？"],
+C2:["Is there a part of your identity you feel is often misunderstood?|誤解されがちだと感じる自分の一面はありますか？","What do you think first impressions reveal, and what do they hide?|第一印象は何を明かし、何を隠すと思いますか？","How much of who you are was chosen, and how much was given?|今の自分のどこまでが自分で選んだもので、どこまでが与えられたものだと思いますか？"]},
+hobby:{A1:["Do you play sports?|スポーツはしますか？","What do you like?|何が好きですか？","Do you play games?|ゲームはしますか？"],
+A2:["What do you do after school?|放課後は何をしますか？","How often do you [practice]?|どのくらい[練習]しますか？","When did you start?|いつ始めましたか？"],
+B1:["How did you get into it?|どうやって始めたんですか？","What's the best thing about it?|一番いいところは何ですか？","Is there anything you'd like to try next?|次に挑戦したいことはありますか？"],
+B2:["Has your hobby changed the way you see things?|趣味で物の見方は変わりましたか？","Would you ever turn your hobby into a job?|趣味を仕事にしたいと思いますか？","What would you recommend to a beginner?|初心者に何をすすめますか？"],
+C1:["What's kept you interested in it for so long?|なぜそんなに長く興味が続いているんですか？","Do you find it more relaxing or challenging?|癒やされる？それとも挑戦的？","How has it influenced other areas of your life?|生活の他の面にどんな影響がありましたか？"],
+C2:["Is there a hobby you abandoned but still think about?|やめたけど今も気になっている趣味はありますか？","Do you think passion can be learned, or is it innate?|情熱は身につくもの？生まれつき？","What does your hobby give you that nothing else does?|他では得られない、趣味がくれるものは何ですか？"]},
+school:{A1:["What grade are you in?|何年生ですか？","Do you like school?|学校は好きですか？","What's your favorite subject?|好きな教科は何ですか？"],
+A2:["How do you get to school?|どうやって通学していますか？","What time does school start?|学校は何時に始まりますか？","Do you have a school uniform?|制服はありますか？"],
+B1:["What's the best event at your school?|あなたの学校で一番いい行事は何ですか？","Who's your favorite teacher, and why?|好きな先生は誰？なぜ？","How much homework do you usually get?|宿題はふだんどのくらい出ますか？"],
+B2:["If you could add one subject, what would it be?|一つ教科を増やせるなら何にしますか？","What have you learned from club activities?|部活から何を学びましたか？","Do you think school rules are too strict?|校則は厳しすぎると思いますか？"],
+C1:["What skills do you think schools fail to teach?|学校が教えられていない力は何だと思いますか？","How has school shaped your view of the world?|学校はあなたの世界観をどう形づくりましたか？","Do you think competition among students is healthy?|生徒同士の競争は健全だと思いますか？"],
+C2:["Should schools prioritize knowledge or character?|学校は知識と人格、どちらを優先すべき？","What would an ideal school look like to you?|あなたにとって理想の学校とは？","Can creativity really be taught in a classroom?|創造性は教室で本当に教えられると思いますか？"]},
+weekend:{A1:["Are you free on [Sunday]?|[日曜]はひまですか？","Do you like weekends?|週末は好きですか？","What will you do?|何をしますか？"],
+A2:["What did you do last weekend?|先週末は何をしましたか？","Where did you go?|どこに行きましたか？","Did you have fun?|楽しかったですか？"],
+B1:["What's your ideal way to spend a Saturday?|理想の土曜日の過ごし方は？","Do you usually stay home or go out?|ふだん家にいる派？出かける派？","Have you got anything special coming up?|何か特別な予定はありますか？"],
+B2:["What's the best weekend you've had recently?|最近で一番よかった週末は？","Do you ever feel your weekends are too short?|週末が短すぎると感じることはありますか？","Is there anything you've been putting off?|先延ばしにしていることはありますか？"],
+C1:["How do you decide what to do with your free time?|自由時間の使い方をどうやって決めていますか？","Do you find it hard to switch off from school?|学校のことから頭を切り替えるのは難しいですか？","What's one thing you'd never give up your weekend for?|週末をつぶしてまではやりたくないことは？"],
+C2:["Do you think free time has become another thing to optimize?|自由時間も効率化の対象になってしまったと思いますか？","What does a truly restful weekend look like for you?|本当に休まる週末とはどんなもの？","Has the way you spend weekends changed as you've grown older?|成長とともに週末の過ごし方は変わりましたか？"]},
+travel:{A1:["Do you like trips?|旅行は好きですか？","Where did you go?|どこに行きましたか？","Was it fun?|楽しかったですか？"],
+A2:["Where did you go last summer?|去年の夏はどこに行きましたか？","Who did you go with?|誰と行きましたか？","What did you eat there?|そこで何を食べましたか？"],
+B1:["Where would you like to go next?|次はどこに行きたいですか？","Do you prefer the beach or the mountains?|海と山、どっちが好き？","What do you always take with you when you travel?|旅行にいつも持っていくものは？"],
+B2:["Have you ever had a problem while traveling?|旅行中にトラブルにあったことはありますか？","Would you ever travel alone?|一人旅をしてみたいですか？","What's a place you'd recommend to a foreign visitor?|外国人におすすめする場所は？"],
+C1:["How do you usually plan a trip?|旅行の計画はどうやって立てますか？","What's the biggest culture shock you've experienced?|経験した一番のカルチャーショックは？","Is it better to travel when you're young or later in life?|旅は若いうちがいい？それとも年を重ねてから？"],
+C2:["Is there a place that changed the way you see your own country?|自分の国の見え方を変えた場所はありますか？","Can you really understand a place as a tourist?|旅行者として本当にその土地を理解できると思いますか？","What's the difference between a traveler and a tourist, in your view?|旅人と観光客の違いは何だと思いますか？"]},
+food:{A1:["Do you like [sushi]?|[寿司]は好きですか？","What do you eat for breakfast?|朝ごはんは何を食べますか？","Are you hungry?|おなかすいてる？"],
+A2:["What did you eat for lunch?|昼ごはんは何を食べましたか？","What food don't you like?|嫌いな食べ物は何ですか？","Do you like sweet food?|甘いものは好きですか？"],
+B1:["What's your favorite restaurant?|お気に入りのお店はどこですか？","What do you usually cook?|ふだん何を作りますか？","Have you ever tried [Thai food]?|[タイ料理]を食べたことはありますか？"],
+B2:["What dish would you recommend to a foreign friend?|外国の友達にすすめる料理は？","Do you prefer eating out or at home?|外食と家ごはん、どっちが好き？","What's the strangest thing you've ever eaten?|今までで一番変わった食べ物は？"],
+C1:["Has your taste in food changed over the years?|食べ物の好みは年々変わってきましたか？","What role does food play in your family?|あなたの家族にとって食事はどんな役割を持っていますか？","Do you think school lunches should be healthier?|学校の昼食はもっと健康的にすべきだと思いますか？"],
+C2:["Is there a dish that reminds you of a particular time in your life?|人生のある時期を思い出させる料理はありますか？","How do you feel about the globalization of food?|食のグローバル化についてどう思いますか？","Do you think we eat with our eyes as much as our mouths?|私たちは口と同じくらい目で食べていると思いますか？"]},
+music:{A1:["Do you sing?|歌いますか？","Who is your favorite singer?|好きな歌手は誰ですか？","Do you play the piano?|ピアノを弾きますか？"],
+A2:["When do you listen to music?|いつ音楽を聴きますか？","Can you play an instrument?|楽器は弾けますか？","Do you like karaoke?|カラオケは好きですか？"],
+B1:["What song are you into right now?|今ハマっている曲は？","Have you ever been to a live concert?|ライブに行ったことはありますか？","What music do you listen to when you study?|勉強中はどんな音楽を聴きますか？"],
+B2:["Which song would you choose to describe yourself?|自分を表す曲を選ぶなら？","Do you pay more attention to lyrics or melody?|歌詞とメロディ、どちらを重視しますか？","What artist would you like to see live?|ライブで見たいアーティストは？"],
+C1:["How has your taste in music changed over time?|音楽の好みは時とともにどう変わりましたか？","Does music sound different to you depending on your mood?|気分によって音楽の聞こえ方は変わりますか？","What do you think makes a song timeless?|曲が時代を超える理由は何だと思いますか？"],
+C2:["Is there a piece of music you only came to appreciate later?|後になってから良さがわかった曲はありますか？","Can music be separated from the artist who made it?|音楽はそれを作ったアーティストと切り離せると思いますか？","What do you think we're looking for when we listen to sad songs?|悲しい曲を聴くとき、私たちは何を求めていると思いますか？"]},
+movies:{A1:["Do you like anime?|アニメは好きですか？","What's your favorite movie?|好きな映画は何ですか？","Do you watch TV?|テレビは見ますか？"],
+A2:["What kind of movies do you like?|どんな映画が好きですか？","Who is your favorite actor?|好きな俳優は誰ですか？","Do you go to the movie theater?|映画館に行きますか？"],
+B1:["What's the best movie you've seen this year?|今年見た中で一番の映画は？","Do you like happy endings?|ハッピーエンドは好きですか？","Which character do you like the most?|一番好きなキャラクターは？"],
+B2:["Is there a movie that changed the way you think?|考え方を変えた映画はありますか？","Do you prefer movies or TV series?|映画とドラマ、どっちが好き？","Have you ever read the book a movie was based on?|映画の原作を読んだことはありますか？"],
+C1:["What makes a character believable to you?|キャラクターにリアリティを感じるのはどんなとき？","Do you think movies should have a message?|映画にはメッセージが必要だと思いますか？","How do streaming services affect the kind of films being made?|配信サービスは作られる映画にどう影響していると思いますか？"],
+C2:["Is there a film you disliked at first but came to admire?|最初は嫌いだったけど後で評価するようになった映画はありますか？","Does ambiguity make a story stronger or weaker?|曖昧さは物語を強くする？弱くする？","Where's the line between entertainment and art, in your opinion?|娯楽と芸術の境目はどこだと思いますか？"]},
+sports:{A1:["Do you like [soccer]?|[サッカー]は好きですか？","Can you swim?|泳げますか？","Do you run?|走りますか？"],
+A2:["What sport do you play?|何のスポーツをしていますか？","Who is your favorite player?|好きな選手は誰ですか？","How often do you practice?|どのくらい練習しますか？"],
+B1:["Have you ever won a tournament?|大会で優勝したことはありますか？","What's the hardest part of your practice?|練習で一番きついのは何？","Do you prefer playing or watching sports?|スポーツはする派？見る派？"],
+B2:["What's the most exciting game you've ever watched?|今まで見た中で一番興奮した試合は？","How do you deal with pressure before a match?|試合前のプレッシャーにどう対処していますか？","Is there a sport you'd like to try?|やってみたいスポーツはありますか？"],
+C1:["What's more important, talent or hard work?|才能と努力、どちらが大切だと思いますか？","How do you stay motivated after a loss?|負けた後どうやってやる気を保っていますか？","Should e-sports be considered real sports?|eスポーツは本物のスポーツと言えると思いますか？"],
+C2:["What do you think sports reveal about a nation's identity?|スポーツは国のアイデンティティについて何を明らかにすると思いますか？","Is winning everything, or does how you play matter more?|勝つことがすべて？それともプレーの仕方の方が大切？","Should athletes speak out on social issues?|スポーツ選手は社会問題について発言すべきだと思いますか？"]},
+family:{A1:["How many people are in your family?|家族は何人ですか？","Do you have a pet?|ペットはいますか？","Is your mother kind?|お母さんは優しいですか？"],
+A2:["What does your father do?|お父さんは何の仕事をしていますか？","Do you live with your grandparents?|祖父母と一緒に住んでいますか？","Do you help at home?|家の手伝いをしますか？"],
+B1:["Who do you look like in your family?|家族の誰に似ていますか？","What do you usually do together as a family?|家族でふだん何をしますか？","Do you ever argue with your family?|家族とけんかすることはありますか？"],
+B2:["What's something you learned from your parents?|両親から学んだことは何ですか？","Do you have any family traditions?|家族の伝統はありますか？","How is your family different from other families?|あなたの家族は他の家族とどう違いますか？"],
+C1:["How has your family influenced your personality?|家族はあなたの性格にどう影響していますか？","Is it better to be an only child or to have siblings?|一人っ子と兄弟がいるの、どちらがいいと思う？","How do you balance independence with family expectations?|自立と家族の期待のバランスをどう取っていますか？"],
+C2:["What do you think you'll pass on to the next generation?|次の世代に何を伝えていくと思いますか？","Are there things about your family you only understood as you grew older?|大人になって初めてわかった家族のことはありますか？","Do blood ties matter more than the bonds we choose?|血のつながりは自分で選んだ絆より大切だと思いますか？"]},
+friends:{A1:["Who is your friend?|あなたの友達は誰？","Do you play with friends?|友達と遊びますか？","What's your friend's name?|友達の名前は？"],
+A2:["Where do you meet your friends?|どこで友達と会いますか？","What do you talk about with your friends?|友達と何について話しますか？","Do you have many friends?|友達はたくさんいますか？"],
+B1:["What's your favorite memory with your friends?|友達との一番の思い出は？","How often do you see your best friend?|親友とどのくらい会いますか？","What makes someone a good friend?|いい友達の条件は？"],
+B2:["Have you ever had a fight with a close friend?|親しい友達とけんかしたことはありますか？","Do you prefer hanging out in a big group or one-on-one?|大人数と1対1、どっちで遊ぶのが好き？","Are you still in touch with your childhood friends?|幼なじみとは今も連絡を取っていますか？"],
+C1:["Can online friendships be as strong as real-life ones?|ネットの友情は現実の友情と同じくらい強くなれると思いますか？","How has your idea of friendship changed over time?|友情に対する考えは時とともにどう変わりましたか？","What do you do when a friend makes a mistake?|友達が間違いをしたとき、どうしますか？"],
+C2:["Do friendships need shared values or just shared time?|友情に必要なのは共通の価値観？それとも共に過ごす時間？","Is honesty always the kindest thing in a friendship?|友情においては正直さが常に一番の優しさだと思いますか？","What role do friends play in shaping who we become?|友達は私たちの人格形成にどんな役割を果たすと思いますか？"]},
+future:{A1:["Do you like [English]?|[英語]は好きですか？","What are you good at?|何が得意ですか？","Where do you want to live?|どこに住みたいですか？"],
+A2:["What do you want to do in the future?|将来何をしたいですか？","Do you want to go to university?|大学に行きたいですか？","Why do you want to be a [teacher]?|なぜ[先生]になりたいんですか？"],
+B1:["When did you decide on your dream?|いつ夢を決めましたか？","What are you doing now to reach your goal?|目標に向けて今何をしていますか？","Do you want to live abroad someday?|いつか海外に住みたいですか？"],
+B2:["What would you do if your dream didn't work out?|夢が叶わなかったらどうしますか？","Who has influenced your future plans the most?|将来の計画に一番影響を与えた人は誰ですか？","Would you choose a job for money or for passion?|お金と情熱、どちらで仕事を選びますか？"],
+C1:["What kind of person do you hope to become?|どんな人間になりたいですか？","How do you deal with uncertainty about the future?|将来の不安とどう向き合っていますか？","Which skills will matter most in twenty years?|20年後に最も重要になるスキルは何だと思いますか？"],
+C2:["Should success be defined by society or by yourself?|成功は社会が定義するもの？自分が定義するもの？","Is it realistic to plan a life, or does life plan itself?|人生は計画できるもの？それとも成り行き？","What legacy, if any, would you like to leave behind?|もし残すなら、どんなものを残したいですか？"]},
+shopping:{A1:["Do you like shopping?|買い物は好きですか？","What do you want?|何が欲しいですか？","Is it cheap?|安いですか？"],
+A2:["What did you buy?|何を買いましたか？","Do you shop online?|ネットで買い物しますか？","How much was it?|いくらでしたか？"],
+B1:["What's the best thing you've bought recently?|最近買った中で一番いいものは？","Do you prefer shopping alone or with friends?|買い物は一人派？友達と派？","What's on your wish list right now?|今欲しいものは何ですか？"],
+B2:["Have you ever regretted buying something?|買って後悔したことはありますか？","Do you compare prices before you buy something?|買う前に値段を比べますか？","What's worth spending more money on, in your opinion?|お金をかける価値があるものは何だと思いますか？"],
+C1:["How do you decide whether you really need something?|本当に必要かどうか、どうやって判断していますか？","Do influencers affect what young people buy?|インフルエンサーは若者の買い物に影響していると思いますか？","Would you buy second-hand clothes?|古着を買いますか？"],
+C2:["Can buying things ever truly make us happy?|物を買うことで本当に幸せになれると思いますか？","How much responsibility do consumers have for how products are made?|製品の作られ方について消費者はどれほど責任があると思いますか？","What do your purchases say about you?|あなたの買い物はあなたについて何を物語っていると思いますか？"]},
+weather:{A1:["Is it cold today?|今日は寒いですか？","Do you like snow?|雪は好きですか？","Do you like summer?|夏は好きですか？"],
+A2:["What's the weather like today?|今日の天気はどうですか？","Is it hot in your town in summer?|あなたの町は夏暑いですか？","Does it snow where you live?|住んでいる所は雪が降りますか？"],
+B1:["What do you like to do in [summer]?|[夏]は何をするのが好き？","Do you check the weather forecast every day?|毎日天気予報を見ますか？","Which season do you like the least?|一番苦手な季節は？"],
+B2:["How do you cope with the heat in summer?|夏の暑さにどう対処していますか？","Does the weather affect your plans a lot?|天気で予定はよく変わりますか？","What's the most extreme weather you've experienced?|経験した一番ひどい天気は？"],
+C1:["Have you noticed the seasons changing over the years?|年々季節に変化を感じますか？","How should we prepare for natural disasters?|自然災害にどう備えるべきだと思いますか？","Do you think seasons influence people's personalities?|季節は人の性格に影響すると思いますか？"],
+C2:["Why is the weather such a universal topic of conversation?|天気がこれほど世界共通の話題なのはなぜだと思いますか？","How might climate change reshape the way we celebrate the seasons?|気候変動は季節の祝い方をどう変えると思いますか？","Is there a season you associate with a particular emotion?|特定の感情と結びつく季節はありますか？"]},
+health:{A1:["Are you tired?|疲れてる？","Do you sleep well?|よく眠れますか？","Do you eat breakfast?|朝ごはんは食べますか？"],
+A2:["What time do you go to bed?|何時に寝ますか？","Do you exercise?|運動はしますか？","Do you often catch colds?|よく風邪をひきますか？"],
+B1:["What do you do when you feel stressed?|ストレスを感じたらどうしますか？","Do you eat a lot of vegetables?|野菜はたくさん食べますか？","How do you relax after school?|放課後どうやってリラックスしていますか？"],
+B2:["What's one healthy habit you'd like to start?|始めたい健康的な習慣は？","Do you think you use your phone too much?|スマホを使いすぎていると思いますか？","How do you stay focused during exams?|試験期間中どうやって集中を保っていますか？"],
+C1:["How do you know when you need a break?|休みが必要だとどうやってわかりますか？","Do young people feel more pressure today than before?|今の若者は昔より強いプレッシャーを感じていると思いますか？","What does a balanced lifestyle mean to you?|あなたにとってバランスの取れた生活とは？"],
+C2:["Is health mainly an individual or a social responsibility?|健康は主に個人の責任？社会の責任？","How has technology changed the way we think about our bodies?|技術は私たちの身体観をどう変えたと思いますか？","Can someone be too focused on being healthy?|健康にこだわりすぎることはあり得ると思いますか？"]},
+hometown:{A1:["Is your town big?|あなたの町は大きいですか？","Do you like your town?|自分の町は好きですか？","Is there a park?|公園はありますか？"],
+A2:["What is your town famous for?|あなたの町は何で有名ですか？","How long have you lived there?|そこにどのくらい住んでいますか？","Is it near the sea?|海の近くですか？"],
+B1:["What's a good place to visit in your town?|あなたの町でおすすめの場所は？","What do people do for fun there?|そこではみんな何をして遊びますか？","What local food should I try?|どんな地元の食べ物を食べるべき？"],
+B2:["How has your town changed since you were little?|小さい頃から町はどう変わりましたか？","Would you like to live there in the future?|将来もそこに住みたいですか？","What would you improve about your town?|町の何を改善したいですか？"],
+C1:["What challenges is your town facing?|あなたの町はどんな課題に直面していますか？","How has your hometown shaped who you are?|故郷はあなたという人間をどう形づくりましたか？","Should young people stay in their hometowns?|若者は地元に残るべきだと思いますか？"],
+C2:["What does home mean to you?|あなたにとって「故郷」とは何ですか？","Can a place change without losing its character?|場所は個性を失わずに変わることができると思いますか？","How do you feel when you return after being away for a while?|しばらく離れた後に戻るとどんな気持ちになりますか？"]},
+animals:{A1:["Do you like dogs?|犬は好きですか？","Is it big?|大きいですか？","What's its name?|名前は何ですか？"],
+A2:["What pet do you have?|何のペットを飼っていますか？","Do you like cats or dogs?|猫と犬、どっちが好き？","Have you been to a zoo?|動物園に行ったことはありますか？"],
+B1:["What pet would you like to have?|どんなペットを飼いたいですか？","Who takes care of your pet?|ペットの世話は誰がしていますか？","What's the funniest thing your pet does?|ペットの一番おもしろいところは？"],
+B2:["If you were an animal, what would you be, and why?|動物になるなら何？なぜ？","Do you think pets understand how we feel?|ペットは人の気持ちがわかると思いますか？","Is it hard to keep a pet in Japan?|日本でペットを飼うのは大変だと思いますか？"],
+C1:["Do zoos do more good than harm?|動物園は害より益の方が多いと思いますか？","What should we do to protect endangered species?|絶滅危惧種を守るために何をすべきだと思いますか？","How do you feel about using animals in research?|動物実験についてどう思いますか？"],
+C2:["Do animals have something like a moral sense?|動物にも道徳心のようなものがあると思いますか？","What does our treatment of animals say about us?|動物の扱い方は私たちについて何を物語っていると思いますか？","Is keeping pets a form of love or of control?|ペットを飼うことは愛情？それとも支配？"]},
+tech:{A1:["Do you have a phone?|スマホを持っていますか？","Do you play games?|ゲームはしますか？","Do you use LINE?|LINEを使いますか？"],
+A2:["What do you use your phone for?|スマホを何に使いますか？","Which apps do you use every day?|毎日使うアプリは？","Do you watch YouTube?|YouTubeは見ますか？"],
+B1:["How much time do you spend on your phone?|スマホにどのくらい時間を使いますか？","Have you ever used AI for homework?|宿題にAIを使ったことはありますか？","What app would you recommend to me?|私におすすめのアプリは？"],
+B2:["Could you live without your phone for a week?|1週間スマホなしで過ごせますか？","What's the best thing technology has given us?|テクノロジーがくれた最高のものは？","Do you trust information you find online?|ネットの情報を信用していますか？"],
+C1:["How will AI affect your future career?|AIはあなたの将来の仕事にどう影響すると思いますか？","Should there be age limits for social media?|SNSに年齢制限を設けるべきだと思いますか？","How do you protect your privacy online?|ネット上のプライバシーをどう守っていますか？"],
+C2:["Does technology bring people closer or push them apart?|技術は人を近づける？遠ざける？","Where should we draw the line in developing AI?|AI開発の線引きはどこにすべきだと思いますか？","What might we be losing as life becomes more digital?|生活がデジタル化する中で私たちは何を失いつつあると思いますか？"]},
+environment:{A1:["Do you use your own bag?|マイバッグを使いますか？","Do you like nature?|自然は好きですか？","Do you turn off the lights?|電気を消していますか？"],
+A2:["Do you separate your garbage?|ゴミを分別していますか？","Do you use plastic bags?|レジ袋を使いますか？","Do you walk or ride a bike to school?|歩きや自転車で通学していますか？"],
+B1:["What can students do to help the environment?|環境のために生徒は何ができますか？","Does your town have any eco projects?|あなたの町にエコ活動はありますか？","What do you do with things you don't need?|いらなくなった物はどうしていますか？"],
+B2:["Which is more important: saving energy or reducing waste?|省エネとゴミ削減、どちらが大切だと思いますか？","Would you pay more for eco-friendly products?|環境に優しい製品なら高くても買いますか？","Have you noticed any changes in nature around you?|身の回りの自然に変化を感じますか？"],
+C1:["Should governments ban single-use plastics?|政府は使い捨てプラスチックを禁止すべきだと思いますか？","Can technology solve climate change?|技術で気候変動を解決できると思いますか？","How can we encourage people to change their habits?|人々に習慣を変えてもらうにはどうすればいいと思いますか？"],
+C2:["Is economic growth compatible with protecting the planet?|経済成長と地球の保護は両立できると思いますか？","Who should bear the greatest responsibility for climate change?|気候変動の責任を最も負うべきなのは誰だと思いますか？","What would you be willing to give up for the environment?|環境のために何を手放せますか？"]},
+culture:{A1:["Do you like [anime]?|[アニメ]は好きですか？","Can you use chopsticks?|お箸は使えますか？","Do you know [sushi]?|[寿司]を知っていますか？"],
+A2:["What do you do at New Year?|お正月は何をしますか？","Have you ever worn a [yukata]?|[浴衣]を着たことはありますか？","What's your favorite Japanese food?|好きな日本食は何ですか？"],
+B1:["What Japanese culture is popular in your country?|あなたの国ではどんな日本文化が人気ですか？","Which festival do you like the most?|一番好きなお祭りは？","What surprised you most about Japan?|日本で一番驚いたことは？"],
+B2:["What custom from your country would you like to share?|あなたの国のどんな習慣を紹介したいですか？","Do you think Japanese manners are hard to learn?|日本のマナーは身につけにくいと思いますか？","How do young people feel about traditions these days?|最近の若者は伝統をどう感じていると思いますか？"],
+C1:["Which Japanese values do you find most interesting?|日本のどんな価値観を一番興味深いと思いますか？","How is modern Japan different from its image abroad?|現代の日本は海外でのイメージとどう違うと思いますか？","Should traditions be protected or allowed to change?|伝統は守るべき？それとも変化を許すべき？"],
+C2:["What gets lost when a concept is translated into another language?|概念が別の言語に訳されるとき何が失われると思いますか？","Is there such a thing as a pure culture?|「純粋な」文化というものは存在すると思いますか？","How does your culture shape the way you express emotions?|あなたの文化は感情表現の仕方にどう影響していると思いますか？"]}
+};
+
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+let theme=store.get("tr-theme")||"intro";
+let level=store.get("tr-level")||"A2";
+if(!P[theme])theme="intro";
+if(!LEVELS.find(l=>l.id===level))level="A2";
+let hideJa=store.get("tr-hideja")==="1";
+
+const $=id=>document.getElementById(id);
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const markup=s=>esc(s).replace(/\[([^\]]+)\]/g,"<mark>$1</mark>");
+const plain=s=>s.replace(/\[([^\]]+)\]/g,"$1");
+const split=s=>{const [en,ja]=s.split("|");return {en,ja}};
+const says=()=>P[theme][level].slice(0,3).map(split);
+const asks=()=>[P[theme][level][3],...Q[theme][level]].map(split);
+const cur=()=>[...says(),...asks()];
+const speaker='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
+
+function renderControls(){
+  $("themes").innerHTML=THEMES.map(t=>`<button class="chip" type="button" data-t="${t.id}" aria-pressed="${t.id===theme}">${t.ja}</button>`).join("");
+  $("stairs").innerHTML=LEVELS.map(l=>`<button class="stair" type="button" data-l="${l.id}" aria-pressed="${l.id===level}" aria-label="${l.id} ${l.ja}">${l.id}</button>`).join("");
+  const L=LEVELS.find(l=>l.id===level);
+  $("levelNote").innerHTML=`<b>${L.id} ${L.ja}</b>:${L.desc}`;
+}
+function renderPhrases(){
+  const t=THEMES.find(x=>x.id===theme);
+  $("resultTitle").textContent=`${t.ja} × ${level}`;
+  const item=(p,i)=>`<li class="phrase">
+      <span class="en" lang="en">${markup(p.en)}</span>
+      <button class="say" type="button" data-i="${i}" aria-label="発音を聞く">${speaker}</button>
+      <div class="ja">${esc(plain(p.ja))}</div>
+    </li>`;
+  const s=says(), a=asks();
+  $("phrases").innerHTML=s.map((p,i)=>item(p,i)).join("");
+  $("asks").innerHTML=a.map((p,i)=>item(p,i+s.length)).join("");
+  document.body.classList.toggle("hide-ja",hideJa);
+  $("jaToggle").textContent=hideJa?"日本語訳を表示":"日本語訳を隠す";
+  $("exportNote").textContent=hideJa?"表示中のフレーズを画像(PNG)にします(日本語訳なし)。":"表示中のフレーズを画像(PNG)にします。";
+}
+function render(){renderControls();renderPhrases()}
+
+/* 読み上げ */
+let voices=[];
+function loadVoices(){try{voices=speechSynthesis.getVoices().filter(v=>/^en(-|_)/i.test(v.lang))}catch(e){}}
+if("speechSynthesis" in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
+else $("foot").textContent="このブラウザでは読み上げ機能が使えません。";
+function speak(i,btn){
+  if(!("speechSynthesis" in window))return;
+  speechSynthesis.cancel();
+  document.querySelectorAll(".say.playing").forEach(b=>b.classList.remove("playing"));
+  const u=new SpeechSynthesisUtterance(plain(cur()[i].en));
+  u.lang="en-US";
+  const v=voices.find(v=>v.lang.replace("_","-")==="en-US")||voices[0];
+  if(v)u.voice=v;
+  u.rate=LEVELS.find(l=>l.id===level).rate;
+  btn.classList.add("playing");
+  u.onend=u.onerror=()=>btn.classList.remove("playing");
+  speechSynthesis.speak(u);
+}
+
+/* 画像エクスポート */
+const EN_FONT='"Lexend", "Helvetica Neue", Arial, sans-serif';
+const JA_FONT='"M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", "Hiragino Sans", sans-serif';
+function enTokens(s){
+  const out=[];
+  s.split(/(\[[^\]]+\])/).forEach(seg=>{
+    if(!seg)return;
+    const m=seg.startsWith("[");
+    const txt=m?seg.slice(1,-1):seg;
+    txt.split(/(\s+)/).forEach(w=>{if(w)out.push({t:w,m,sp:/^\s+$/.test(w)})});
+  });
+  return out;
+}
+function wrapEn(ctx,s,maxW){
+  const lines=[[]];let w=0;
+  for(const tk of enTokens(s)){
+    const tw=ctx.measureText(tk.t).width;
+    if(tk.sp){ if(w>0){lines[lines.length-1].push({...tk,w:tw});w+=tw;} continue; }
+    if(w+tw>maxW&&w>0){
+      const L=lines[lines.length-1];
+      while(L.length&&L[L.length-1].sp)L.pop();
+      lines.push([]);w=0;
+    }
+    lines[lines.length-1].push({...tk,w:tw});w+=tw;
+  }
+  return lines;
+}
+function wrapJa(ctx,s,maxW){
+  const lines=[];let line="";
+  for(const ch of s){
+    if(ctx.measureText(line+ch).width>maxW&&line){lines.push(line);line=ch;}
+    else line+=ch;
+  }
+  if(line)lines.push(line);
+  return lines;
+}
+async function buildImage(){
+  try{await Promise.all([document.fonts.load('500 44px "Lexend"'),document.fonts.load('700 64px "Lexend"'),document.fonts.load('400 30px "M PLUS Rounded 1c"'),document.fonts.load('700 30px "M PLUS Rounded 1c"')]);}catch(e){}
+  const W=1080,PAD=80,CW=W-PAD*2;
+  const C={bg:"#F7F9FB",ink:"#16283F",muted:"#5B6B80",line:"#DCE3EC",accent:"#1F4E79",mark:"#FFE066"};
+  const t=THEMES.find(x=>x.id===theme), L=LEVELS.find(l=>l.id===level), list=cur();
+  const cv=document.createElement("canvas"), ctx=cv.getContext("2d");
+  const EN_SIZE=44, EN_LH=64, JA_SIZE=30, JA_LH=46, TAG_SIZE=26;
+  // レイアウト計算
+  const blocks=list.map((p,i)=>{
+    ctx.font=`500 ${EN_SIZE}px ${EN_FONT}`;
+    const en=wrapEn(ctx,p.en,CW);
+    ctx.font=`400 ${JA_SIZE}px ${JA_FONT}`;
+    const ja=hideJa?[]:wrapJa(ctx,plain(p.ja),CW);
+    const ask=i===0||i===3;
+    const h=40+(ask?TAG_SIZE+14:0)+en.length*EN_LH+(ja.length?12+ja.length*JA_LH:0)+40;
+    return {en,ja,ask,h,label:i===0?"自分のことを話す":"相手に聞き返す"};
+  });
+  const HEADER=250, FOOTER=120;
+  const H=HEADER+blocks.reduce((a,b)=>a+b.h,0)+FOOTER;
+  cv.width=W;cv.height=H;
+  ctx.fillStyle=C.bg;ctx.fillRect(0,0,W,H);
+  ctx.textBaseline="alphabetic";
+  // ヘッダー
+  ctx.fillStyle=C.ink;ctx.font=`700 72px ${EN_FONT}`;ctx.fillText("Talk Ready",PAD,PAD+60);
+  ctx.font=`700 34px ${JA_FONT}`;ctx.fillStyle=C.accent;
+  ctx.fillText(`${t.ja}  ×  ${L.id} ${L.ja}`,PAD,PAD+128);
+  let y=HEADER;
+  ctx.strokeStyle=C.line;ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(PAD,y);ctx.lineTo(W-PAD,y);ctx.stroke();
+  for(const b of blocks){
+    let yy=y+40;
+    if(b.ask){ctx.font=`700 ${TAG_SIZE}px ${JA_FONT}`;ctx.fillStyle=C.accent;ctx.fillText(b.label,PAD,yy+TAG_SIZE-4);yy+=TAG_SIZE+14;}
+    ctx.font=`500 ${EN_SIZE}px ${EN_FONT}`;
+    for(const line of b.en){
+      const base=yy+EN_SIZE;
+      let x=PAD;
+      line.forEach((tk,k)=>{
+        const prev=line[k-1], next=line[k+1];
+        const hl=tk.m&&(!tk.sp||(prev&&prev.m&&next&&next.m));
+        if(hl){ctx.fillStyle=C.mark;const pad=tk.sp?0:4;ctx.fillRect(x-pad,base-EN_SIZE+2,tk.w+pad*2,EN_SIZE+14);}
+        x+=tk.w;
+      });
+      x=PAD;ctx.fillStyle=C.ink;
+      line.forEach(tk=>{if(!tk.sp)ctx.fillText(tk.t,x,base);x+=tk.w;});
+      yy+=EN_LH;
+    }
+    if(b.ja.length){
+      yy+=12;ctx.font=`400 ${JA_SIZE}px ${JA_FONT}`;ctx.fillStyle=C.muted;
+      for(const l of b.ja){ctx.fillText(l,PAD,yy+JA_SIZE);yy+=JA_LH;}
+    }
+    y+=b.h;
+    ctx.strokeStyle=C.line;ctx.beginPath();ctx.moveTo(PAD,y);ctx.lineTo(W-PAD,y);ctx.stroke();
+  }
+  ctx.font=`400 26px ${JA_FONT}`;ctx.fillStyle=C.muted;
+  ctx.fillText("黄色の部分を自分の内容に入れ替えて話してみよう",PAD,H-PAD+20);
+  return cv;
+}
+const downloadsP=Promise.resolve(null);
+async function exportImage(){
+  const btn=$("exportBtn");btn.disabled=true;
+  const note=$("exportNote");const orig=note.textContent;note.textContent="画像を作成中…";
+  try{
+    const cv=await buildImage();
+    const blob=await new Promise(r=>cv.toBlob(r,"image/png"));
+    const filename=`TalkReady_${theme}_${level}.png`;
+    const dl=await downloadsP;
+    if(dl&&blob){
+      try{await dl.save({filename,data:blob});note.textContent="保存しました。";setTimeout(()=>note.textContent=orig,2500);return;}
+      catch(err){
+        if(err&&err.code==="declined"){note.textContent=orig;return;}
+        if(err&&err.code==="rate_limited"){note.textContent="少し待ってからもう一度お試しください。";return;}
+      }
+    }
+    $("modalImg").src=cv.toDataURL("image/png");
+    $("modal").classList.add("open");
+    note.textContent=orig;
+  }catch(e){
+    note.textContent="画像を作成できませんでした。もう一度お試しください。";
+  }finally{btn.disabled=false;}
+}
+
+document.addEventListener("click",e=>{
+  const c=e.target.closest(".chip");
+  if(c){theme=c.dataset.t;store.set("tr-theme",theme);return render()}
+  const s=e.target.closest(".stair");
+  if(s){level=s.dataset.l;store.set("tr-level",level);return render()}
+  const b=e.target.closest(".say");
+  if(b)return speak(+b.dataset.i,b);
+  if(e.target.closest("#jaToggle")){hideJa=!hideJa;store.set("tr-hideja",hideJa?"1":"0");return renderPhrases()}
+  if(e.target.closest("#exportBtn"))return exportImage();
+  if(e.target.closest("#modalClose")||e.target.id==="modal")$("modal").classList.remove("open");
+});
+render();
+</script>
+</body>
+</html>
