@@ -1,58 +1,47 @@
-# TALK BATTLE — Conversation Intelligence
+# TALK INSIGHT — Conversation Intelligence
 
-Liquid Glass風の半透明UIで、2人の会話をまとめて分析するWebアプリです。サイト内に個人アカウント名は表示しません。
+会話を記録し、総合スコア・ランク・5つの観点・改善アドバイスで振り返るWebアプリです。
 
-## 公開方法（GitHub Pages）
+## 公開サイト
+https://udaihuai.github.io/talk-grading/
 
-1. GitHubでこのリポジトリを開く
-2. **Settings → Pages** を開く
-3. **Build and deployment → Source** を `Deploy from a branch` にする
-4. Branchを `main)、Folderを `/ (root)` にして **Save**
-5. 公開URL：`https://kouei20130525-lang.github.io/talk-grading/`
+## 主な機能
+- 1人 / 2人の会話モード
+- 音声認識による会話記録（対応ブラウザのみ）
+- 発言の手動入力
+- 総合スコア（100点満点）とランク評価（S / A+ / A / A- / B+ … F）
+- 自然さ・発言バランス・質問と返答・傾聴と理解・話題の広がりの5項目評価
+- 良かった点、改善アドバイス、話者別コメント
+- 会話ログとテキストリプレイ
 
-## 会話の使い方
+## 採点について
+AI採点はCloudflare Worker経由でGemini APIを利用します。AI採点に接続できない場合は、ブラウザ内のルールベース採点に切り替わります。通常採点は会話内容の意味を完全に理解するものではなく、発言回数・質問表現・反応語などを使った参考評価です。
 
-1. 2人の名前、テーマ、時間を設定
-2. AI採点サーバーURL（後述）を入力
-3. START CONVERSATIONを押してマイクを許可
-4. 話す人が変わるたびに「話者1 / 話者2」を切り替える
-5. 終了すると会話ログをChatGPTに送り、総合点・5項目・良かった点・改善点・話者別コメントを表示
+音声の音質、発音の正確さ、表情、声の印象を完全に判定するものではありません。AI採点も文字起こしされたテキストを中心に評価します。
 
-※ 1台のマイクを使う場合、話者の切替は手動です。切替を忘れると話者別評価が不正確になります。音声認識の精度はブラウザや環境に左右されます。
+## Cloudflare Workerの設定
+このリポジトリの `worker.js` をCloudflare Workersへデプロイします。必要な設定は以下です。
 
-## ChatGPT採点サーバーの設定（Cloudflare Workers）
+- Secret `GEMINI_API_KEY`：Gemini APIキー
+- Secret `ADMIN_PASSWORD`：管理者ログイン用パスワード
+- Secret `ADMIN_TOKEN_SECRET`：管理者トークン署名用の十分に長い秘密値
+- KV binding `TALK_INSIGHT_KV)：共有設定・利用回数保存用
+- 任意の環境変数 `GEMINI_MODEL)：モデル名（既定値 `gemini-2.5-flash`）
 
-GitHub Pagesは静的サイトなので、OpenAI APIキーを安全に隠して直接呼び出すことはできません。このリポジトリの `worker.js` をCloudflare Workerとしてデプロイし、APIキーはWorker Secretとして登録します。
+APIキーや管理者パスワード、トークン秘密値をHTMLやGitHubへ書き込まないでください。WorkerのコードをGitHubで更新しただけではCloudflare上のWorkerは更新されません。Cloudflare側で最新の `worker.js` を反映して **Save and Deploy** してください。
 
-1. Cloudflareにログインし、Workers & Pagesで新しいWorkerを作成
-2. `worker.js` の内容をWorkerのコードとして貼り付けてDeploy
-3. Workerの **Settings → Variables and Secrets** からSecretを追加
-   - Name：`OPENAI_API_KEY`
-   - Value：自分のOpenAI APIキー
-4. Workerを再デプロイし、発行されたWorker URL（例：`https://your-worker.workers.dev`）をサイトの「AI採点サーバーURL」に入力
+## 管理画面
+https://udaihuai.github.io/talk-grading/admin.html
 
-APIキーはサイト、GitHub、チャットに貼らないでください。OpenAI APIの利用はChatGPTの月額プランとは別で、API利用料金が発生する場合があります。料金・利用状況はOpenAI Platformで確認してください。
-
-## 採点内容
-
-- 会話全体の総合点（100点）
-- 自然さ
-- 発言バランス
-- 質問・返答
-- 傾聴・理解
-- 話題の広がり
-- 良かった点、次回への改善点、話者別コメント
-
-AIは認識されたテキストを評価します。声の音質、正確な発音、表情、相手の声を遮ったタイミングなどを直接・完全に評価するものではありません。
+管理画面のサーバー連携・共有設定・メンテナンス機能には、Workerの最新コードがデプロイされ、KV bindingとSecretが正しく設定されている必要があります。
 
 ## プライバシー
-
-- 録音音声そのものはこのWorkerへ送らず、ブラウザの音声認識結果（テキストと話者ラベル）を採点用に送信します。
-- Web Speech APIの認識処理はブラウザやOSの実装により外部サービスを利用する場合があります。
-- 会話ログは採点のためOpenAI APIへ送信されます。個人情報、住所、学校名、秘密などを話さないでください。
-- Workerは受信した会話テキストをアプリ側で保存しませんが、OpenAI API側のデータ取扱いは利用するサービスの最新ポリシーを確認してください。
+- 録音音声そのものではなく、ブラウザで認識したテキストと話者情報を採点APIへ送ります。
+- 音声認識機能はブラウザやOSの仕様に依存します。
+- AI採点を利用する場合、会話テキストはGemini APIへ送信されます。
+- 個人情報、住所、学校名、秘密などを会話に含めないでください。
 
 ## ファイル
-
-- `index.html`：Webアプリ本体
-- `worker.js`：ChatGPT採点用Cloudflare Worker
+- `index.html)：Webアプリ本体
+- `admin.html)：管理者向けコントロールセンター
+- `worker.js)：Cloudflare Worker（AI採点・共有設定API）
