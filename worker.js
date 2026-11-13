@@ -77,6 +77,19 @@ export default {
       catch (e) { return json({ ok: false, error: e.message }, 503); }
     }
 
+
+    if (url.pathname.endsWith("/health") && request.method === "GET") {
+      return json({
+        ok: true,
+        service: "talk-insight-api",
+        timestamp: new Date().toISOString(),
+        kvConfigured: !!env.TALK_INSIGHT_KV,
+        geminiConfigured: !!env.GEMINI_API_KEY,
+        adminConfigured: !!(env.ADMIN_PASSWORD && env.ADMIN_TOKEN_SECRET),
+        model: env.GEMINI_MODEL || "gemini-2.5-flash"
+      });
+    }
+
     if (url.pathname.endsWith("/usage") && request.method === "GET") {
       try {
         if (!env.TALK_INSIGHT_KV) return json({ ok: true, used: 0, limit: 1000 });
