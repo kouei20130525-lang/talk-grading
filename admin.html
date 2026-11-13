@@ -100,6 +100,16 @@ footer{color:#6888ad}
 .commandOption{display:block;width:100%;text-align:left;padding:12px;border:1px solid transparent;background:transparent;color:#c8e7ff;border-radius:5px;cursor:pointer;font:12px var(--mono)}
 .commandOption:hover,.commandOption.selected{background:#12375d;border-color:#317bb5}.paletteBox small{display:block;color:#7f9fbe;margin-top:12px}
 #maintenanceMessage{margin-top:8px}
+
+/* ADMIN AUTHENTICATION SCREEN */
+#auth{position:relative;overflow:hidden;border:1px solid #327bb8;box-shadow:0 25px 90px #0009,inset 0 1px #8bd7ff22;background:linear-gradient(145deg,#0c2343f5,#07152bf7);border-radius:12px;padding:34px}
+#auth:before{content:"TALK INSIGHT  /  RESTRICTED ACCESS";display:block;color:#61caff;font:700 10px var(--mono);letter-spacing:3px;margin-bottom:22px}
+#auth h2{font-size:25px;color:#e9f6ff;letter-spacing:1px}
+#auth .eyebrow{color:#61caff}
+#auth .btn.primary{min-width:170px;padding:13px 18px;box-shadow:0 7px 24px #087dc955}
+#auth .field label{letter-spacing:1.6px;color:#8fc9f4}
+#auth .field input{padding:14px;border-radius:6px;font-size:13px}
+#authMsg{min-height:20px;color:#ff9eaf}
 </style></head><body><main class="wrap">
 <header><div class="brand">TALK INSIGHT<small>DEVELOPER CONTROL CENTER</small></div><div class="row"><span class="pill">ADMIN / DEV MODE</span><button class="btn" id="logout">ログアウト</button></div></header>
 <section class="hero glass"><div class="eyebrow" style="color:#aebcf1">GLOBAL SYSTEM MANAGEMENT</div><h1>ADMIN CONTROL</h1><p>機能・採点・デザイン・データ・開発環境を一元管理</p></section>
