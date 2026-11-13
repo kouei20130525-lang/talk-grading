@@ -113,7 +113,7 @@ export default {
 
     if (url.pathname.endsWith("/admin/backup") && (request.method === "GET" || request.method === "POST")) {
       try {
-        const token = (request.headers.get("Authorization") || "").replace(/^Bearer\\s+/i, "");
+        const token = (request.headers.get("Authorization") || "").replace(/^Bearer\s+/i, "");
         const tokenCheck = await validToken(token);
         if (tokenCheck !== true) return json({ ok: false, error: tokenCheck }, 401);
         if (!env.TALK_INSIGHT_KV) return json({ ok: false, error: "TALK_INSIGHT_KV binding is not configured" }, 503);
