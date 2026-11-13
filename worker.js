@@ -110,6 +110,28 @@ export default {
       } catch (e) { return json({ ok: false, error: e.message }, 500); }
     }
 
+
+    if (url.pathname.endsWith("/admin/backup") && (request.method === "GET" || request.method === "POST")) {
+      try {
+        const token = (request.headers.get("Authorization") || "").replace(/^Bearer\\s+/i, "");
+        const tokenCheck = await validToken(token);
+        if (tokenCheck !== true) return json({ ok: false, error: tokenCheck }, 401);
+        if (!env.TALK_INSIGHT_KV) return json({ ok: false, error: "TALK_INSIGHT_KV binding is not configured" }, 503);
+        if (request.method === "GET") {
+          const current = await readSettings();
+          if (!current) return json({ ok: false, error: "共有設定がありません" }, 404);
+          return json({ ok: true, backup: { format: "talk-insight-backup-v1", exportedAt: new Date().toISOString(), config: current.settings || {} } });
+        }
+        const body = await request.json();
+        if (!body.settings || typeof body.settings !== "object" || JSON.stringify(body.settings).length > 50000)
+          return json({ ok: false, error: "バックアップデータが不正です" }, 400);
+        const current = await readSettings();
+        const record = { version: Number(current?.version || 0) + 1, updatedAt: new Date().toISOString(), settings: body.settings };
+        await env.TALK_INSIGHT_KV.put("global-settings", JSON.stringify(record));
+        return json({ ok: true, version: record.version, updatedAt: record.updatedAt });
+      } catch (e) { return json({ ok: false, error: e.message }, 500); }
+    }
+
     if (url.pathname.endsWith("/admin/settings") && request.method === "POST") {
       try {
         const token = (request.headers.get("Authorization") || "").replace(/^Bearer\s+/i, "");
@@ -142,6 +164,8 @@ export default {
 
       const settingsRecord = await readSettings();
       const settings = settingsRecord?.settings || {};
+      if (settings.maintenanceMode === true)
+        return json({ ok: false, maintenance: true, error: settings.maintenanceMessage || "メンテナンス中です" }, 503);
       if (settings.aiEnabled === false || settings.features?.["AI採点"] === false)
         return json({ ok: false, disabled: true, error: "AI採点は管理者によって停止されています" }, 503);
 
