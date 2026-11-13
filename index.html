@@ -851,6 +851,29 @@ $('adminLogo').addEventListener('click',openAdminFromLogo);
 $('adminLogo').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openAdminFromLogo()}});
 
 
-/* Check global maintenance state before revealing the app. */
-(async()=>{const screen=document.getElementById('maintenanceScreen');const app=document.querySelector('.app');app.style.visibility='hidden';try{const r=await fetch('https://talk-insight-api.kouei20130525.workers.dev/settings',{cache:'no-store'});const d=await r.json();const s=d.settings?.settings||d.settings||{};if(d.ok&&s.maintenanceMode){document.getElementById('maintenanceText').textContent=s.maintenanceMessage||'ただいまメンテナンスを行っています。';screen.style.display='flex';app.style.display='none';}else{app.style.visibility='visible';}}catch(e){console.warn('Maintenance status unavailable',e);app.style.visibility='visible';}})();
+/* Load shared admin settings before revealing the public app. */
+(async()=>{
+ const screen=document.getElementById('maintenanceScreen'),app=document.querySelector('.app');
+ app.style.visibility='hidden';
+ try{
+  const r=await fetch('https://talk-insight-api.kouei20130525.workers.dev/settings',{cache:'no-store'});
+  const d=await r.json(),shared=d.settings?.settings||d.settings||{};
+  if(d.ok&&shared.maintenanceMode){
+   document.getElementById('maintenanceText').textContent=shared.maintenanceMessage||'ただいまメンテナンスを行っています。';
+   screen.style.display='flex';app.style.display='none';return;
+  }
+  const f=shared.features||{};
+  const hide=(enabled,selector)=>{if(enabled===false)document.querySelectorAll(selector).forEach(el=>el.style.display='none')};
+  hide(f['Talk Ready'],'#tabTalkReady, #talkReadyPanel');
+  hide(f['会話分析'],'#tabAnalysis, #setup');
+  hide(f['ミッション機能'],'#mission');
+  hide(f['スキル分析'],'#skillProfile');
+  hide(f['手動文字入力'],'#manualEntry');
+  if(f['採点・評価']===false){const start=document.getElementById('start');if(start){start.disabled=true;start.textContent='SCORING DISABLED';}}
+  if(shared.aiEnabled===false||f['AI採点']===false){
+   const hint=document.querySelector('#setup .hint');if(hint)hint.textContent='AI採点は管理者によって停止されています。会話の記録とローカル参考分析は利用できます。';
+  }
+ }catch(e){console.warn('Shared settings unavailable',e);}
+ app.style.visibility='visible';
+})();
 </script></body></html>
