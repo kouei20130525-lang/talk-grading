@@ -25,8 +25,8 @@ AI採点はCloudflare Worker経由でGemini APIを利用します。AI採点に�
 - Secret `GEMINI_API_KEY`：Gemini APIキー
 - Secret `ADMIN_PASSWORD`：管理者ログイン用パスワード
 - Secret `ADMIN_TOKEN_SECRET`：管理者トークン署名用の十分に長い秘密値
-- KV binding `TALK_INSIGHT_KV)：共有設定・利用回数保存用
-- 任意の環境変数 `GEMINI_MODEL)：モデル名（既定値 `gemini-2.5-flash`）
+- KV binding：TALK_INSIGHT_KV（共有設定・利用回数保存用）
+- 任意の環境変数：GEMINI_MODEL（モデル名。既定値は gemini-2.5-flash）
 
 APIキーや管理者パスワード、トークン秘密値をHTMLやGitHubへ書き込まないでください。WorkerのコードをGitHubで更新しただけではCloudflare上のWorkerは更新されません。Cloudflare側で最新の `worker.js` を反映して **Save and Deploy** してください。
 
@@ -42,6 +42,6 @@ https://udaihuai.github.io/talk-grading/admin.html
 - 個人情報、住所、学校名、秘密などを会話に含めないでください。
 
 ## ファイル
-- `index.html)：Webアプリ本体
-- `admin.html)：管理者向けコントロールセンター
-- `worker.js)：Cloudflare Worker（AI採点・共有設定API）
+- index.html：Webアプリ本体
+- admin.html：管理者向けコントロールセンター
+- worker.js：Cloudflare Worker（AI採点・共有設定API）
