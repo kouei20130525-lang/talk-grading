@@ -521,7 +521,7 @@ body{
 .release li{margin:1px 0}
 @media(max-width:720px){.release-list{max-height:250px}}
 </style></head>
-<body><main class="app">
+<body><div id="maintenanceScreen" style="display:none;position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#07152b,#0b2d52);color:#e7f4ff;align-items:center;justify-content:center;text-align:center;padding:24px;font-family:'Noto Sans JP',sans-serif"><div style="max-width:560px"><div style="font:700 11px monospace;letter-spacing:4px;color:#64caff">TALK INSIGHT / SYSTEM MAINTENANCE</div><div style="font-size:42px;margin:22px">⚙</div><h1 style="font-size:26px">メンテナンス中</h1><p id="maintenanceText" style="line-height:2;color:#b8d4f2">ただいまメンテナンスを行っています。</p><p style="font:10px monospace;color:#7298c0">PLEASE TRY AGAIN LATER</p></div></div><main class="app">
 <header class="nav"><div class="nav-orbit orbit-one" aria-hidden="true"></div><div class="nav-orbit orbit-two" aria-hidden="true"></div><div class="brand"><div class="logo" id="adminLogo" role="button" tabindex="0" aria-label="TALK INSIGHT">TI</div><div><strong>TALK INSIGHT</strong><small>CONVERSATION INTELLIGENCE</small></div></div><div class="nav-actions"><button class="tutorial-help" id="openTutorial" type="button">使い方</button><button class="settings-toggle" id="openSettings" aria-label="設定を開く"><span class="settings-glyph" aria-hidden="true"></span></button><div class="livepill">SYSTEM READY</div></div></header>
 <section class="hero"><div class="eyebrow">LISTEN · CONNECT · COMMUNICATE</div><h1>Talk, Together.</h1><p>2人の会話を、5つの視点から分析。</p></section>
 <div class="tabs"><button class="tab active" id="tabAnalysis" type="button">CONVERSATION ANALYSIS</button><button class="tab" id="tabTalkReady" type="button">TALK READY / ENGLISH PRACTICE</button></div>
@@ -824,4 +824,7 @@ function openAdminFromLogo(){
 $('adminLogo').addEventListener('click',openAdminFromLogo);
 $('adminLogo').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openAdminFromLogo()}});
 
+
+/* Read global maintenance flag before enabling the app interface. */
+(async()=>{const screen=document.getElementById('maintenanceScreen');try{const r=await fetch('https://talk-insight-api.kouei20130525.workers.dev/settings',{cache:'no-store'});const d=await r.json();const s=d.settings?.settings||d.settings||{};if(d.ok&&s.maintenanceMode){document.getElementById('maintenanceText').textContent=s.maintenanceMessage||'ただいまメンテナンスを行っています。';screen.style.display='flex';document.querySelector('.app').style.display='none';}}catch(e){console.warn('Maintenance status unavailable',e)}})();
 </script></body></html>
