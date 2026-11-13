@@ -40,6 +40,14 @@ export default {
       if (!env.TALK_INSIGHT_KV) throw new Error("TALK_INSIGHT_KV binding is not configured");
       return await env.TALK_INSIGHT_KV.get("global-settings", "json") || null;
     };
+    // KV-backed best-effort limiter. Use a Cloudflare Rate Limiting binding for strict atomic enforcement.
+    const rateLimit = async (key, max, ttl) => {
+      const current = Number(await env.TALK_INSIGHT_KV.get(key) || 0);
+      if (current >= max) return false;
+      await env.TALK_INSIGHT_KV.put(key, String(current + 1), { expirationTtl: ttl });
+      return true;
+    };
+    const clientKey = request.headers.get("CF-Connecting-IP") || "unknown";
     // Use standard Base64 (with padding) consistently for token payloads and signatures.
     const b64 = bytes => btoa(String.fromCharCode(...new Uint8Array(bytes)));
     const decodeB64 = value => {
@@ -102,6 +110,9 @@ export default {
     if (url.pathname.endsWith("/admin/login") && request.method === "POST") {
       try {
         const body = await request.json();
+        if (!env.TALK_INSIGHT_KV) return json({ ok: false, error: "TALK_INSIGHT_KV binding is not configured" }, 503);
+        if (!await rateLimit("login:" + clientKey, 8, 900))
+          return json({ ok: false, error: "ログイン試行回数が多すぎます。15分後に再試行してください。" }, 429);
         if (!env.ADMIN_PASSWORD || !env.ADMIN_TOKEN_SECRET)
           return json({ ok: false, error: "管理者認証Secretが未設定です" }, 503);
         if (typeof body.password !== "string" || body.password !== env.ADMIN_PASSWORD)
@@ -158,9 +169,16 @@ export default {
     if (!env.TALK_INSIGHT_KV) return json({ ok: false, error: "TALK_INSIGHT_KV binding is not configured" }, 503);
 
     try {
+      const contentLength = Number(request.headers.get("Content-Length") || 0);
+      if (contentLength > 30000) return json({ ok: false, error: "リクエストが大きすぎます（30KB上限）" }, 413);
       const body = await request.json();
-      if (!Array.isArray(body.turns) || body.turns.length === 0)
-        return json({ ok: false, error: "会話データがありません" }, 400);
+      if (!Array.isArray(body.turns) || body.turns.length === 0 || body.turns.length > 200)
+        return json({ ok: false, error: "会話データが不正です（1〜200ターン）" }, 400);
+      const totalChars = body.turns.reduce((n, t) => n + String(t?.text || "").length, 0);
+      if (totalChars > 16000 || body.turns.some(t => !t || typeof t.text !== "string" || t.text.length > 2000))
+        return json({ ok: false, error: "会話ログが長すぎるか、形式が不正です（合計16,000文字まで）" }, 400);
+      if (!await rateLimit("score:" + clientKey, 30, 60))
+        return json({ ok: false, error: "短時間の利用回数が上限に達しました。1分後に再試行してください。" }, 429);
 
       const settingsRecord = await readSettings();
       const settings = settingsRecord?.settings || {};
@@ -176,10 +194,11 @@ export default {
       if (used >= limit)
         return json({ ok: false, quotaExceeded: true, error: "今月のAI採点上限に達しました。通常採点に切り替えてください。" }, 429);
 
+      const cleanLabel = value => String(value || "").replace(/[<>\r\n]/g, "").slice(0, 40);
       const transcript = body.turns.map((t, i) => {
-        const who = t.speaker === 2 ? (body.speaker2 || "話者2") : (body.speaker1 || "話者1");
-        return (i + 1) + ". " + who + "：" + String(t.text || "").slice(0, 500);
-      }).join("\n").slice(0, 16000);
+        const who = t.speaker === 2 ? (cleanLabel(body.speaker2) || "話者2") : (cleanLabel(body.speaker1) || "話者1");
+        return (i + 1) + ". " + who + "：" + t.text;
+      }).join("\n");
       const instructions = "あなたは会話コミュニケーションの専門コーチです。中学生にも分かる日本語で公平に評価してください。" +
         "総合点と5指標は0〜100。発言量の完全な同量を要求せず、自然な応答、質問、相手への反応、話題展開を評価してください。" +
         "会話の長さや文字起こしの誤りに配慮し、根拠のない断定を避けてください。" +
