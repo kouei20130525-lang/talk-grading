@@ -825,6 +825,6 @@ $('adminLogo').addEventListener('click',openAdminFromLogo);
 $('adminLogo').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openAdminFromLogo()}});
 
 
-/* Read global maintenance flag before enabling the app interface. */
-(async()=>{const screen=document.getElementById('maintenanceScreen');try{const r=await fetch('https://talk-insight-api.kouei20130525.workers.dev/settings',{cache:'no-store'});const d=await r.json();const s=d.settings?.settings||d.settings||{};if(d.ok&&s.maintenanceMode){document.getElementById('maintenanceText').textContent=s.maintenanceMessage||'ただいまメンテナンスを行っています。';screen.style.display='flex';document.querySelector('.app').style.display='none';}}catch(e){console.warn('Maintenance status unavailable',e)}})();
+/* Check global maintenance state before revealing the app. */
+(async()=>{const screen=document.getElementById('maintenanceScreen');const app=document.querySelector('.app');app.style.visibility='hidden';try{const r=await fetch('https://talk-insight-api.kouei20130525.workers.dev/settings',{cache:'no-store'});const d=await r.json();const s=d.settings?.settings||d.settings||{};if(d.ok&&s.maintenanceMode){document.getElementById('maintenanceText').textContent=s.maintenanceMessage||'ただいまメンテナンスを行っています。';screen.style.display='flex';app.style.display='none';}else{app.style.visibility='visible';}}catch(e){console.warn('Maintenance status unavailable',e);app.style.visibility='visible';}})();
 </script></body></html>
